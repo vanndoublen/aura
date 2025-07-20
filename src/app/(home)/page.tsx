@@ -2,7 +2,7 @@ import { TextareaForm } from "@/modules/home/ui/components/textarea-form";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 
 
 const Page = () => {
@@ -25,7 +25,9 @@ const Page = () => {
                     Create a story
                 </p>
                 <div className="max-w-3xl mx-auto w-full">
-                    <TextareaForm />
+                    <Suspense fallback={<p>Loading text area</p>}>
+                        <TextareaForm />
+                    </Suspense>
                 </div>
             </section>
             {/* TODO: view past projects  */}

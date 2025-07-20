@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { toast } from "sonner";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import TextareaAutoSize from "react-textarea-autosize";
@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { PROJECT_TEMPLATES } from "./constants";
 import { useClerk } from "@clerk/nextjs";
 import React from "react";
+import { ModelDropdown } from "./model-dropdown";
 
 
 const formSchema = z.object({
@@ -125,12 +126,18 @@ export const TextareaForm = () => {
                             )}
                         />
                         <div className="flex gap-2 items-end justify-between pt-2">
-                            <div className="text-[10px] text-muted-foreground font-mono">
-                                <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
-                                    <span>&#8984;</span>Enter
-                                </kbd>
-                                &nbsp;to submit
+                            <div className="flex items-center gap-x-4">
+                                <div className="text-[10px] text-muted-foreground font-mono">
+                                    <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+                                        <span>&#8984;</span>Enter
+                                    </kbd>
+                                    &nbsp;to submit
+                                </div>
+                                <Suspense fallback={<p>Loading models ... </p>}>
+                                    <ModelDropdown modelDisplayName={["a", "b"]} />
+                                </Suspense>
                             </div>
+
                             <Button
                                 disabled={isButtonDisabled}
                                 className={cn(
@@ -141,11 +148,12 @@ export const TextareaForm = () => {
                             >
 
                                 {isPending ? (
-                                <Loader2Icon className="size-4 animate-spin" />
-                            ) : (
-                                <ArrowUpIcon />
-                            )}
+                                    <Loader2Icon className="size-4 animate-spin" />
+                                ) : (
+                                    <ArrowUpIcon />
+                                )}
                             </Button>
+
                         </div>
                     </form>
 

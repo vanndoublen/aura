@@ -6,7 +6,7 @@ import prisma from "@/lib/db";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { generateSlug} from 'random-word-slugs'
 
-export const projectRouter = createTRPCRouter({
+export const projectsRouter = createTRPCRouter({
   getMany: protectedProcedure.query(async ({ ctx }) => {
     const projects = prisma.project.findMany({
       where: {

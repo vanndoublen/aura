@@ -5,7 +5,7 @@ import { TRPCError } from "@trpc/server";
 import { ProviderName } from "@/modules/ai/providers";
 import { AiService } from "@/modules/ai/service";
 
-export const messageRouter = createTRPCRouter({
+export const messagesRouter = createTRPCRouter({
   getMany: protectedProcedure
     .input(
       z.object({
