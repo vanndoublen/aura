@@ -3397,14 +3397,14 @@ export namespace Prisma {
   }
 
   export type MessageAvgAggregateOutputType = {
-    promptTokens: number | null
-    completionTokens: number | null
+    inputTokens: number | null
+    outputTokens: number | null
     totalTokens: number | null
   }
 
   export type MessageSumAggregateOutputType = {
-    promptTokens: number | null
-    completionTokens: number | null
+    inputTokens: number | null
+    outputTokens: number | null
     totalTokens: number | null
   }
 
@@ -3414,8 +3414,8 @@ export namespace Prisma {
     content: string | null
     role: $Enums.MessageRole | null
     type: $Enums.MessageType | null
-    promptTokens: number | null
-    completionTokens: number | null
+    inputTokens: number | null
+    outputTokens: number | null
     totalTokens: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -3429,8 +3429,8 @@ export namespace Prisma {
     content: string | null
     role: $Enums.MessageRole | null
     type: $Enums.MessageType | null
-    promptTokens: number | null
-    completionTokens: number | null
+    inputTokens: number | null
+    outputTokens: number | null
     totalTokens: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -3444,8 +3444,8 @@ export namespace Prisma {
     content: number
     role: number
     type: number
-    promptTokens: number
-    completionTokens: number
+    inputTokens: number
+    outputTokens: number
     totalTokens: number
     createdAt: number
     updatedAt: number
@@ -3456,14 +3456,14 @@ export namespace Prisma {
 
 
   export type MessageAvgAggregateInputType = {
-    promptTokens?: true
-    completionTokens?: true
+    inputTokens?: true
+    outputTokens?: true
     totalTokens?: true
   }
 
   export type MessageSumAggregateInputType = {
-    promptTokens?: true
-    completionTokens?: true
+    inputTokens?: true
+    outputTokens?: true
     totalTokens?: true
   }
 
@@ -3473,8 +3473,8 @@ export namespace Prisma {
     content?: true
     role?: true
     type?: true
-    promptTokens?: true
-    completionTokens?: true
+    inputTokens?: true
+    outputTokens?: true
     totalTokens?: true
     createdAt?: true
     updatedAt?: true
@@ -3488,8 +3488,8 @@ export namespace Prisma {
     content?: true
     role?: true
     type?: true
-    promptTokens?: true
-    completionTokens?: true
+    inputTokens?: true
+    outputTokens?: true
     totalTokens?: true
     createdAt?: true
     updatedAt?: true
@@ -3503,8 +3503,8 @@ export namespace Prisma {
     content?: true
     role?: true
     type?: true
-    promptTokens?: true
-    completionTokens?: true
+    inputTokens?: true
+    outputTokens?: true
     totalTokens?: true
     createdAt?: true
     updatedAt?: true
@@ -3605,8 +3605,8 @@ export namespace Prisma {
     content: string
     role: $Enums.MessageRole
     type: $Enums.MessageType
-    promptTokens: number | null
-    completionTokens: number | null
+    inputTokens: number | null
+    outputTokens: number | null
     totalTokens: number | null
     createdAt: Date
     updatedAt: Date
@@ -3639,8 +3639,8 @@ export namespace Prisma {
     content?: boolean
     role?: boolean
     type?: boolean
-    promptTokens?: boolean
-    completionTokens?: boolean
+    inputTokens?: boolean
+    outputTokens?: boolean
     totalTokens?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3656,8 +3656,8 @@ export namespace Prisma {
     content?: boolean
     role?: boolean
     type?: boolean
-    promptTokens?: boolean
-    completionTokens?: boolean
+    inputTokens?: boolean
+    outputTokens?: boolean
     totalTokens?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3673,8 +3673,8 @@ export namespace Prisma {
     content?: boolean
     role?: boolean
     type?: boolean
-    promptTokens?: boolean
-    completionTokens?: boolean
+    inputTokens?: boolean
+    outputTokens?: boolean
     totalTokens?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3690,8 +3690,8 @@ export namespace Prisma {
     content?: boolean
     role?: boolean
     type?: boolean
-    promptTokens?: boolean
-    completionTokens?: boolean
+    inputTokens?: boolean
+    outputTokens?: boolean
     totalTokens?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3699,7 +3699,7 @@ export namespace Prisma {
     aiModelId?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "externalId" | "content" | "role" | "type" | "promptTokens" | "completionTokens" | "totalTokens" | "createdAt" | "updatedAt" | "projectId" | "aiModelId", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "externalId" | "content" | "role" | "type" | "inputTokens" | "outputTokens" | "totalTokens" | "createdAt" | "updatedAt" | "projectId" | "aiModelId", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     aiModel?: boolean | Message$aiModelArgs<ExtArgs>
@@ -3725,8 +3725,8 @@ export namespace Prisma {
       content: string
       role: $Enums.MessageRole
       type: $Enums.MessageType
-      promptTokens: number | null
-      completionTokens: number | null
+      inputTokens: number | null
+      outputTokens: number | null
       totalTokens: number | null
       createdAt: Date
       updatedAt: Date
@@ -4162,8 +4162,8 @@ export namespace Prisma {
     readonly content: FieldRef<"Message", 'String'>
     readonly role: FieldRef<"Message", 'MessageRole'>
     readonly type: FieldRef<"Message", 'MessageType'>
-    readonly promptTokens: FieldRef<"Message", 'Int'>
-    readonly completionTokens: FieldRef<"Message", 'Int'>
+    readonly inputTokens: FieldRef<"Message", 'Int'>
+    readonly outputTokens: FieldRef<"Message", 'Int'>
     readonly totalTokens: FieldRef<"Message", 'Int'>
     readonly createdAt: FieldRef<"Message", 'DateTime'>
     readonly updatedAt: FieldRef<"Message", 'DateTime'>
@@ -4649,8 +4649,8 @@ export namespace Prisma {
     content: 'content',
     role: 'role',
     type: 'type',
-    promptTokens: 'promptTokens',
-    completionTokens: 'completionTokens',
+    inputTokens: 'inputTokens',
+    outputTokens: 'outputTokens',
     totalTokens: 'totalTokens',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -4930,8 +4930,8 @@ export namespace Prisma {
     content?: StringFilter<"Message"> | string
     role?: EnumMessageRoleFilter<"Message"> | $Enums.MessageRole
     type?: EnumMessageTypeFilter<"Message"> | $Enums.MessageType
-    promptTokens?: IntNullableFilter<"Message"> | number | null
-    completionTokens?: IntNullableFilter<"Message"> | number | null
+    inputTokens?: IntNullableFilter<"Message"> | number | null
+    outputTokens?: IntNullableFilter<"Message"> | number | null
     totalTokens?: IntNullableFilter<"Message"> | number | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
     updatedAt?: DateTimeFilter<"Message"> | Date | string
@@ -4947,8 +4947,8 @@ export namespace Prisma {
     content?: SortOrder
     role?: SortOrder
     type?: SortOrder
-    promptTokens?: SortOrderInput | SortOrder
-    completionTokens?: SortOrderInput | SortOrder
+    inputTokens?: SortOrderInput | SortOrder
+    outputTokens?: SortOrderInput | SortOrder
     totalTokens?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -4967,8 +4967,8 @@ export namespace Prisma {
     content?: StringFilter<"Message"> | string
     role?: EnumMessageRoleFilter<"Message"> | $Enums.MessageRole
     type?: EnumMessageTypeFilter<"Message"> | $Enums.MessageType
-    promptTokens?: IntNullableFilter<"Message"> | number | null
-    completionTokens?: IntNullableFilter<"Message"> | number | null
+    inputTokens?: IntNullableFilter<"Message"> | number | null
+    outputTokens?: IntNullableFilter<"Message"> | number | null
     totalTokens?: IntNullableFilter<"Message"> | number | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
     updatedAt?: DateTimeFilter<"Message"> | Date | string
@@ -4984,8 +4984,8 @@ export namespace Prisma {
     content?: SortOrder
     role?: SortOrder
     type?: SortOrder
-    promptTokens?: SortOrderInput | SortOrder
-    completionTokens?: SortOrderInput | SortOrder
+    inputTokens?: SortOrderInput | SortOrder
+    outputTokens?: SortOrderInput | SortOrder
     totalTokens?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -5007,8 +5007,8 @@ export namespace Prisma {
     content?: StringWithAggregatesFilter<"Message"> | string
     role?: EnumMessageRoleWithAggregatesFilter<"Message"> | $Enums.MessageRole
     type?: EnumMessageTypeWithAggregatesFilter<"Message"> | $Enums.MessageType
-    promptTokens?: IntNullableWithAggregatesFilter<"Message"> | number | null
-    completionTokens?: IntNullableWithAggregatesFilter<"Message"> | number | null
+    inputTokens?: IntNullableWithAggregatesFilter<"Message"> | number | null
+    outputTokens?: IntNullableWithAggregatesFilter<"Message"> | number | null
     totalTokens?: IntNullableWithAggregatesFilter<"Message"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
@@ -5177,8 +5177,8 @@ export namespace Prisma {
     content: string
     role: $Enums.MessageRole
     type: $Enums.MessageType
-    promptTokens?: number | null
-    completionTokens?: number | null
+    inputTokens?: number | null
+    outputTokens?: number | null
     totalTokens?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -5192,8 +5192,8 @@ export namespace Prisma {
     content: string
     role: $Enums.MessageRole
     type: $Enums.MessageType
-    promptTokens?: number | null
-    completionTokens?: number | null
+    inputTokens?: number | null
+    outputTokens?: number | null
     totalTokens?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -5207,8 +5207,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
-    promptTokens?: NullableIntFieldUpdateOperationsInput | number | null
-    completionTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    inputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    outputTokens?: NullableIntFieldUpdateOperationsInput | number | null
     totalTokens?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5222,8 +5222,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
-    promptTokens?: NullableIntFieldUpdateOperationsInput | number | null
-    completionTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    inputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    outputTokens?: NullableIntFieldUpdateOperationsInput | number | null
     totalTokens?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5237,8 +5237,8 @@ export namespace Prisma {
     content: string
     role: $Enums.MessageRole
     type: $Enums.MessageType
-    promptTokens?: number | null
-    completionTokens?: number | null
+    inputTokens?: number | null
+    outputTokens?: number | null
     totalTokens?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -5252,8 +5252,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
-    promptTokens?: NullableIntFieldUpdateOperationsInput | number | null
-    completionTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    inputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    outputTokens?: NullableIntFieldUpdateOperationsInput | number | null
     totalTokens?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5265,8 +5265,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
-    promptTokens?: NullableIntFieldUpdateOperationsInput | number | null
-    completionTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    inputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    outputTokens?: NullableIntFieldUpdateOperationsInput | number | null
     totalTokens?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5550,8 +5550,8 @@ export namespace Prisma {
     content?: SortOrder
     role?: SortOrder
     type?: SortOrder
-    promptTokens?: SortOrder
-    completionTokens?: SortOrder
+    inputTokens?: SortOrder
+    outputTokens?: SortOrder
     totalTokens?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -5560,8 +5560,8 @@ export namespace Prisma {
   }
 
   export type MessageAvgOrderByAggregateInput = {
-    promptTokens?: SortOrder
-    completionTokens?: SortOrder
+    inputTokens?: SortOrder
+    outputTokens?: SortOrder
     totalTokens?: SortOrder
   }
 
@@ -5571,8 +5571,8 @@ export namespace Prisma {
     content?: SortOrder
     role?: SortOrder
     type?: SortOrder
-    promptTokens?: SortOrder
-    completionTokens?: SortOrder
+    inputTokens?: SortOrder
+    outputTokens?: SortOrder
     totalTokens?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -5586,8 +5586,8 @@ export namespace Prisma {
     content?: SortOrder
     role?: SortOrder
     type?: SortOrder
-    promptTokens?: SortOrder
-    completionTokens?: SortOrder
+    inputTokens?: SortOrder
+    outputTokens?: SortOrder
     totalTokens?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -5596,8 +5596,8 @@ export namespace Prisma {
   }
 
   export type MessageSumOrderByAggregateInput = {
-    promptTokens?: SortOrder
-    completionTokens?: SortOrder
+    inputTokens?: SortOrder
+    outputTokens?: SortOrder
     totalTokens?: SortOrder
   }
 
@@ -5980,8 +5980,8 @@ export namespace Prisma {
     content: string
     role: $Enums.MessageRole
     type: $Enums.MessageType
-    promptTokens?: number | null
-    completionTokens?: number | null
+    inputTokens?: number | null
+    outputTokens?: number | null
     totalTokens?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -5994,8 +5994,8 @@ export namespace Prisma {
     content: string
     role: $Enums.MessageRole
     type: $Enums.MessageType
-    promptTokens?: number | null
-    completionTokens?: number | null
+    inputTokens?: number | null
+    outputTokens?: number | null
     totalTokens?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6037,8 +6037,8 @@ export namespace Prisma {
     content?: StringFilter<"Message"> | string
     role?: EnumMessageRoleFilter<"Message"> | $Enums.MessageRole
     type?: EnumMessageTypeFilter<"Message"> | $Enums.MessageType
-    promptTokens?: IntNullableFilter<"Message"> | number | null
-    completionTokens?: IntNullableFilter<"Message"> | number | null
+    inputTokens?: IntNullableFilter<"Message"> | number | null
+    outputTokens?: IntNullableFilter<"Message"> | number | null
     totalTokens?: IntNullableFilter<"Message"> | number | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
     updatedAt?: DateTimeFilter<"Message"> | Date | string
@@ -6052,8 +6052,8 @@ export namespace Prisma {
     content: string
     role: $Enums.MessageRole
     type: $Enums.MessageType
-    promptTokens?: number | null
-    completionTokens?: number | null
+    inputTokens?: number | null
+    outputTokens?: number | null
     totalTokens?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6066,8 +6066,8 @@ export namespace Prisma {
     content: string
     role: $Enums.MessageRole
     type: $Enums.MessageType
-    promptTokens?: number | null
-    completionTokens?: number | null
+    inputTokens?: number | null
+    outputTokens?: number | null
     totalTokens?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6222,8 +6222,8 @@ export namespace Prisma {
     content: string
     role: $Enums.MessageRole
     type: $Enums.MessageType
-    promptTokens?: number | null
-    completionTokens?: number | null
+    inputTokens?: number | null
+    outputTokens?: number | null
     totalTokens?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6236,8 +6236,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
-    promptTokens?: NullableIntFieldUpdateOperationsInput | number | null
-    completionTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    inputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    outputTokens?: NullableIntFieldUpdateOperationsInput | number | null
     totalTokens?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6250,8 +6250,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
-    promptTokens?: NullableIntFieldUpdateOperationsInput | number | null
-    completionTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    inputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    outputTokens?: NullableIntFieldUpdateOperationsInput | number | null
     totalTokens?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6264,8 +6264,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
-    promptTokens?: NullableIntFieldUpdateOperationsInput | number | null
-    completionTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    inputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    outputTokens?: NullableIntFieldUpdateOperationsInput | number | null
     totalTokens?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6278,8 +6278,8 @@ export namespace Prisma {
     content: string
     role: $Enums.MessageRole
     type: $Enums.MessageType
-    promptTokens?: number | null
-    completionTokens?: number | null
+    inputTokens?: number | null
+    outputTokens?: number | null
     totalTokens?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -6292,8 +6292,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
-    promptTokens?: NullableIntFieldUpdateOperationsInput | number | null
-    completionTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    inputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    outputTokens?: NullableIntFieldUpdateOperationsInput | number | null
     totalTokens?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6306,8 +6306,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
-    promptTokens?: NullableIntFieldUpdateOperationsInput | number | null
-    completionTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    inputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    outputTokens?: NullableIntFieldUpdateOperationsInput | number | null
     totalTokens?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6320,8 +6320,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
-    promptTokens?: NullableIntFieldUpdateOperationsInput | number | null
-    completionTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    inputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    outputTokens?: NullableIntFieldUpdateOperationsInput | number | null
     totalTokens?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

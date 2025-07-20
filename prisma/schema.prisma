@@ -57,8 +57,8 @@ model Message {
   content          String
   role             MessageRole
   type             MessageType
-  promptTokens     Int?
-  completionTokens Int?
+  inputTokens     Int?
+  outputTokens Int?
   totalTokens      Int?
 
   createdAt DateTime @default(now())

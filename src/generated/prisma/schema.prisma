@@ -52,14 +52,14 @@ model AiModel {
 }
 
 model Message {
-  id               String      @id @default(uuid())
-  externalId       String?
-  content          String
-  role             MessageRole
-  type             MessageType
-  promptTokens     Int?
-  completionTokens Int?
-  totalTokens      Int?
+  id           String      @id @default(uuid())
+  externalId   String?
+  content      String
+  role         MessageRole
+  type         MessageType
+  inputTokens  Int?
+  outputTokens Int?
+  totalTokens  Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
