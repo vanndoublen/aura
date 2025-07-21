@@ -5,105 +5,230 @@ import { Suspense, useState } from "react";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-// import { MessagesContainer } from "../components/messages-container";
-// import { Fragment } from "@/generated/prisma";
 import { ProjectHeader } from "../components/project-header";
-// import { FragmentWeb } from "../components/fragment-web";
 import { CodeIcon, CrownIcon, EyeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-// import { CodeView } from "@/components/code-view";
-// import { FileExplorer } from "@/components/file-explorer";
 import { UserControl } from "@/components/user-control";
 import { useAuth } from "@clerk/nextjs";
+import { MessagesContainer } from "../components/message-container";
+import { Sidebar, SidebarContent, SidebarGroup, SidebarInset, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
 // import { ErrorBoundary } from "react-error-boundary";
 
 interface Props {
     projectId: string;
 }
 
+const data = {
+    navMain: [
+        {
+            title: "Getting Started",
+            url: "#",
+            items: [
+                {
+                    title: "Installation",
+                    url: "#",
+                },
+                {
+                    title: "Project Structure",
+                    url: "#",
+                },
+            ],
+        },
+        {
+            title: "Building Your Application",
+            url: "#",
+            items: [
+                {
+                    title: "Routing",
+                    url: "#",
+                },
+                {
+                    title: "Data Fetching",
+                    url: "#",
+                    isActive: true,
+                },
+                {
+                    title: "Rendering",
+                    url: "#",
+                },
+                {
+                    title: "Caching",
+                    url: "#",
+                },
+                {
+                    title: "Styling",
+                    url: "#",
+                },
+                {
+                    title: "Optimizing",
+                    url: "#",
+                },
+                {
+                    title: "Configuring",
+                    url: "#",
+                },
+                {
+                    title: "Testing",
+                    url: "#",
+                },
+                {
+                    title: "Authentication",
+                    url: "#",
+                },
+                {
+                    title: "Deploying",
+                    url: "#",
+                },
+                {
+                    title: "Upgrading",
+                    url: "#",
+                },
+                {
+                    title: "Examples",
+                    url: "#",
+                },
+            ],
+        },
+        {
+            title: "API Reference",
+            url: "#",
+            items: [
+                {
+                    title: "Components",
+                    url: "#",
+                },
+                {
+                    title: "File Conventions",
+                    url: "#",
+                },
+                {
+                    title: "Functions",
+                    url: "#",
+                },
+                {
+                    title: "next.config.js Options",
+                    url: "#",
+                },
+                {
+                    title: "CLI",
+                    url: "#",
+                },
+                {
+                    title: "Edge Runtime",
+                    url: "#",
+                },
+            ],
+        },
+        {
+            title: "Architecture",
+            url: "#",
+            items: [
+                {
+                    title: "Accessibility",
+                    url: "#",
+                },
+                {
+                    title: "Fast Refresh",
+                    url: "#",
+                },
+                {
+                    title: "Next.js Compiler",
+                    url: "#",
+                },
+                {
+                    title: "Supported Browsers",
+                    url: "#",
+                },
+                {
+                    title: "Turbopack",
+                    url: "#",
+                },
+            ],
+        },
+        {
+            title: "Community",
+            url: "#",
+            items: [
+                {
+                    title: "Contribution Guide",
+                    url: "#",
+                },
+            ],
+        },
+    ],
+}
+
 export const ProjectView = ({ projectId }: Props) => {
     const { has } = useAuth();
     const hasProAccess = has?.({ plan: "pro" });
-    // const [activeFragment, setActiveFragment] = useState<Fragment | null>(null);
-    const [tabState, setTabState] = useState<"preview" | "code">("preview");
+    const trpc = useTRPC();
+    const { data: projects } = useSuspenseQuery(trpc.projects.getMany.queryOptions())
+
 
 
     return (
         <div className="h-screen">
-            <ResizablePanelGroup direction="horizontal">
-                <ResizablePanel
-                    defaultSize={35}
-                    minSize={20}
-                    className="flex flex-col min-h-0"
-                >
-                    {/* <ErrorBoundary fallback={<p>Project header error</p>}>
-                        <Suspense fallback={<p>Loading project ...</p>}>
-                            <ProjectHeader projectId={projectId} />
-                        </Suspense>
-                    </ErrorBoundary>
-                    <ErrorBoundary fallback={<p>Messages container error</p>}>
-                        <Suspense fallback={<p>loading messages. ... . </p>}>
-                            <MessagesContainer
-                                projectId={projectId}
-                                activeFragment={activeFragment}
-                                setActiveFragment={setActiveFragment}
-                            />
-                        </Suspense>
-                    </ErrorBoundary> */}
-                </ResizablePanel>
 
-                <ResizableHandle className="hover:bg-primary transition-colors" />
+            <SidebarProvider
+                style={
+                    {
+                        "--sidebar-width": "19rem",
+                    } as React.CSSProperties
+                }
+            >
+                <Sidebar variant="floating">
+                    <SidebarContent>
+                        <SidebarGroup>
+                            <SidebarMenu className="gap-2">
+                                {/* {data.navMain.map((item) => (
+                                    <SidebarMenuItem key={item.title}>
+                                        <SidebarMenuButton asChild>
+                                            <a href={item.url} className="font-medium">
+                                                {item.title}
+                                            </a>
+                                        </SidebarMenuButton> */}
+                                {projects ? (
+                                    <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
+                                        {projects.map((project) => (
+                                            <SidebarMenuSubItem key={project.id}>
+                                                <SidebarMenuSubButton asChild isActive={projectId === project.id}>
+                                                    <Link href={project.id}>
+                                                        {project.name}
+                                                    </Link>
+                                                </SidebarMenuSubButton>
+                                            </SidebarMenuSubItem>
+                                        ))}
+                                    </SidebarMenuSub>
+                                ) : null}
+                                {/* </SidebarMenuItem> */}
+                                {/* ))} */}
+                            </SidebarMenu>
+                        </SidebarGroup>
+                    </SidebarContent>
 
-                <ResizablePanel
-                    defaultSize={65}
-                    minSize={50}
+                </Sidebar>
 
-                >
-                    <Tabs
-                        className="h-full gap-y-0"
-                        defaultValue="preview"
-                        value={tabState}
-                        onValueChange={(value) => setTabState(value as "preview" | "code")}
-                    >
 
-                        <div className="w-full flex items-center p-2 border-b gap-x-2">
-                            <TabsList className="h-8 p-0 border rounded-md">
-                                <TabsTrigger value="preview" className="rounded-md">
-                                    <EyeIcon /> <span>Demo</span>
-                                </TabsTrigger>
-                                <TabsTrigger value="code" className="rounded-md">
-                                    <CodeIcon /> <span>Code</span>
-                                </TabsTrigger>
-                            </TabsList>
-                            <div className="ml-auto flex items-center gap-x-2">
-                                {!hasProAccess && (
-                                    <Button asChild size="sm">
-                                        <Link href="/pricing">
-                                            <CrownIcon /> Upgrade
-                                        </Link>
-                                    </Button>
-                                )}
+                <SidebarInset>
+                    <header className="flex h-16 shrink-0 items-center gap-2 px-4">
+                        <SidebarTrigger className="-ml-1" />
+                        <Separator
+                            orientation="vertical"
+                            className="mr-2 data-[orientation=vertical]:h-4"
+                        />
+                    </header>
 
-                                <UserControl />
-                            </div>
-                        </div>
-                        {/* <TabsContent value="preview">
-                            {!!activeFragment && <FragmentWeb data={activeFragment} />}
-                        </TabsContent>
-                        <TabsContent value="code" className="min-h-0">
-                            {!!activeFragment?.files && (
-                                <FileExplorer
-                                    files={activeFragment.files as { [path: string]: string }}
-                                />
-                            )}
-                        </TabsContent> */}
-
-                    </Tabs>
-                </ResizablePanel>
-            </ResizablePanelGroup>
+                    {/* <ErrorBoundary fallback={<p>Messages container error</p>}> */}
+                    <Suspense fallback={<p>loading messages. ... . </p>}>
+                        <MessagesContainer
+                            projectId={projectId}
+                        />
+                    </Suspense>
+                    {/* </ErrorBoundary> */}
+                </SidebarInset>
+            </SidebarProvider>
         </div>
     )
 }

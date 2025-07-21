@@ -36,7 +36,11 @@ export const MessageForm = ({ projectId }: Props) => {
     const queryClient = useQueryClient();
 
     // const { data: usage } = useQuery(trpc.usage.status.queryOptions());
-
+    const { data: aiModels } = useSuspenseQuery(trpc.ai.getMany.queryOptions());
+    const [selectedModel, setSeletedModel] = useState<AiModel | null>(() => {
+        const defaultModel = aiModels.find(model => model.name === "gpt-4.1");
+        return defaultModel || aiModels[0] || null;
+    })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -67,15 +71,12 @@ export const MessageForm = ({ projectId }: Props) => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         await mutateMessage.mutateAsync({
             value: values.value,
+            aiModelId: selectedModel?.id,
             projectId,
         })
     }
 
-    const { data: aiModels } = useSuspenseQuery(trpc.ai.getMany.queryOptions());
-    const [selectedModel, setSeletedModel] = useState<AiModel | null>(() => {
-        const defaultModel = aiModels.find(model => model.name === "gpt-4.1");
-        return defaultModel || aiModels[0] || null;
-    })
+
 
     const [isFocused, setIsFocused] = useState(false);
     const isPending = mutateMessage.isPending;
