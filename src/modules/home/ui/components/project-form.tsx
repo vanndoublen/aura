@@ -62,7 +62,7 @@ export const ProjectForm = () => {
             queryClient.invalidateQueries(
                 trpc.projects.getMany.queryOptions()
             );
-            router.push(`/projects/${createdProject.id}}`)
+            router.push(`/projects/${createdProject.id}`)
 
             // TODO: add usage
             // queryClient.invalidateQueries(

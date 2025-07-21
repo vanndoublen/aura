@@ -1,15 +1,15 @@
 export const PROJECT_TEMPLATES = [
   {
     emoji: "",
-    title: "AI Story Reader & Dictionary",
+    title: "Linear algebra",
     prompt:
-      "Build the story reading page: generate personalized Chinese stories (mock data), make words clickable for pop-up definitions, pinyin, and an 'Add to Dictionary' button. Include a list of past stories.",
+      "what is linear algebra in short",
   },
   {
     emoji: "",
-    title: "Dynamic Chinese Dictionary",
+    title: "Calculus",
     prompt:
-      "Create the dictionary page: list saved Chinese words with Hanzi, Pinyin, and English. Add features for custom folders, search, and 'mastered/needs review' status for vocabulary.",
+      "what is calculus in short",
   },
   {
     emoji: "",

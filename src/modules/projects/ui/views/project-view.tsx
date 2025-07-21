@@ -21,14 +21,23 @@ interface Props {
 }
 
 export const ProjectView = ({ projectId }: Props) => {
+    const [isOpen, setIsOpen] = useState(true);
+    const {isLoaded , isSignedIn, userId} = useAuth(); 
     const { has } = useAuth();
     const hasProAccess = has?.({ plan: "pro" });
+    
     const trpc = useTRPC();
     const { data: projects } = useSuspenseQuery(trpc.projects.getMany.queryOptions())
 
 
-    const [isOpen, setIsOpen] = useState(true); 
 
+    if (!isLoaded) {
+        return <div>Loading authentication...</div>
+    }
+
+    if (!isSignedIn || !userId) {
+        return <div>Please sign in to continue</div>
+    }
 
     return (
         <div className="h-screen">
@@ -39,7 +48,7 @@ export const ProjectView = ({ projectId }: Props) => {
                         "--sidebar-width": "19rem",
                     } as React.CSSProperties
                 }
-                open={isOpen} 
+                open={isOpen}
                 onOpenChange={setIsOpen}
             >
                 <Sidebar variant="floating">
@@ -76,7 +85,7 @@ export const ProjectView = ({ projectId }: Props) => {
 
 
                 <SidebarInset>
-                    <ProjectHeader isOpen={isOpen} setIsOpen={setIsOpen}/>
+                    <ProjectHeader isOpen={isOpen} setIsOpen={setIsOpen} />
 
                     {/* <ErrorBoundary fallback={<p>Messages container error</p>}> */}
                     <Suspense fallback={<p>loading messages. ... . </p>}>
