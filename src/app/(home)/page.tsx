@@ -1,46 +1,20 @@
-import { ProjectForm } from "@/modules/home/ui/components/project-form";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
-import React, { Suspense } from "react";
-
-
+import { HomeView } from "@/modules/home/ui/views/home-view";
+import { getQueryClient, trpc } from "@/trpc/server";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { Suspense } from "react";
 const Page = () => {
-    return (
-        <div className="flex flex-col max-w-5xl mx-auto w-full">
-            <section className="space-y-6 py-[16vh] 2xl:py-48">
-                <div className="flex flex-col items-center">
-                    <Image
-                        src="/logo.svg"
-                        alt="Vibe"
-                        width={50}
-                        height={50}
-                        className="hidden md:block"
-                    />
-                </div>
-                <h1 className="text-2xl md:text-5xl font-bold text-center">
-                    Generate something with Aura
-                </h1>
-                <p className="text-lg md:text-xl text-muted-foreground text-center">
-                    Create a story
-                </p>
-                <div className="max-w-3xl mx-auto w-full">
-                    <Suspense fallback={<p>Loading text area</p>}>
-                        <ProjectForm />
-                    </Suspense>
-                </div>
-            </section>
-            {/* TODO: view past projects  */}
-            {/* <ProjectList /> */}
-            <div className="mx-auto">
-                <Button asChild className="bg-transparent" variant="elevated" >
-                    <Link href="/readings">
-                        View past readings
-                    </Link>
-                </Button>
-            </div>
-        </div>
+    const queryClient = getQueryClient();
+    // TODO: might need to use infiniteQuery instead
+    void queryClient.prefetchQuery(trpc.projects.getMany.queryOptions());
 
+    return (
+        <HydrationBoundary state={dehydrate(queryClient)}>
+            {/* <ErrorBoundary fallback={<p>Error!</p>}> */}
+            <Suspense fallback={<p>Loading ... </p>}>
+                <HomeView />
+            </Suspense>
+            {/* </ErrorBoundary> */}
+        </HydrationBoundary>
     )
 }
 

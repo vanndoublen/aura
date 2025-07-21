@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { ArrowUpIcon, Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { PROJECT_TEMPLATES } from "./constants";
+import { PROJECT_TEMPLATES } from "../../constants";
 import { useClerk } from "@clerk/nextjs";
 import { type AiModel } from "@/generated/prisma";
 import { ModelDropdown } from "@/components/model-dropdown";
