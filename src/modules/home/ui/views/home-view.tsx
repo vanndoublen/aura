@@ -7,6 +7,11 @@ import { ProjectForm } from "../components/project-form";
 import { ProjectDialogButton } from "../components/project-dialog-button";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { TextLoop } from "../../../../../components/motion-primitives/text-loop";
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import TextType from "@/blocks/TextAnimations/TextType/TextType";
+
+const words = ["Generate your gadget with Aura"];
 
 export const HomeView = () => {
     // TODO: might use suspense infinite query instead
@@ -26,11 +31,22 @@ export const HomeView = () => {
                     />
                 </div>
                 <h1 className="text-2xl md:text-5xl font-bold text-center">
-                    Generate something with Aura
+
+                    <TextType
+                        text={words}
+                        typingSpeed={75}
+                        pauseDuration={1500}
+                        showCursor={true}
+                        cursorCharacter="|"
+                    />
                 </h1>
-                <p className="text-lg md:text-xl text-muted-foreground text-center">
-                    Create a story
-                </p>
+
+                <TextLoop className='text-lg md:text-xl text-muted-foreground text-center max-w-5xl w-full mx-auto'>
+                    <span>How can I assist you today?</span>
+                    <span>What is octave in music</span>
+                    <span>How to study linear algebra</span>
+                    <span>Build a simple landing page in tsx</span>
+                </TextLoop>
                 <div className="max-w-3xl mx-auto w-full">
                     <Suspense fallback={<p>Loading text area</p>}>
                         <ProjectForm />
