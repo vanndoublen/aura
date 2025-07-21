@@ -1,5 +1,5 @@
 "use client";
-import Silk from "@/blocks/Backgrounds/Silk/Silk";
+// import Silk from "@/blocks/Backgrounds/Silk/Silk";
 import { Navbar } from "@/modules/home/ui/components/navbar";
 
 interface Props {

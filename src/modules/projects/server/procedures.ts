@@ -4,11 +4,13 @@ import { TRPCError } from "@trpc/server";
 
 import prisma from "@/lib/db";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
-import { generateSlug} from 'random-word-slugs'
+import { generateSlug } from "random-word-slugs";
+import { ProviderName } from "@/modules/ai/providers";
+import { AiService } from "@/modules/ai/service";
 
 export const projectsRouter = createTRPCRouter({
   getMany: protectedProcedure.query(async ({ ctx }) => {
-    const projects = prisma.project.findMany({
+    const projects = await prisma.project.findMany({
       where: {
         userId: ctx.auth.userId,
       },
@@ -26,7 +28,7 @@ export const projectsRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
-      const project = prisma.project.findUnique({
+      const project = await prisma.project.findUnique({
         where: {
           id: input.id,
           userId: ctx.auth.userId,
@@ -48,28 +50,72 @@ export const projectsRouter = createTRPCRouter({
           .string()
           .min(1, { message: "Value is required" })
           .max(10000, { message: "Value is too long" }),
+        aiModelId: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
       // TODO: calculate credits
 
-      const createdProject = prisma.project.create({
+      const createdProject = await prisma.project.create({
         data: {
           name: generateSlug(2, {
             format: "kebab",
           }),
-          userId: ctx.auth.userId, 
+          userId: ctx.auth.userId,
           messages: {
             create: {
-                content: input.value,
-                role: "USER",
-                type: "TEXT", 
-            }
-          }
+              content: input.value,
+              role: "USER",
+              type: "TEXT",
+            },
+          },
         },
       });
-      
+      let createdAiMessage = null;
 
-      return createdProject; 
+      if (input.aiModelId) {
+        const aiModel = await prisma.aiModel.findUnique({
+          where: { id: input.aiModelId },
+        });
+
+        if (aiModel) {
+          const providerName = aiModel.provider as ProviderName;
+
+          const response = await AiService.createResponse(
+            input.value,
+            providerName,
+            aiModel.name
+          );
+
+          let inputTokens: number | undefined;
+          let outputTokens: number | undefined;
+          let totalTokens: number | undefined;
+
+          if (providerName === "OpenAI") {
+            // aiResponse is typed as OpenAiResponse
+            inputTokens = response.inputTokens;
+            outputTokens = response.outputTokens;
+            totalTokens = response.totalTokens;
+          } else {
+            // TODO: add more providers
+          }
+
+          createdAiMessage = await prisma.message.create({
+            data: {
+              content: response.content,
+              role: "ASSISTANT",
+              type: "TEXT",
+              projectId: createdProject.id,
+              aiModelId: input.aiModelId,
+              externalId: response.id,
+              inputTokens,
+              outputTokens,
+              totalTokens,
+            },
+          });
+        }
+      }
+
+      return { createdProject, createdAiMessage };
     }),
 });

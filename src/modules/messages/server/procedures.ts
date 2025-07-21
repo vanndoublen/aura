@@ -64,6 +64,8 @@ export const messagesRouter = createTRPCRouter({
         },
       });
 
+      let createdAiMessage = null;
+
       if (input.aiModelId) {
         const aiModel = await prisma.aiModel.findUnique({
           where: { id: input.aiModelId },
@@ -91,7 +93,7 @@ export const messagesRouter = createTRPCRouter({
             // TODO: add more providers
           }
 
-          const createdAiMessage = await prisma.message.create({
+          createdAiMessage = await prisma.message.create({
             data: {
               content: response.content,
               role: "ASSISTANT",
@@ -104,10 +106,9 @@ export const messagesRouter = createTRPCRouter({
               totalTokens,
             },
           });
-          return { createdUserMessage, createdAiMessage}
         }
       }
 
-      return { createdUserMessage };
+      return { createdUserMessage, createdAiMessage };
     }),
 });

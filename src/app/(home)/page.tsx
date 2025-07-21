@@ -1,4 +1,4 @@
-import { TextareaForm } from "@/modules/home/ui/components/textarea-form";
+import { ProjectForm } from "@/modules/home/ui/components/project-form";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,7 +26,7 @@ const Page = () => {
                 </p>
                 <div className="max-w-3xl mx-auto w-full">
                     <Suspense fallback={<p>Loading text area</p>}>
-                        <TextareaForm />
+                        <ProjectForm />
                     </Suspense>
                 </div>
             </section>
