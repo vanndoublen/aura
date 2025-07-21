@@ -19,7 +19,7 @@ interface Props {
 
 export const ProjectView = ({ projectId }: Props) => {
     const [isOpen, setIsOpen] = useState(true);
-    const {isLoaded , isSignedIn, userId} = useAuth(); 
+    const { isLoaded, isSignedIn, userId } = useAuth();
     const { has } = useAuth();
     const hasProAccess = has?.({ plan: "pro" });
 
@@ -37,7 +37,7 @@ export const ProjectView = ({ projectId }: Props) => {
     }
 
     return (
-        <div className="h-screen">
+        <div className="h-screen flex flex-col">
 
             <SidebarProvider
                 style={
@@ -72,16 +72,17 @@ export const ProjectView = ({ projectId }: Props) => {
                 </Sidebar>
 
 
-                <SidebarInset>
+                <SidebarInset className="flex flex-col">
                     <ProjectHeader isOpen={isOpen} setIsOpen={setIsOpen} />
 
-                    {/* <ErrorBoundary fallback={<p>Messages container error</p>}> */}
-                    <Suspense fallback={<p>loading messages. ... . </p>}>
-                        <MessagesContainer
-                            projectId={projectId}
-                        />
-                    </Suspense>
-                    {/* </ErrorBoundary> */}
+
+                        {/* <ErrorBoundary fallback={<p>Messages container error</p>}> */}
+                        <Suspense fallback={<p>loading messages. ... . </p>}>
+                            <MessagesContainer
+                                projectId={projectId}
+                            />
+                        </Suspense>
+                        {/* </ErrorBoundary> */}
                 </SidebarInset>
             </SidebarProvider>
         </div>

@@ -6,16 +6,16 @@ import { useEffect, useRef } from "react";
 import { MessageLoading } from "./message-loading";
 
 interface Props {
-    projectId: string; 
+    projectId: string;
 
 }
 
 export const MessagesContainer = ({
     projectId,
 
-} : Props ) => {
-    const trpc = useTRPC(); 
-    const bottomRef = useRef<HTMLDivElement>(null); 
+}: Props) => {
+    const trpc = useTRPC();
+    const bottomRef = useRef<HTMLDivElement>(null);
     const lastAssistantMessageIdRef = useRef<string | null>(null);
 
     const { data: messages } = useSuspenseQuery(trpc.messages.getMany.queryOptions({
@@ -32,26 +32,27 @@ export const MessagesContainer = ({
             (message) => message.role === "ASSISTANT",
         )
 
-        if (lastAssistantMessage && lastAssistantMessage.id !== lastAssistantMessageIdRef.current){
-            lastAssistantMessageIdRef.current = lastAssistantMessage.id; 
+        if (lastAssistantMessage && lastAssistantMessage.id !== lastAssistantMessageIdRef.current) {
+            lastAssistantMessageIdRef.current = lastAssistantMessage.id;
         }
     }, [messages]);
 
-    useEffect (() => {
-        bottomRef.current?.scrollIntoView(); 
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView();
     }, [messages.length])
 
-    const lastMessage = messages[messages.length - 1]; 
+    const lastMessage = messages[messages.length - 1];
     const isLastMessageUser = lastMessage?.role === "USER";
 
 
 
     return (
-        <div className="flex flex-col flex-1 min-h-0">
-            <div className="flex-1 min-h-0 overflow-y-auto">
-                <div className="pt-2 pr-1">
+        <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
+            {/* All content in one scrollable container */}
+            <div className="flex-1 pb-44">
+                <div className="max-w-2xl min-w-2xl mx-auto pt-2 pr-1 pb-4">
                     {messages.map((message) => (
-                        <MessageCard 
+                        <MessageCard
                             key={message.id}
                             content={message.content}
                             role={message.role}
@@ -59,17 +60,17 @@ export const MessagesContainer = ({
                             type={message.type}
                         />
                     ))}
-                    
-                </div>
                     {isLastMessageUser && <MessageLoading />}
-                <div ref={bottomRef}/>
+                </div>
+                <div ref={bottomRef} />
             </div>
-
-            <div className="relative p-3 pt-1">
-                <div className="absolute -top-6 left-0 right-0 h-6 bg-gradient-to-b from-transparent to-background pointer-events-none"/>
-                 <MessageForm projectId={projectId}/>
+            {/* Fixed textarea - full width container but constrained content */}
+            <div className="absolute bottom-0 right-0 left-0 pointer-events-none">
+                <div className="max-w-2xl min-w-1xl mx-auto pointer-events-auto">
+                    <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-full max-w-3xl h-6 bg-gradient-to-b from-transparent to-background pointer-events-none" />
+                    <MessageForm projectId={projectId} />
+                </div>
             </div>
-            
         </div>
     )
 }
