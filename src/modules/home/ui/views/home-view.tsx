@@ -10,6 +10,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { TextLoop } from "../../../../../components/motion-primitives/text-loop";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import TextType from "@/blocks/TextAnimations/TextType/TextType";
+import { useCurrentTheme } from "@/hooks/use-current-theme";
 
 const words = ["Generate your gadget with Aura"];
 
@@ -17,6 +18,21 @@ export const HomeView = () => {
     // TODO: might use suspense infinite query instead
     const trpc = useTRPC();
     const { data: projects } = useSuspenseQuery(trpc.projects.getMany.queryOptions());
+
+    let currectTheme = useCurrentTheme();
+    if (currectTheme === "dark") {
+        currectTheme = "dark";
+    } else {
+        currectTheme = "light"; 
+    }
+
+    const getTextColors = (theme: string) => {
+        if (theme === "dark") {
+            return ["hsl(var(--foreground))"]; 
+        }
+        return ["hsl(var(--foreground))"]; 
+    };
+
 
     return (
         <div className="flex flex-col max-w-5xl mx-auto w-full">
@@ -30,7 +46,7 @@ export const HomeView = () => {
                         className="hidden md:block"
                     />
                 </div>
-                <h1 className="text-2xl md:text-5xl font-bold text-center">
+                <h1 className="text-2xl md:text-5xl font-bold text-center ">
 
                     <TextType
                         text={words}
@@ -38,7 +54,9 @@ export const HomeView = () => {
                         pauseDuration={1500}
                         showCursor={true}
                         cursorCharacter="|"
+                        textColors={getTextColors(currectTheme)}
                     />
+
                 </h1>
 
                 <TextLoop className='text-lg md:text-xl text-muted-foreground text-center max-w-5xl w-full mx-auto'>

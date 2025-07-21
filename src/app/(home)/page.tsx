@@ -7,6 +7,8 @@ const Page = () => {
     // TODO: might need to use infiniteQuery instead
     void queryClient.prefetchQuery(trpc.projects.getMany.queryOptions());
 
+    void queryClient.prefetchQuery(trpc.ai.getMany.queryOptions());
+
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
             {/* <ErrorBoundary fallback={<p>Error!</p>}> */}

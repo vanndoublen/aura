@@ -32,16 +32,11 @@ const formSchema = z.object({
 
 
 export const ProjectForm = () => {
-    // const [queryClient] = React.useState(() => new QueryClient())
-
     const router = useRouter();
-
+    const clerk = useClerk();
 
     const trpc = useTRPC();
     const queryClient = useQueryClient();
-
-    const clerk = useClerk();
-
 
     const { data: aiModels } = useSuspenseQuery(trpc.ai.getMany.queryOptions());
     const [selectedModel, setSeletedModel] = useState<AiModel | null>(() => {
