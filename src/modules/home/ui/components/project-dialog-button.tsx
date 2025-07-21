@@ -24,7 +24,8 @@ export const ProjectDialogButton = ({ projects }: Props) => {
     return (
         <div>
             <Button
-                className="bg-transparent" variant="elevated"
+                className="bg-transparent text-[12px] h-10"
+                variant="elevated"
                 onClick={() => setIsOpen(true)}
             >
                 View projects

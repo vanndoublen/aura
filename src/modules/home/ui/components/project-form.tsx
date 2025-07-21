@@ -20,6 +20,7 @@ import { PROJECT_TEMPLATES } from "../../constants";
 import { useClerk } from "@clerk/nextjs";
 import { type AiModel } from "@/generated/prisma";
 import { ModelDropdown } from "@/components/model-dropdown";
+import { AISuggestion, AISuggestions } from "@/components/ui/kibo-ui/ai/suggestion";
 
 
 const formSchema = z.object({
@@ -167,15 +168,12 @@ export const ProjectForm = () => {
 
                 <div className="flex-wrap justify-center gap-2 hidden md:flex max-w-3xl">
                     {PROJECT_TEMPLATES.map((template) => (
-                        <Button
+                        <AISuggestion
                             key={template.title}
-                            variant="outline"
-                            size="sm"
-                            className="bg-transparent dark:bg-sidebar"
                             onClick={() => onSelect(template.prompt)}
-                        >
-                            {template.emoji} {template.title}
-                        </Button>
+                            suggestion={template.title}
+                            className="bg-transparent text-[12px] font-mono"
+                        />
                     ))}
                 </div>
             </section>
