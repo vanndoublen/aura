@@ -9,9 +9,10 @@ const openai = new OpenAI({
 export const openaiProvider: AiProvider<OpenAiResponse> = {
   name: "OpenAI",
   
-  async createResponse(input: string, model: string): Promise<OpenAiResponse> {
+  async createResponse(input: string, model: string, instructions?: string): Promise<OpenAiResponse> {
     const response = await openai.responses.create({
       model,
+      instructions,
       input,
     });
     

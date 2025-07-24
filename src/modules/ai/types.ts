@@ -24,7 +24,7 @@ export interface ClaudeResponse extends BaseAiResponse{
 
 export interface AiProvider<T extends BaseAiResponse = BaseAiResponse> {
   name: string;
-  createResponse(input: string, model: string): Promise<T>;
+  createResponse(input: string, model: string, instructions?: string): Promise<T>;
 }
 
 export type AiResponse = OpenAiResponse | GeminiResponse | ClaudeResponse;

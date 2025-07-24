@@ -5,7 +5,8 @@ export class AiService {
   static async createResponse<T extends ProviderName>(
     input: string,
     providerName: T,
-    modelName: string
+    modelName: string,
+    instructions?: string, 
   ): Promise<ProviderResponseMap[T]> {
     const provider = providers[providerName];
     
@@ -13,6 +14,6 @@ export class AiService {
       throw new Error(`Provider ${providerName} not found`);
     }
 
-    return provider.createResponse(input, modelName) as Promise<ProviderResponseMap[T]>;
+    return provider.createResponse(input, modelName, instructions) as Promise<ProviderResponseMap[T]>;
   }
 }

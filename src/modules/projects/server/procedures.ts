@@ -7,6 +7,7 @@ import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { generateSlug } from "random-word-slugs";
 import { ProviderName } from "@/modules/ai/providers";
 import { AiService } from "@/modules/ai/service";
+import { PROJECT_TITLE_PROMPT } from "@/prompt";
 
 export const projectsRouter = createTRPCRouter({
   getMany: protectedProcedure.query(async ({ ctx }) => {
@@ -56,11 +57,16 @@ export const projectsRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       // TODO: calculate credits
 
+      const projectTitleResponse = await AiService.createResponse(
+        input.value,
+        "OpenAI",
+        "gpt-4.1-nano",
+        PROJECT_TITLE_PROMPT
+      )
+
       const createdProject = await prisma.project.create({
         data: {
-          name: generateSlug(2, {
-            format: "kebab",
-          }),
+          name: projectTitleResponse.content,
           userId: ctx.auth.userId,
           messages: {
             create: {
