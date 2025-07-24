@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { MessageRole, MessageType } from "@/generated/prisma";
+import { AIResponse } from "@/components/ui/kibo-ui/ai/response";
 
 
 
@@ -53,7 +54,7 @@ export const AssistantMessage = ({
                 </span>
             </div>
             <div className="pl-8.5 flex flex-col gap-y-4">
-                <span>{content}</span>
+                <AIResponse>{content}</AIResponse>
             </div>
 
 

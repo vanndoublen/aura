@@ -50,7 +50,7 @@ export const MessagesContainer = ({
         <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
             {/* All content in one scrollable container */}
             <div className="flex-1 pb-44">
-                <div className="max-w-2xl min-w-2xl mx-auto pt-2 pr-1 pb-4">
+                <div className="max-w-2xl  mx-auto pt-2 pr-1 pb-4">
                     {messages.map((message) => (
                         <MessageCard
                             key={message.id}
@@ -66,7 +66,7 @@ export const MessagesContainer = ({
             </div>
             {/* Fixed textarea - full width container but constrained content */}
             <div className="absolute bottom-0 right-0 left-0 pointer-events-none">
-                <div className="max-w-2xl min-w-1xl mx-auto pointer-events-auto">
+                <div className="max-w-2xl  mx-auto pointer-events-auto">
                     <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-full max-w-3xl h-6 bg-gradient-to-b from-transparent to-background pointer-events-none" />
                     <MessageForm projectId={projectId} />
                 </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 
 import { ProjectForm } from "../components/project-form";
 import { ProjectDialogButton } from "../components/project-dialog-button";
@@ -11,10 +11,13 @@ import { TextLoop } from "../../../../../components/motion-primitives/text-loop"
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import TextType from "@/blocks/TextAnimations/TextType/TextType";
 import { useCurrentTheme } from "@/hooks/use-current-theme";
+import { cn } from "@/lib/utils";
 
 const words = ["Generate your gadget with Aura"];
 
 export const HomeView = () => {
+    const [isOpenDialog, onIsOpenDialog] = useState(false); 
+
     // TODO: might use suspense infinite query instead
     const trpc = useTRPC();
     const { data: projects } = useSuspenseQuery(trpc.projects.getMany.queryOptions());
@@ -35,7 +38,7 @@ export const HomeView = () => {
 
 
     return (
-        <div className="flex flex-col max-w-5xl mx-auto w-full">
+        <div className={cn("flex flex-col max-w-5xl mx-auto w-full transition-all duration-300", isOpenDialog && "blur-sm")}>
             <section className="space-y-6 py-[16vh] 2xl:py-48">
                 <div className="flex flex-col items-center">
                     <Image
@@ -73,7 +76,7 @@ export const HomeView = () => {
             </section>
 
             <div className="mx-auto">
-                <ProjectDialogButton projects={projects} />
+                <ProjectDialogButton projects={projects} onDialogOpen={onIsOpenDialog}/>
             </div>
         </div>
     )
