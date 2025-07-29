@@ -4,6 +4,10 @@ import prisma from "@/lib/db";
 import { TRPCError } from "@trpc/server";
 import { ProviderName } from "@/modules/ai/providers";
 import { AiService } from "@/modules/ai/service";
+import { observable } from "@trpc/server/observable";
+import OpenAI from "openai";
+import { streamAIResponse } from "@/modules/ai/ai-streaming";
+import { Message } from "@/generated/prisma";
 
 export const messagesRouter = createTRPCRouter({
   getMany: protectedProcedure
@@ -110,5 +114,97 @@ export const messagesRouter = createTRPCRouter({
       }
 
       return { createdUserMessage, createdAiMessage };
+    }),
+
+  stream: protectedProcedure
+    .input(
+      z.object({
+        value: z
+          .string()
+          .min(1, { message: "Value is required" })
+          .max(10000, { message: "Value is too long" }),
+        projectId: z.string().min(1, { message: "Project ID is required" }),
+        aiModelId: z.string().optional(),
+      })
+    )
+    .query(async function* ({ input, ctx }) {
+      const existingProject = await prisma.project.findUnique({
+        where: {
+          id: input.projectId,
+          userId: ctx.auth.userId,
+        },
+      });
+
+      if (!existingProject) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Project not found",
+        });
+      }
+
+      // TODO: add credit consumption
+
+      const createdUserMessage = await prisma.message.create({
+        data: {
+          content: input.value,
+          projectId: input.projectId,
+          role: "USER",
+          type: "TEXT",
+        },
+      });
+
+      let assistantContent = "";
+      let createdAssistantMessage: Message | null = null;
+      if (input.aiModelId) {
+        const aiModel = await prisma.aiModel.findUnique({
+          where: { id: input.aiModelId },
+        });
+
+        if (aiModel) {
+          try {
+            const stream = streamAIResponse({
+              provider: aiModel.provider,
+              model: aiModel.name,
+              message: input.value,
+            });
+
+            for await (const chuck of stream) {
+              assistantContent += chuck;
+              // TODO: maybe add token count
+              yield chuck;
+            }
+            createdAssistantMessage = await prisma.message.create({
+              data: {
+                role: "ASSISTANT",
+                type: "TEXT",
+                content: assistantContent,
+                projectId: input.projectId,
+              },
+            });
+          } catch (error) {
+            if (assistantContent) {
+              createdAssistantMessage = await prisma.message.create({
+                data: {
+                  role: "ASSISTANT",
+                  type: "ERROR",
+                  content: assistantContent + " [ERROR: Stream interrupted]",
+                  projectId: input.projectId,
+                },
+              });
+            }
+
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Response interrupted",
+            });
+          }
+
+          // yield* streamAIResponse({
+          //   provider: aiModel.provider,
+          //   model: aiModel.name,
+          //   message: input.value,
+          // });
+        }
+      }
     }),
 });

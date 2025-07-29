@@ -19,6 +19,7 @@ import { AiModel } from "@/generated/prisma";
 
 interface Props {
     projectId: string;
+    onSendMessage: (messageText: string, modelId: string) => void;
 }
 
 const formSchema = z.object({
@@ -29,7 +30,7 @@ const formSchema = z.object({
 })
 
 
-export const MessageForm = ({ projectId }: Props) => {
+export const MessageForm = ({ projectId, onSendMessage }: Props) => {
     const router = useRouter();
 
     const trpc = useTRPC();
@@ -68,12 +69,13 @@ export const MessageForm = ({ projectId }: Props) => {
         }
     }))
 
-    const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        await mutateMessage.mutateAsync({
-            value: values.value,
-            aiModelId: selectedModel?.id,
-            projectId,
-        })
+    const onSubmit = (values: z.infer<typeof formSchema>) => {
+        // await mutateMessage.mutateAsync({
+        //     value: values.value,
+        //     aiModelId: selectedModel?.id,
+        //     projectId,
+        // })
+        onSendMessage(values.value, selectedModel?.id ?? "")
     }
 
 

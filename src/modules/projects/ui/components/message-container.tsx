@@ -1,8 +1,8 @@
 import { useTRPC } from "@/trpc/client";
-import { useSuspenseQuery } from "@tanstack/react-query"
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query"
 import { MessageCard } from "./message-card";
 import { MessageForm } from "./message-form";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MessageLoading } from "./message-loading";
 
 interface Props {
@@ -18,12 +18,15 @@ export const MessagesContainer = ({
     const bottomRef = useRef<HTMLDivElement>(null);
     const lastAssistantMessageIdRef = useRef<string | null>(null);
 
+    const [currentStreamContent, setCurrentStreamContent] = useState("");
+    const [isStreaming, setIsStreaming] = useState(false);
+
     const { data: messages } = useSuspenseQuery(trpc.messages.getMany.queryOptions({
         projectId: projectId,
 
     }, {
         // TODO: temporary live message update
-        refetchInterval: 5000,
+        refetchInterval: isStreaming ? false: 5000,
     }));
 
     // TODO: this is causing problem
@@ -44,6 +47,50 @@ export const MessagesContainer = ({
     const lastMessage = messages[messages.length - 1];
     const isLastMessageUser = lastMessage?.role === "USER";
 
+    
+    const [queryParams, setQueryParams] = useState({
+        projectId: projectId,
+        value: "",
+        aiModelId: "",
+    });
+
+    const { data: streamData, refetch, isFetching } = useQuery(trpc.messages.stream.queryOptions(
+        queryParams,
+        { enabled: false }
+
+    ))
+
+    useEffect(() => {
+        console.log(streamData);
+        if (streamData) {
+            const fullContent = streamData.join('');
+            setCurrentStreamContent(fullContent);
+        }
+    }, [streamData]);
+
+    const handleSendMessage = async (messageText: string, modelId?: string) => {
+        if (!messageText.trim() || isStreaming) return;
+
+        setIsStreaming(true);
+        setCurrentStreamContent("");
+
+        try {
+            setQueryParams({
+                projectId: projectId,
+                value: messageText,
+                aiModelId: modelId ?? "",
+            })
+            await refetch();
+            console.log("frommmmmmmmmm-------------------------------")
+
+        } catch (error) {
+            console.error("Streaming error: " + error)
+        } finally {
+            setIsStreaming(false);
+            setCurrentStreamContent("");
+        }
+    }
+
 
 
     return (
@@ -60,7 +107,14 @@ export const MessagesContainer = ({
                             type={message.type}
                         />
                     ))}
-                    {isLastMessageUser && <MessageLoading />}
+                    {isFetching &&
+                        <MessageCard
+                            content={currentStreamContent}
+                            role="ASSISTANT"
+                            createdAt={new Date()}
+                            type="TEXT"
+                        />}
+                    {/* {isLastMessageUser && <MessageLoading />} */}
                 </div>
                 <div ref={bottomRef} />
             </div>
@@ -68,7 +122,7 @@ export const MessagesContainer = ({
             <div className="absolute bottom-0 right-0 left-0 pointer-events-none">
                 <div className="max-w-2xl  mx-auto pointer-events-auto">
                     <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-full max-w-3xl h-6 bg-gradient-to-b from-transparent to-background pointer-events-none" />
-                    <MessageForm projectId={projectId} />
+                    <MessageForm projectId={projectId} onSendMessage={handleSendMessage} />
                 </div>
             </div>
         </div>

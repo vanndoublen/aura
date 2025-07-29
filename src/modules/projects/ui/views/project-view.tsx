@@ -1,9 +1,9 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import { useTRPC } from "@/trpc/client";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 import { ProjectHeader } from "../components/project-header";
 import Link from "next/link";
@@ -11,6 +11,7 @@ import { useAuth } from "@clerk/nextjs";
 import { MessagesContainer } from "../components/message-container";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarInset, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
+import { string } from "zod";
 // import { ErrorBoundary } from "react-error-boundary";
 
 interface Props {
@@ -76,13 +77,13 @@ export const ProjectView = ({ projectId }: Props) => {
                     <ProjectHeader isOpen={isOpen} setIsOpen={setIsOpen} />
 
 
-                        {/* <ErrorBoundary fallback={<p>Messages container error</p>}> */}
-                        <Suspense fallback={<p>loading messages. ... . </p>}>
-                            <MessagesContainer
-                                projectId={projectId}
-                            />
-                        </Suspense>
-                        {/* </ErrorBoundary> */}
+                    {/* <ErrorBoundary fallback={<p>Messages container error</p>}> */}
+                    <Suspense fallback={<p>loading messages. ... . </p>}>
+                        <MessagesContainer
+                            projectId={projectId}
+                        />
+                    </Suspense>
+                    {/* </ErrorBoundary> */}
                 </SidebarInset>
             </SidebarProvider>
         </div>
