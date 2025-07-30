@@ -168,10 +168,10 @@ export const messagesRouter = createTRPCRouter({
               message: input.value,
             });
 
-            for await (const chuck of stream) {
-              assistantContent += chuck;
+            for await (const chunk of stream) {
+              assistantContent += chunk;
               // TODO: maybe add token count
-              yield chuck;
+              yield chunk;
             }
             createdAssistantMessage = await prisma.message.create({
               data: {

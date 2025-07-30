@@ -19,6 +19,8 @@ import { AiModel } from "@/generated/prisma";
 
 interface Props {
     projectId: string;
+    isStreaming: boolean;
+    isFetching: boolean; 
     onSendMessage: (messageText: string, modelId: string) => void;
 }
 
@@ -30,7 +32,7 @@ const formSchema = z.object({
 })
 
 
-export const MessageForm = ({ projectId, onSendMessage }: Props) => {
+export const MessageForm = ({ projectId, isStreaming, isFetching, onSendMessage }: Props) => {
     const router = useRouter();
 
     const trpc = useTRPC();
@@ -75,14 +77,16 @@ export const MessageForm = ({ projectId, onSendMessage }: Props) => {
         //     aiModelId: selectedModel?.id,
         //     projectId,
         // })
+        console.log(values.value); 
         onSendMessage(values.value, selectedModel?.id ?? "")
+        form.reset(); 
     }
 
 
 
     const [isFocused, setIsFocused] = useState(false);
     const isPending = mutateMessage.isPending;
-    const isButtonDisabled = isPending || !form.formState.isValid;
+    const isButtonDisabled = isPending || !form.formState.isValid || isStreaming || isFetching;
     // const showUsage = !!usage;
     const showUsage = false;
 
