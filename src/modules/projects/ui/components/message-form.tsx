@@ -16,12 +16,13 @@ import { ArrowUpIcon, Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ModelDropdown } from "@/components/model-dropdown";
 import { AiModel } from "@/generated/prisma";
+import { useChat } from "@/hooks/use-chat";
 
 interface Props {
     projectId: string;
     isStreaming: boolean;
     isFetching: boolean; 
-    onSendMessage: (messageText: string, modelId: string) => void;
+    // onSendMessage: (messageText: string, modelId: string) => void;
 }
 
 const formSchema = z.object({
@@ -32,11 +33,13 @@ const formSchema = z.object({
 })
 
 
-export const MessageForm = ({ projectId, isStreaming, isFetching, onSendMessage }: Props) => {
+export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
     const router = useRouter();
 
     const trpc = useTRPC();
     const queryClient = useQueryClient();
+
+    const {sendMessage} = useChat(projectId); 
 
     // const { data: usage } = useQuery(trpc.usage.status.queryOptions());
     const { data: aiModels } = useSuspenseQuery(trpc.ai.getMany.queryOptions());
@@ -72,13 +75,8 @@ export const MessageForm = ({ projectId, isStreaming, isFetching, onSendMessage 
     }))
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        // await mutateMessage.mutateAsync({
-        //     value: values.value,
-        //     aiModelId: selectedModel?.id,
-        //     projectId,
-        // })
         console.log(values.value); 
-        onSendMessage(values.value, selectedModel?.id ?? "")
+        sendMessage(values.value, selectedModel?.id ?? "")
         form.reset(); 
     }
 

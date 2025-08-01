@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Suspense, useState } from "react";
@@ -21,6 +21,8 @@ import { useClerk } from "@clerk/nextjs";
 import { type AiModel } from "@/generated/prisma";
 import { ModelDropdown } from "@/components/model-dropdown";
 import { AISuggestion, AISuggestions } from "@/components/ui/kibo-ui/ai/suggestion";
+import { useChat } from "@/hooks/use-chat";
+import { useMessageStore } from "@/stores/message-store";
 
 
 const formSchema = z.object({
@@ -32,11 +34,21 @@ const formSchema = z.object({
 
 
 export const ProjectForm = () => {
+    const [projectId, setProjectId] = useState("");
+    const [success, setSuccess] = useState(false);
+    const [userMessage, setUserMessage] = useState("");
+
     const router = useRouter();
     const clerk = useClerk();
 
     const trpc = useTRPC();
     const queryClient = useQueryClient();
+
+    const { sendMessage } = useChat(projectId || "");
+    const messageSentRef = useRef(false);
+
+
+
 
     const { data: aiModels } = useSuspenseQuery(trpc.ai.getMany.queryOptions());
     const [selectedModel, setSeletedModel] = useState<AiModel | null>(() => {
@@ -51,13 +63,25 @@ export const ProjectForm = () => {
         },
     });
 
+    useEffect(() => {
+        if (success && projectId && userMessage && selectedModel?.id && !messageSentRef.current) {
+            messageSentRef.current = true; // Prevent sending multiple times
+            console.log(projectId + "  " + userMessage + "  " + selectedModel?.id)
+            toast.info(projectId + "  " + userMessage + "  " + selectedModel?.id)
+            sendMessage(userMessage, selectedModel?.id);
+            router.push(`/projects/${projectId}`);
+        }
+    }, [success, projectId, userMessage, selectedModel?.id, router, sendMessage]);
+
     const mutateProject = useMutation(trpc.projects.create.mutationOptions({
         onSuccess: (data) => {
-            const { createdProject, createdAiMessage } = data;
+            form.reset(); 
             queryClient.invalidateQueries(
                 trpc.projects.getMany.queryOptions()
             );
-            router.push(`/projects/${createdProject.id}`)
+
+            setProjectId(data.id)
+            setSuccess(true);
 
             // TODO: add usage
             // queryClient.invalidateQueries(
@@ -76,10 +100,12 @@ export const ProjectForm = () => {
     }))
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        setUserMessage(values.value);
         await mutateProject.mutateAsync({
             value: values.value,
             aiModelId: selectedModel?.id,
         })
+
     }
 
     const onSelect = (value: string) => {

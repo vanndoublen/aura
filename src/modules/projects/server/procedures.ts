@@ -70,61 +70,9 @@ export const projectsRouter = createTRPCRouter({
         data: {
           name: projectTitleResponse.content,
           userId: ctx.auth.userId,
-          messages: {
-            create: {
-              content: input.value,
-              role: "USER",
-              type: "TEXT",
-            },
-          },
         },
       });
-      let createdAiMessage = null;
-
-      if (input.aiModelId) {
-        const aiModel = await prisma.aiModel.findUnique({
-          where: { id: input.aiModelId },
-        });
-
-        if (aiModel) {
-          const providerName = aiModel.provider as ProviderName;
-
-          const response = await AiService.createResponse(
-            input.value,
-            providerName,
-            aiModel.name
-          );
-
-          let inputTokens: number | undefined;
-          let outputTokens: number | undefined;
-          let totalTokens: number | undefined;
-
-          if (providerName === "OpenAI") {
-            // aiResponse is typed as OpenAiResponse
-            inputTokens = response.inputTokens;
-            outputTokens = response.outputTokens;
-            totalTokens = response.totalTokens;
-          } else {
-            // TODO: add more providers
-          }
-
-          createdAiMessage = await prisma.message.create({
-            data: {
-              content: response.content,
-              role: "ASSISTANT",
-              type: "TEXT",
-              projectId: createdProject.id,
-              aiModelId: input.aiModelId,
-              externalId: response.id,
-              inputTokens,
-              outputTokens,
-              totalTokens,
-            },
-          });
-        }
-      }
-
-      return { createdProject, createdAiMessage };
+      return createdProject; 
     }),
 
   stream: protectedProcedure
