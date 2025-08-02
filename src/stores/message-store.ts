@@ -10,6 +10,10 @@ interface StreamingData {
 }
 
 interface MessageStore {
+  globalProjectId: string | null;
+  globalUserMessage: string | null;
+  globalModelId: string | null;
+
   // State per project
   streams: Record<string, StreamingData>;
 
@@ -22,10 +26,14 @@ interface MessageStore {
   endStream: (projectId: string) => void;
   clearStream: (projectId: string) => void;
 
-  setPendingProjectMessage: (
-    message: string,
-    modelId: string | undefined
+  setGlobalMessage: (
+    projectId: string,
+    userMessage: string,
+    modelId: string
   ) => void;
+
+  clearGlobalMessage: () => void;
+
   clearPendingProjectMessage: () => void;
 
   // Selectors
@@ -34,6 +42,10 @@ interface MessageStore {
 
 export const useMessageStore = create<MessageStore>()(
   subscribeWithSelector((set, get) => ({
+    globalProjectId: null,
+    globalUserMessage: null,
+    globalModelId: null,
+
     streams: {},
     pendingProjectMessage: null,
     pendingProjectModelId: null,
@@ -86,11 +98,20 @@ export const useMessageStore = create<MessageStore>()(
         return { streams: rest };
       }),
 
-    setPendingProjectMessage: (message, modelId) =>
+    setGlobalMessage: (projectId, message, modelId) =>
       set({
-        pendingProjectMessage: message,
-        pendingProjectModelId: modelId || null,
+        globalProjectId: projectId,
+        globalUserMessage: message,
+        globalModelId: modelId,
       }),
+
+    clearGlobalMessage: () =>
+      set({
+        globalProjectId: null,
+        globalModelId: null,
+        globalUserMessage: null,
+      }),
+
     clearPendingProjectMessage: () =>
       set({
         pendingProjectMessage: null,

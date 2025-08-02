@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { toast } from "sonner";
-import { Suspense, useState } from "react";
+import { Suspense, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import TextareaAutoSize from "react-textarea-autosize";
@@ -17,11 +17,12 @@ import { useRouter } from "next/navigation";
 import { ModelDropdown } from "@/components/model-dropdown";
 import { AiModel } from "@/generated/prisma";
 import { useChat } from "@/hooks/use-chat";
+import { useMessageStore } from "@/stores/message-store";
 
 interface Props {
     projectId: string;
     isStreaming: boolean;
-    isFetching: boolean; 
+    isFetching: boolean;
     // onSendMessage: (messageText: string, modelId: string) => void;
 }
 
@@ -39,7 +40,10 @@ export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
     const trpc = useTRPC();
     const queryClient = useQueryClient();
 
-    const {sendMessage} = useChat(projectId); 
+    const setGlobalMessage = useCallback(useMessageStore((state) => state.setGlobalMessage), []);
+
+
+    // const {sendMessage} = useChat(projectId); 
 
     // const { data: usage } = useQuery(trpc.usage.status.queryOptions());
     const { data: aiModels } = useSuspenseQuery(trpc.ai.getMany.queryOptions());
@@ -75,9 +79,10 @@ export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
     }))
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log(values.value); 
-        sendMessage(values.value, selectedModel?.id ?? "")
-        form.reset(); 
+        console.log(values.value);
+        // sendMessage(values.value, selectedModel?.id ?? "")
+        setGlobalMessage(projectId, values.value, selectedModel?.id ?? ""); 
+        form.reset();
     }
 
 

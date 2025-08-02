@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Suspense, useState } from "react";
@@ -44,10 +44,10 @@ export const ProjectForm = () => {
     const trpc = useTRPC();
     const queryClient = useQueryClient();
 
-    const { sendMessage } = useChat(projectId || "");
+    // const { sendMessage } = useChat(projectId || "");
     const messageSentRef = useRef(false);
 
-
+    const setGlobalMessage = useCallback(useMessageStore((state) => state.setGlobalMessage), []);
 
 
     const { data: aiModels } = useSuspenseQuery(trpc.ai.getMany.queryOptions());
@@ -68,14 +68,14 @@ export const ProjectForm = () => {
             messageSentRef.current = true; // Prevent sending multiple times
             console.log(projectId + "  " + userMessage + "  " + selectedModel?.id)
             toast.info(projectId + "  " + userMessage + "  " + selectedModel?.id)
-            sendMessage(userMessage, selectedModel?.id);
+            setGlobalMessage(projectId, userMessage, selectedModel?.id);
             router.push(`/projects/${projectId}`);
         }
-    }, [success, projectId, userMessage, selectedModel?.id, router, sendMessage]);
+    }, [success, projectId, userMessage, selectedModel?.id, router, setGlobalMessage]);
 
     const mutateProject = useMutation(trpc.projects.create.mutationOptions({
         onSuccess: (data) => {
-            form.reset(); 
+            form.reset();
             queryClient.invalidateQueries(
                 trpc.projects.getMany.queryOptions()
             );

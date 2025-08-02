@@ -1,7 +1,7 @@
 import z from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import prisma from "@/lib/db";
-import { TRPCError } from "@trpc/server";
+import { tracked, TRPCError } from "@trpc/server";
 import { ProviderName } from "@/modules/ai/providers";
 import { AiService } from "@/modules/ai/service";
 import { observable } from "@trpc/server/observable";
@@ -127,7 +127,7 @@ export const messagesRouter = createTRPCRouter({
         aiModelId: z.string().optional(),
       })
     )
-    .query(async function* ({ input, ctx }) {
+    .subscription(async function* ({ input, ctx }) {
       const existingProject = await prisma.project.findUnique({
         where: {
           id: input.projectId,
@@ -154,6 +154,7 @@ export const messagesRouter = createTRPCRouter({
       });
 
       let assistantContent = "";
+      let chunkId = 0;
       let createdAssistantMessage: Message | null = null;
       if (input.aiModelId) {
         const aiModel = await prisma.aiModel.findUnique({
@@ -171,7 +172,8 @@ export const messagesRouter = createTRPCRouter({
             for await (const chunk of stream) {
               assistantContent += chunk;
               // TODO: maybe add token count
-              yield chunk;
+              // yield chunk;
+              yield tracked(`chunk_${chunkId++}`, assistantContent);
             }
             createdAssistantMessage = await prisma.message.create({
               data: {

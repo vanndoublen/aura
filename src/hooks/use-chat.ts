@@ -1,7 +1,10 @@
 import { useMessageStore } from "@/stores/message-store";
 import { useTRPC } from "@/trpc/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSubscription } from "@trpc/tanstack-react-query";
 import { useEffect, useRef, useState } from "react";
+import { useShallow } from 'zustand/react/shallow'
+
 
 export const useChat = (projectId: string) => {
   // ✅ Move all hooks INSIDE the hook function
@@ -14,21 +17,39 @@ export const useChat = (projectId: string) => {
   const [currentStreamContent, setCurrentStreamContent] = useState("");
   const [userMessage, setUserMessage] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
-  const queryParams = useRef({
+  const [isFetching, setIsFetching] = useState(false); 
+
+  const globalUserMessage = useMessageStore( useShallow((state) => state.globalUserMessage)); 
+  const globalModelId = useMessageStore( useShallow((state) => state.globalModelId)); 
+
+  const [queryParams, setQueryParams] = useState({
     projectId: projectId,
-    value: "",
-    aiModelId: "",
+    value: globalUserMessage ?? "",
+    aiModelId: globalModelId ?? "",
   });
 
-  const {
-    data: streamData,
-    refetch,
-    isFetching,
-    error,
-    isError,
-  } = useQuery(
-    trpc.messages.stream.queryOptions(queryParams.current, { enabled: false })
+  
+
+  const { data: streamData, error, status, reset } = useSubscription(
+    trpc.messages.stream.subscriptionOptions(
+      {
+        ...queryParams
+      },
+      {
+        enabled: false,
+        onData(data) {
+          setIsStreaming(true)
+          setCurrentStreamContent(prev => prev + data.data)
+        },
+        onError(error) {
+          setIsStreaming(false)
+          console.error(error); 
+        }
+      },
+    )
   );
+  setIsStreaming(status !== "idle")
+  setIsFetching(status === "pending")
 
   // useEffect(() => {
   //   if (isError && error) {
@@ -74,10 +95,10 @@ export const useChat = (projectId: string) => {
         aiModelId: modelId ?? "",
       };
 
-      queryParams.current = newParams;
-      
+      setQueryParams(newParams)
+
       await new Promise((resolve) => setTimeout(resolve, 0));
-      const result = await refetch();
+      const result = await reset();
       console.log("✅ Stream completed, result:", result);
     } catch (error) {
       console.error("❌ Streaming error:", error);

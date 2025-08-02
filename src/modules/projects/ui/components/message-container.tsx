@@ -7,6 +7,8 @@ import { MessageLoading } from "./message-loading";
 import { getQueryClient } from "@/trpc/server";
 import { useChat } from "@/hooks/use-chat";
 import { useMessageStore } from "@/stores/message-store";
+import { useShallow } from 'zustand/react/shallow'
+import { useSubscription } from "@trpc/tanstack-react-query";
 
 
 interface Props {
@@ -23,7 +25,69 @@ export const MessagesContainer = ({
     const bottomRef = useRef<HTMLDivElement>(null);
     const lastAssistantMessageIdRef = useRef<string | null>(null);
 
-    const streamData = useMessageStore(state => state.getStreamData(projectId));
+    const [currentStreamContent, setCurrentStreamContent] = useState("");
+    const [userMessage, setUserMessage] = useState("");
+    const [isStreaming, setIsStreaming] = useState(false);
+    const [isFetching, setIsFetching] = useState(false);
+
+    const globalUserMessage = useMessageStore(useShallow((state) => state.globalUserMessage));
+    const globalModelId = useMessageStore(useShallow((state) => state.globalModelId));
+
+    const [queryParams, setQueryParams] = useState({
+        projectId: projectId,
+        value: globalUserMessage ?? "",
+        aiModelId: globalModelId ?? "",
+    });
+
+
+    useEffect(() => {
+        setQueryParams({
+            projectId: projectId,
+            value: globalUserMessage ?? "",
+            aiModelId: globalModelId ?? "",
+        });
+        if (globalUserMessage) {
+            setUserMessage(globalUserMessage)
+        }
+    }, [projectId, globalUserMessage, globalModelId]);
+
+
+    console.log(queryParams);
+    const { data: streamData, error, status, reset } = useSubscription(
+        trpc.messages.stream.subscriptionOptions(
+            {
+                ...queryParams
+            },
+            {
+                enabled: !!queryParams.value && !!queryParams.aiModelId,
+                onData(data) {
+                    setIsStreaming(true)
+                    setCurrentStreamContent(prev => prev + data.data)
+                },
+                onError(error) {
+                    setIsStreaming(false)
+                    console.error(error);
+                }
+            },
+        )
+    );
+
+    useEffect(() => {
+        setIsStreaming(status !== "idle" && status !== "error");
+        setIsFetching(status === "pending" || status === "connecting");
+    }, [status]);
+
+    useEffect(() => {
+        if (!isStreaming) {
+            // Streaming just ended, refetch messages
+            queryClient.invalidateQueries(
+                trpc.messages.getMany.queryOptions({ projectId })
+            );
+        }
+    }, [isStreaming, projectId, queryClient]);
+
+
+    // const streamData = useMessageStore(state => state.getStreamData(projectId));
     const { data: messages } = useSuspenseQuery(trpc.messages.getMany.queryOptions({
         projectId: projectId,
     }));
@@ -40,8 +104,10 @@ export const MessagesContainer = ({
     }, [messages]);
 
     useEffect(() => {
+
         bottomRef.current?.scrollIntoView();
-    }, [messages.length, streamData?.userMessage, streamData?.streamContent])
+
+    }, [messages.length, globalUserMessage, currentStreamContent, streamData?.data])
 
     const lastMessage = messages[messages.length - 1];
     const isLastMessageUser = lastMessage?.role === "USER";
@@ -61,17 +127,17 @@ export const MessagesContainer = ({
                             type={message.type}
                         />
                     ))}
-                    {streamData?.isStreaming && streamData?.userMessage &&
+                    {isStreaming && userMessage &&
                         <MessageCard
-                            content={streamData?.userMessage}
+                            content={userMessage}
                             role="USER"
                             createdAt={new Date()}
                             type="TEXT"
                         />}
-                    {streamData?.isStreaming && !streamData.streamContent && <MessageLoading />}
-                    {streamData?.isStreaming && streamData.streamContent && (
+                    {isStreaming && !currentStreamContent && isFetching && userMessage && <MessageLoading />}
+                    {isStreaming && currentStreamContent && streamData && (
                         <MessageCard
-                            content={streamData.streamContent}
+                            content={streamData.data}
                             role="ASSISTANT"
                             createdAt={new Date()}
                             type="TEXT"
@@ -86,8 +152,8 @@ export const MessagesContainer = ({
                     <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-full max-w-3xl h-6 bg-gradient-to-b from-transparent to-background pointer-events-none" />
                     <MessageForm
                         projectId={projectId}
-                        isStreaming={streamData?.isStreaming ?? false}
-                        isFetching={streamData?.isStreaming ?? false}
+                        isStreaming={isStreaming ?? false}
+                        isFetching={isFetching ?? false}
 
                     />
                 </div>
