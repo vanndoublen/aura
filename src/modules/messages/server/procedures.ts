@@ -173,7 +173,7 @@ export const messagesRouter = createTRPCRouter({
               assistantContent += chunk;
               // TODO: maybe add token count
               // yield chunk;
-              yield tracked(`chunk_${chunkId++}`, assistantContent);
+              yield tracked(`chunk_${chunkId++}`, chunk);
             }
             createdAssistantMessage = await prisma.message.create({
               data: {

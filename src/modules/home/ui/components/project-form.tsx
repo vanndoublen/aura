@@ -66,10 +66,10 @@ export const ProjectForm = () => {
     useEffect(() => {
         if (success && projectId && userMessage && selectedModel?.id && !messageSentRef.current) {
             messageSentRef.current = true; // Prevent sending multiple times
-            console.log(projectId + "  " + userMessage + "  " + selectedModel?.id)
-            toast.info(projectId + "  " + userMessage + "  " + selectedModel?.id)
             setGlobalMessage(projectId, userMessage, selectedModel?.id);
-            router.push(`/projects/${projectId}`);
+            setTimeout(() => {
+                router.push(`/projects/${projectId}`);
+              }, 2000);
         }
     }, [success, projectId, userMessage, selectedModel?.id, router, setGlobalMessage]);
 
