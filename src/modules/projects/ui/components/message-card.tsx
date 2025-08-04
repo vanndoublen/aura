@@ -8,7 +8,6 @@ import { MessageRole, MessageType } from "@/generated/prisma";
 import { AIResponse } from "@/components/ui/kibo-ui/ai/response";
 
 
-
 interface UserMessageProps {
     content: string;
 }
@@ -28,12 +27,14 @@ interface AssistantMessageProps {
     content: string;
     createdAt: Date;
     type: MessageType;
+    isStreaming?: boolean; 
 }
 
 export const AssistantMessage = ({
     content,
     createdAt,
     type,
+    isStreaming,
 }: AssistantMessageProps) => {
     return (
         <div className={cn(
@@ -54,10 +55,10 @@ export const AssistantMessage = ({
                 </span>
             </div>
             <div className="pl-8.5 flex flex-col gap-y-4">
-                <AIResponse>{content}</AIResponse>
+                <AIResponse isStreaming={isStreaming}>
+                    {content}
+                </AIResponse>
             </div>
-
-
         </div>
     )
 }
@@ -68,6 +69,7 @@ interface Props {
     role: MessageRole;
     createdAt: Date;
     type: MessageType;
+    isStreaming?: boolean;
 }
 
 export const MessageCard = ({
@@ -75,6 +77,7 @@ export const MessageCard = ({
     role,
     createdAt,
     type,
+    isStreaming=false
 }: Props) => {
     if (role === "ASSISTANT") {
         return (
@@ -82,6 +85,7 @@ export const MessageCard = ({
                 content={content}
                 createdAt={createdAt}
                 type={type}
+                isStreaming={isStreaming}
             />
         )
     }

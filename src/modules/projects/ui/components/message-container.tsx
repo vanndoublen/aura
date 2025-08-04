@@ -9,6 +9,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { useSubscription } from "@trpc/tanstack-react-query";
 import { Message } from "@/generated/prisma";
 import { nanoid } from "nanoid";
+import { CircleDashed, TextCursor, TextCursorInput, TextCursorInputIcon } from "lucide-react";
 
 interface Props {
     projectId: string;
@@ -92,14 +93,14 @@ export const MessagesContainer = ({
                 enabled: !!queryParams.value && !!queryParams.aiModelId,
                 onData(data) {
                     setIsStreaming(true);
-                    
+
                     // Accumulate stream content in ref to avoid closure issues
                     streamContentRef.current += data.data;
-                    
+
                     setCombinedMessages(prev => {
                         const lastMessage = prev[prev.length - 1];
                         const isLastMessageAssistant = lastMessage?.role === "ASSISTANT";
-                        
+
                         if (!isLastMessageAssistant || !streamingMessageIdRef.current) {
                             // Create new assistant message
                             const newAssistantMessage: Message = {
@@ -116,12 +117,12 @@ export const MessagesContainer = ({
                                 outputTokens: 0,
                                 totalTokens: 0,
                             };
-                            
+
                             streamingMessageIdRef.current = newAssistantMessage.id;
                             return [...prev, newAssistantMessage];
                         } else {
                             // Update existing assistant message with accumulated content
-                            return prev.map(msg => 
+                            return prev.map(msg =>
                                 msg.id === streamingMessageIdRef.current
                                     ? {
                                         ...msg,
@@ -146,9 +147,9 @@ export const MessagesContainer = ({
     useEffect(() => {
         const isCurrentlyStreaming = isStreaming;
         const isCurrentlyFetching = status === "pending" || status === "connecting";
-        
+
         setIsFetching(isCurrentlyFetching);
-        
+
         // Only set streaming to false if status indicates it's not active
         if (status === "idle" || status === "error") {
             setIsStreaming(false);
@@ -171,6 +172,7 @@ export const MessagesContainer = ({
                             role={message.role}
                             createdAt={message.createdAt}
                             type={message.type}
+                            isStreaming={isStreaming}
                         />
                     ))}
                     {isFetching && !isStreaming && (
@@ -179,7 +181,7 @@ export const MessagesContainer = ({
                 </div>
                 <div ref={bottomRef} />
             </div>
-            
+
             <div className="absolute bottom-0 right-0 left-0 pointer-events-none">
                 <div className="max-w-2xl mx-auto pointer-events-auto">
                     <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-full max-w-3xl h-6 bg-gradient-to-b from-transparent to-background pointer-events-none" />
