@@ -12,6 +12,7 @@ import { MessagesContainer } from "../components/message-container";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarInset, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { string } from "zod";
+import { AppSidebar } from "../sidebars/app-sidebar";
 // import { ErrorBoundary } from "react-error-boundary";
 
 interface Props {
@@ -43,38 +44,23 @@ export const ProjectView = ({ projectId }: Props) => {
             <SidebarProvider
                 style={
                     {
-                        "--sidebar-width": "19rem",
+                        "--sidebar-width": "16rem",
                     } as React.CSSProperties
                 }
                 open={isOpen}
                 onOpenChange={setIsOpen}
             >
-                <Sidebar variant="floating">
-                    <SidebarContent>
-                        <SidebarGroup>
-                            <SidebarMenu className="gap-2">
-                                {projects ? (
-                                    <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
-                                        {projects.map((project) => (
-                                            <SidebarMenuSubItem key={project.id}>
-                                                <SidebarMenuSubButton asChild isActive={projectId === project.id}>
-                                                    <Link href={project.id}>
-                                                        {project.name}
-                                                    </Link>
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                        ))}
-                                    </SidebarMenuSub>
-                                ) : null}
-                            </SidebarMenu>
-                        </SidebarGroup>
-                    </SidebarContent>
 
-                </Sidebar>
+                <AppSidebar
+                    projects={projects}
+                    projectId={projectId}
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}  
+                />
 
 
                 <SidebarInset className="flex flex-col">
-                    <ProjectHeader isOpen={isOpen} setIsOpen={setIsOpen} />
+                    <ProjectHeader />
 
 
                     {/* <ErrorBoundary fallback={<p>Messages container error</p>}> */}

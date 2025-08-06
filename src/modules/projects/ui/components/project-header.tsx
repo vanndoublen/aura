@@ -6,27 +6,10 @@ import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { UserControl } from "@/components/user-control";
 
-interface Props {
-    isOpen: boolean;
-    setIsOpen: (open: boolean) => void;
-}
-
-export const ProjectHeader = ({ isOpen, setIsOpen }: Props) => {
+export const ProjectHeader = () => {
     return (
         <header className="flex h-16 shrink-0 items-center justify-between gap-2 px-4">
             <div className="flex items-center">
-                <Button
-                    size="sm"
-                    variant="ghost"
-                    className="border-none"
-                    onClick={() => setIsOpen(!isOpen)}
-                >
-                    <Sidebar />
-                </Button>
-                <Separator
-                    orientation="vertical"
-                    className="mr-2 data-[orientation=vertical]:h-4"
-                />
                 <Button
                     variant="ghost"
                     size="sm"
