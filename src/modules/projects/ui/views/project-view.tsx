@@ -13,6 +13,7 @@ import { Sidebar, SidebarContent, SidebarGroup, SidebarInset, SidebarMenu, Sideb
 import { Separator } from "@/components/ui/separator";
 import { string } from "zod";
 import { AppSidebar } from "../sidebars/app-sidebar";
+import { ThemeToggle } from "@/components/theme-toggle";
 // import { ErrorBoundary } from "react-error-boundary";
 
 interface Props {
@@ -60,9 +61,6 @@ export const ProjectView = ({ projectId }: Props) => {
 
 
                 <SidebarInset className="flex flex-col">
-                    <ProjectHeader />
-
-
                     {/* <ErrorBoundary fallback={<p>Messages container error</p>}> */}
                     <Suspense fallback={<p>loading messages. ... . </p>}>
                         <MessagesContainer

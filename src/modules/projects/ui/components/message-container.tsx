@@ -10,6 +10,7 @@ import { useSubscription } from "@trpc/tanstack-react-query";
 import { Message } from "@/generated/prisma";
 import { nanoid } from "nanoid";
 import { CircleDashed, TextCursor, TextCursorInput, TextCursorInputIcon } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface Props {
     projectId: string;
@@ -163,6 +164,9 @@ export const MessagesContainer = ({
 
     return (
         <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
+            <div className="fixed right-4 z-50">
+                <ThemeToggle />
+            </div>
             <div className="flex-1 pb-44">
                 <div className="max-w-2xl mx-auto pt-2 pr-1 pb-4">
                     {combinedMessages.map((message) => (
