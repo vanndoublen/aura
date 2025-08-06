@@ -17,7 +17,6 @@ import { SignedIn } from "@clerk/nextjs";
 const words = ["Generate your gadget with Aura"];
 
 export const HomeView = () => {
-    const [isOpenDialog, onIsOpenDialog] = useState(false);
 
     // TODO: might use suspense infinite query instead
     const trpc = useTRPC();
@@ -39,7 +38,7 @@ export const HomeView = () => {
 
 
     return (
-        <div className={cn("flex flex-col max-w-5xl mx-auto w-full transition-all duration-300", isOpenDialog && "blur-sm")}>
+        <div className={cn("flex flex-col max-w-5xl mx-auto w-full transition-all duration-300")}>
             <section className="space-y-6 py-[16vh] 2xl:py-48">
                 <div className="flex flex-col items-center">
                     <Image
@@ -78,7 +77,7 @@ export const HomeView = () => {
             
             <SignedIn>
                 <div className="mx-auto">
-                    <ProjectDialogButton projects={projects} onDialogOpen={onIsOpenDialog} />
+                    <ProjectDialogButton projects={projects} isHome/>
                 </div>
             </SignedIn>
         </div>

@@ -45,7 +45,7 @@ export const AppSidebar = ({ projects, projectId, isOpen, setIsOpen, ...props }:
                 </SidebarMenu>
             </SidebarHeader>
 
-            <NavMain />
+            <NavMain projects={projects} />
 
             <SidebarContent>
                 <NavProjects projects={projects} projectId={projectId} />

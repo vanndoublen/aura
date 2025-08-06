@@ -1,7 +1,13 @@
 import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
-import { EditIcon, SearchIcon } from "lucide-react"
+import { Project } from "@/generated/prisma"
+import { ProjectDialogButton } from "@/modules/home/ui/components/project-dialog-button"
+import { EditIcon } from "lucide-react"
 
-export const NavMain = () => {
+interface Props {
+    projects: Project[];
+}
+
+export const NavMain = ({ projects }: Props) => {
     return (
         <SidebarGroup>
             <SidebarMenu>
@@ -10,10 +16,9 @@ export const NavMain = () => {
                         <EditIcon />
                         <span>New Chat</span>
                     </SidebarMenuButton>
-                    <SidebarMenuButton>
-                        <SearchIcon />
-                        <span>Search</span>
-                    </SidebarMenuButton>
+
+                    <ProjectDialogButton projects={projects} />
+
                 </SidebarMenuItem>
             </SidebarMenu>
         </SidebarGroup>
