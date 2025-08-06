@@ -2,7 +2,7 @@ import { useUser, useClerk } from "@clerk/nextjs"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "./ui/sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from "lucide-react";
+import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, Loader, LogOut, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export const UserButton = () => {
@@ -47,7 +47,9 @@ export const UserButton = () => {
                             <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                                 <Avatar className="h-8 w-8 rounded-lg">
                                     <AvatarImage src={user?.imageUrl} alt={user?.username ?? ""} />
-                                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                                    <AvatarFallback className="rounded-lg">
+                                        <Loader className="animate-spin"/>
+                                    </AvatarFallback>
                                 </Avatar>
 
                                 <div className="grid flex-1 text-left text-sm leading-tight">

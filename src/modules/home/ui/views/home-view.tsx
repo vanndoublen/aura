@@ -12,11 +12,12 @@ import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import TextType from "@/blocks/TextAnimations/TextType/TextType";
 import { useCurrentTheme } from "@/hooks/use-current-theme";
 import { cn } from "@/lib/utils";
+import { SignedIn } from "@clerk/nextjs";
 
 const words = ["Generate your gadget with Aura"];
 
 export const HomeView = () => {
-    const [isOpenDialog, onIsOpenDialog] = useState(false); 
+    const [isOpenDialog, onIsOpenDialog] = useState(false);
 
     // TODO: might use suspense infinite query instead
     const trpc = useTRPC();
@@ -26,14 +27,14 @@ export const HomeView = () => {
     if (currectTheme === "dark") {
         currectTheme = "dark";
     } else {
-        currectTheme = "light"; 
+        currectTheme = "light";
     }
 
     const getTextColors = (theme: string) => {
         if (theme === "dark") {
-            return ["hsl(var(--foreground))"]; 
+            return ["hsl(var(--foreground))"];
         }
-        return ["hsl(var(--foreground))"]; 
+        return ["hsl(var(--foreground))"];
     };
 
 
@@ -74,10 +75,12 @@ export const HomeView = () => {
                     </Suspense>
                 </div>
             </section>
-
-            <div className="mx-auto">
-                <ProjectDialogButton projects={projects} onDialogOpen={onIsOpenDialog}/>
-            </div>
+            
+            <SignedIn>
+                <div className="mx-auto">
+                    <ProjectDialogButton projects={projects} onDialogOpen={onIsOpenDialog} />
+                </div>
+            </SignedIn>
         </div>
     )
 }

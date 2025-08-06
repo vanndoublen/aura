@@ -16,6 +16,7 @@ import { format } from "date-fns";
 import { Minimize, Minimize2Icon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { boolean } from "zod";
 
 interface Props {
     projects: Project[];
@@ -25,45 +26,38 @@ interface Props {
 export const ProjectDialogButton = ({ projects, onDialogOpen }: Props) => {
     const [isOpen, setIsOpen] = useState(false);
 
-    const onOpen = () => {
-        setIsOpen(true);
-        onDialogOpen(true);
-    }
+    const handleOpenChange = (open: boolean) => {
+        setIsOpen(open);
+        onDialogOpen(open);
 
-    const onClose = () => {
-        setIsOpen(false);
-        onDialogOpen(false);
     }
 
     return (
         <div>
-            <Button
-                className="bg-transparent hover:bg-accent text-[12px] h-10"
-                variant="elevated"
-                onClick={onOpen}
-            >
-                View projects
-            </Button>
 
+            <Dialog open={isOpen} onOpenChange={handleOpenChange}>
 
-            <Dialog open={isOpen} onOpenChange={onOpen}>
-                <DialogContent showCloseButton={false} className="!max-w-6xl !w-[90vw] !rounded-4xl">
+                    <Button
+                        className="bg-transparent hover:bg-accent text-[12px] h-10"
+                        variant="elevated"
+                        onClick={() => handleOpenChange(true)}
+                    >
+                        View projects
+                    </Button>
+                <DialogContent showCloseButton={false} className="!max-w-3xl !w-[70vw] !rounded-4xl">
                     <DialogHeader className="">
                         <DialogTitle>Projects</DialogTitle>
-                        {/* <DialogDescription>
-                            Select one of your past projects
-                        </DialogDescription> */}
                     </DialogHeader>
 
-                    <ScrollArea className="h-[560px] min-h-1xl w-full mx-auto border-t ">
-                        <div className="flex flex-col">
+                    <ScrollArea className="h-[400px] min-h-1xl w-full mx-auto border-t">
+                        <div className="flex flex-col max-w-3xl w-[50vw] ">
 
                             {projects.map((project) => (
                                 <Button
                                     asChild
                                     variant="ghost"
                                     key={project.id}
-                                    className="bg-transparent py-4 border-none h-10 flex text-start justify-between rounded-2xl"
+                                    className="bg-transparent py-4 border-none h-10 flex text-start justify-between max-w-3xl w-[50vw] rounded-2xl"
                                 >
                                     <Link href={`projects/${project.id}`} >
 
@@ -79,7 +73,7 @@ export const ProjectDialogButton = ({ projects, onDialogOpen }: Props) => {
                         <Button
                             size="icon"
                             // className="w-full bg-accent text-foreground font-semibold"
-                            onClick={onClose}
+                            onClick={() => handleOpenChange(false)}
                             variant="ghost"
                             className="border-none hover:bg-transparent"
                         >
