@@ -27,7 +27,6 @@ import rehypeRaw from 'rehype-raw';
 export type AIResponseProps = HTMLAttributes<HTMLDivElement> & {
   options?: Options;
   children: Options['children'];
-  isStreaming?: boolean;
 };
 
 const components: Options['components'] = {
@@ -61,16 +60,7 @@ const components: Options['components'] = {
       {children}
     </a>
   ),
-  span: ({ node, children, className, ...props }) => {
-    // More specific check for cursor
-    if (className === 'streaming-cursor') {
-      return (
-        <span className="inline-block w-3 h-3 bg-gray-700 dark:bg-gray-300 rounded-full ml-1 animate-pulse" />
-      );
-    }
 
-    return <span className={className} {...props}>{children}</span>;
-  },
   h1: ({ node, children, className, ...props }) => (
     <h1
       className={cn('mt-6 mb-2 font-semibold text-3xl', className)}
@@ -141,15 +131,15 @@ const components: Options['components'] = {
         data={data}
         defaultValue={data[0].language}
       >
-        <CodeBlockHeader>
-          <CodeBlockFiles>
+        <CodeBlockHeader className='!p-0'>
+          <CodeBlockFiles >
             {(item) => (
               <CodeBlockFilename key={item.language} value={item.language}>
                 {item.filename}
               </CodeBlockFilename>
             )}
           </CodeBlockFiles>
-          <CodeBlockSelect>
+          <CodeBlockSelect >
             <CodeBlockSelectTrigger>
               <CodeBlockSelectValue />
             </CodeBlockSelectTrigger>
@@ -168,8 +158,8 @@ const components: Options['components'] = {
         </CodeBlockHeader>
         <CodeBlockBody>
           {(item) => (
-            <CodeBlockItem key={item.language} value={item.language}>
-              <CodeBlockContent language={item.language as BundledLanguage}>
+            <CodeBlockItem key={item.language} value={item.language} >
+              <CodeBlockContent language={item.language as BundledLanguage} >
                 {item.code}
               </CodeBlockContent>
             </CodeBlockItem>
@@ -181,10 +171,7 @@ const components: Options['components'] = {
 };
 
 export const AIResponse = memo(
-  ({ className, options, children, isStreaming = false, ...props }: AIResponseProps) => {
-    const contentWithCursor = isStreaming
-      ? `${children}<span class="streaming-cursor"></span>`
-      : children;
+  ({ className, options, children, ...props }: AIResponseProps) => {
     return (
       <div
         className={cn(
@@ -196,15 +183,13 @@ export const AIResponse = memo(
         <ReactMarkdown
           components={components}
           remarkPlugins={[remarkGfm]}
-          rehypePlugins={[rehypeRaw]}
           {...options}
         >
-          {contentWithCursor}
+          {children}
         </ReactMarkdown>
       </div>
     )
   },
   (prevProps, nextProps) =>
-    prevProps.children === nextProps.children &&
-    prevProps.isStreaming === nextProps.isStreaming
+    prevProps.children === nextProps.children
 );

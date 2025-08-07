@@ -14,7 +14,7 @@ export const NavMain = ({ projects }: Props) => {
                 <SidebarMenuItem>
                     <SidebarMenuButton>
                         <EditIcon />
-                        <span>New Chat</span>
+                        <span className="text-xs">New chat</span>
                     </SidebarMenuButton>
 
                     <ProjectDialogButton projects={projects} />

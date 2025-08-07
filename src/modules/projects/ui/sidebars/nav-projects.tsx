@@ -18,7 +18,9 @@ export const NavProjects = ({projects, projectId} : Props) => {
                             <SidebarMenuSubItem key={project.id}>
                                 <SidebarMenuSubButton asChild isActive={projectId === project.id}>
                                     <Link href={project.id}>
-                                        {project.name}
+                                        <span className="text-xs">
+                                            {project.name}
+                                        </span>
                                     </Link>
                                 </SidebarMenuSubButton>
                             </SidebarMenuSubItem>

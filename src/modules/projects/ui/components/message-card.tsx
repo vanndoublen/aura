@@ -14,7 +14,7 @@ interface UserMessageProps {
 const UserMessage = ({ content }: UserMessageProps) => {
     return (
         <div className="flex justify-end pb-4 pr-2 pl-10">
-            <Card className="rounded-lg bg-muted p-3 shadow-none border-none max-w-[80%] break-words">
+            <Card className="rounded-lg bg-muted p-3 shadow-none border-none max-w-[80%] break-words text-sm">
                 {content}
             </Card>
         </div>
@@ -27,14 +27,12 @@ interface AssistantMessageProps {
     content: string;
     createdAt: Date;
     type: MessageType;
-    isStreaming?: boolean; 
 }
 
 export const AssistantMessage = ({
     content,
     createdAt,
     type,
-    isStreaming,
 }: AssistantMessageProps) => {
     return (
         <div className={cn(
@@ -55,7 +53,7 @@ export const AssistantMessage = ({
                 </span>
             </div>
             <div className="pl-8.5 flex flex-col gap-y-4">
-                <AIResponse isStreaming={isStreaming}>
+                <AIResponse className="text-sm">
                     {content}
                 </AIResponse>
             </div>
@@ -69,7 +67,6 @@ interface Props {
     role: MessageRole;
     createdAt: Date;
     type: MessageType;
-    isStreaming?: boolean;
 }
 
 export const MessageCard = ({
@@ -77,7 +74,6 @@ export const MessageCard = ({
     role,
     createdAt,
     type,
-    isStreaming=false
 }: Props) => {
     if (role === "ASSISTANT") {
         return (
@@ -85,7 +81,6 @@ export const MessageCard = ({
                 content={content}
                 createdAt={createdAt}
                 type={type}
-                isStreaming={isStreaming}
             />
         )
     }

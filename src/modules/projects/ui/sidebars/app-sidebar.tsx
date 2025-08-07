@@ -30,10 +30,6 @@ interface Props extends React.ComponentProps<typeof Sidebar> {
 export const AppSidebar = ({ projects, projectId, ...props }: Props) => {
   const { open, toggleSidebar } = useSidebar();
 
-  useEffect(() => {
-    console.log("sidebar :::: " , open);
-  }, [open])
-
   return (
     <>
       <Sidebar collapsible="icon" {...props}>
@@ -44,11 +40,11 @@ export const AppSidebar = ({ projects, projectId, ...props }: Props) => {
                 <SidebarMenuButton
                   asChild
                   className={cn(
-                    "border-none bg-transparent w-auto hover:bg-transparent font-bold",
+                    "border-none bg-transparent w-auto hover:bg-none font-bold text-base bg-none",
                     !open && "md:hidden"
                   )}
                 >
-                  <Link href="/">Aura</Link>
+                  <Link href="/" className="bg-none hover:bg-none">Aura</Link>
                 </SidebarMenuButton>
                 <SidebarMenuButton
                   size="sm"
@@ -71,11 +67,11 @@ export const AppSidebar = ({ projects, projectId, ...props }: Props) => {
 
         <NavMain projects={projects} />
 
-        <SidebarContent>
+        <SidebarContent >
           <NavProjects projects={projects} projectId={projectId} />
         </SidebarContent>
 
-        <SidebarFooter>
+        <SidebarFooter className="border-t border-dashed">
           <NavUser />
         </SidebarFooter>
         <SidebarRail />

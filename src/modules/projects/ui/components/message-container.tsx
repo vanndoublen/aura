@@ -9,93 +9,50 @@ import { useShallow } from 'zustand/react/shallow'
 import { useSubscription } from "@trpc/tanstack-react-query";
 import { Message } from "@/generated/prisma";
 import { nanoid } from "nanoid";
-import { CircleDashed, TextCursor, TextCursorInput, TextCursorInputIcon } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 interface Props {
     projectId: string;
 }
 
-export const MessagesContainer = ({
-    projectId,
-}: Props) => {
+export const MessagesContainer = ({ projectId }: Props) => {
     const trpc = useTRPC();
     const queryClient = useQueryClient();
     const bottomRef = useRef<HTMLDivElement>(null);
-    const processedMessageRef = useRef<string | null>(null);
     const streamingMessageIdRef = useRef<string | null>(null);
     const streamContentRef = useRef("");
+    const currentProjectRef = useRef(projectId);
 
     const [isStreaming, setIsStreaming] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
     const [combinedMessages, setCombinedMessages] = useState<Message[]>([]);
+    const [queryParams, setQueryParams] = useState({
+        projectId: projectId,
+        value: "",
+        aiModelId: "",
+    });
 
     const globalUserMessage = useMessageStore(useShallow((state) => state.globalUserMessage));
     const globalModelId = useMessageStore(useShallow((state) => state.globalModelId));
+    const globalProjectId = useMessageStore(useShallow((state) => state.globalProjectId));
+    const clearGlobalMessage = useMessageStore(useShallow((state) => state.clearGlobalMessage));
 
-    const [queryParams, setQueryParams] = useState({
-        projectId: projectId,
-        value: globalUserMessage ?? "",
-        aiModelId: globalModelId ?? "",
-    });
-
-    // Load initial messages
     const { data: messages } = useSuspenseQuery(trpc.messages.getMany.queryOptions({
         projectId: projectId,
     }));
-
-    // Initialize combined messages with database messages
-    useEffect(() => {
-        setCombinedMessages(messages);
-    }, [messages]);
-
-    // Update query params when global state changes
-    useEffect(() => {
-        if (globalUserMessage && globalUserMessage !== processedMessageRef.current) {
-            processedMessageRef.current = globalUserMessage;
-            setQueryParams({
-                projectId: projectId,
-                value: globalUserMessage,
-                aiModelId: globalModelId ?? "",
-            });
-        }
-    }, [projectId, globalUserMessage, globalModelId]);
-
-    // Add user message when query params change
-    useEffect(() => {
-        if (queryParams.value && queryParams.value !== "") {
-            const userMessage: Message = {
-                id: nanoid(),
-                projectId: projectId,
-                externalId: "",
-                content: queryParams.value,
-                role: "USER",
-                type: "TEXT",
-                aiModelId: "",
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                inputTokens: 0,
-                outputTokens: 0,
-                totalTokens: 0,
-            };
-
-            setCombinedMessages(prev => [...prev, userMessage]);
-
-            // reinitialize for new message
-            streamContentRef.current = ""; // Reset stream content
-            streamingMessageIdRef.current = null; // Reset streaming message ID
-        }
-    }, [queryParams.value, projectId]);
 
     const { data: streamData, error, status, reset } = useSubscription(
         trpc.messages.stream.subscriptionOptions(
             queryParams,
             {
-                enabled: !!queryParams.value && !!queryParams.aiModelId,
+                enabled: Boolean(
+                    queryParams.value &&
+                    queryParams.value.trim() !== "" &&
+                    queryParams.aiModelId &&
+                    queryParams.projectId === projectId
+                ),
                 onData(data) {
                     setIsStreaming(true);
-
-                    // Accumulate stream content in ref to avoid closure issues
                     streamContentRef.current += data.data;
 
                     setCombinedMessages(prev => {
@@ -103,7 +60,6 @@ export const MessagesContainer = ({
                         const isLastMessageAssistant = lastMessage?.role === "ASSISTANT";
 
                         if (!isLastMessageAssistant || !streamingMessageIdRef.current) {
-                            // Create new assistant message
                             const newAssistantMessage: Message = {
                                 id: nanoid(),
                                 projectId: projectId,
@@ -122,7 +78,6 @@ export const MessagesContainer = ({
                             streamingMessageIdRef.current = newAssistantMessage.id;
                             return [...prev, newAssistantMessage];
                         } else {
-                            // Update existing assistant message with accumulated content
                             return prev.map(msg =>
                                 msg.id === streamingMessageIdRef.current
                                     ? {
@@ -144,20 +99,73 @@ export const MessagesContainer = ({
         )
     );
 
-    // Update streaming and fetching states
     useEffect(() => {
-        const isCurrentlyStreaming = isStreaming;
-        const isCurrentlyFetching = status === "pending" || status === "connecting";
+        setCombinedMessages(messages);
+    }, [messages]);
 
+    useEffect(() => {
+        if (currentProjectRef.current !== projectId) {
+            clearGlobalMessage();
+            
+            setQueryParams({
+                projectId: projectId,
+                value: "",
+                aiModelId: "",
+            });
+            
+            setIsStreaming(false);
+            streamContentRef.current = "";
+            streamingMessageIdRef.current = null;
+            reset();
+            
+            currentProjectRef.current = projectId;
+        }
+    }, [projectId, clearGlobalMessage, reset]);
+
+    useEffect(() => {
+        if (globalUserMessage && globalProjectId === projectId) {
+            setQueryParams({
+                projectId: projectId,
+                value: globalUserMessage,
+                aiModelId: globalModelId ?? "",
+            });
+        }
+    }, [globalUserMessage, globalModelId, globalProjectId, projectId]);
+
+    useEffect(() => {
+        if (queryParams.value && queryParams.value.trim() !== "" && queryParams.projectId === projectId) {
+            const userMessage: Message = {
+                id: nanoid(),
+                projectId: projectId,
+                externalId: "",
+                content: queryParams.value.trim(),
+                role: "USER",
+                type: "TEXT",
+                aiModelId: "",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                inputTokens: 0,
+                outputTokens: 0,
+                totalTokens: 0,
+            };
+
+            setCombinedMessages(prev => [...prev, userMessage]);
+            streamContentRef.current = "";
+            streamingMessageIdRef.current = null;
+            
+            clearGlobalMessage();
+        }
+    }, [queryParams.value, queryParams.projectId, projectId, clearGlobalMessage]);
+
+    useEffect(() => {
+        const isCurrentlyFetching = status === "pending" || status === "connecting";
         setIsFetching(isCurrentlyFetching);
 
-        // Only set streaming to false if status indicates it's not active
         if (status === "idle" || status === "error") {
             setIsStreaming(false);
         }
-    }, [status, isStreaming]);
+    }, [status]);
 
-    // Auto-scroll to bottom
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [combinedMessages.length, combinedMessages[combinedMessages.length - 1]?.content]);
@@ -176,7 +184,6 @@ export const MessagesContainer = ({
                             role={message.role}
                             createdAt={message.createdAt}
                             type={message.type}
-                            isStreaming={isStreaming}
                         />
                     ))}
                     {isFetching && !isStreaming && (

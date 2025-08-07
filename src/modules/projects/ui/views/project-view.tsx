@@ -47,7 +47,7 @@ export const ProjectView = ({ projectId }: Props) => {
         <AppSidebar projects={projects} projectId={projectId} />
 
         <SidebarInset className="flex flex-col">
-          <SidebarTrigger className="md:hidden border-none fixed top-4 left-4" />
+          <SidebarTrigger className="md:hidden border-none fixed top-2 left-4" />
           <Suspense fallback={<p>loading messages. ... . </p>}>
             <MessagesContainer projectId={projectId} />
           </Suspense>

@@ -12,7 +12,7 @@ import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import TextType from "@/blocks/TextAnimations/TextType/TextType";
 import { useCurrentTheme } from "@/hooks/use-current-theme";
 import { cn } from "@/lib/utils";
-import { SignedIn } from "@clerk/nextjs";
+import { SignedIn, useUser } from "@clerk/nextjs";
 
 const words = ["Generate your gadget with Aura"];
 
@@ -21,6 +21,8 @@ export const HomeView = () => {
     // TODO: might use suspense infinite query instead
     const trpc = useTRPC();
     const { data: projects } = useSuspenseQuery(trpc.projects.getMany.queryOptions());
+
+    const { isSignedIn } = useUser();
 
     let currectTheme = useCurrentTheme();
     if (currectTheme === "dark") {
@@ -49,7 +51,7 @@ export const HomeView = () => {
                         className="hidden md:block"
                     />
                 </div>
-                <h1 className="text-2xl md:text-5xl font-bold text-center ">
+                <h1 className="text-2xl md:text-5xl font-bold text-center font-libre">
 
                     <TextType
                         text={words}
@@ -62,7 +64,7 @@ export const HomeView = () => {
 
                 </h1>
 
-                <TextLoop className='text-lg md:text-xl text-muted-foreground text-center max-w-5xl w-full mx-auto'>
+                <TextLoop className='text-base md:text-xl text-muted-foreground text-center max-w-5xl w-full mx-auto'>
                     <span>How can I assist you today?</span>
                     <span>What is octave in music</span>
                     <span>How to study linear algebra</span>
@@ -74,11 +76,13 @@ export const HomeView = () => {
                     </Suspense>
                 </div>
             </section>
-            
+
             <SignedIn>
-                <div className="mx-auto">
-                    <ProjectDialogButton projects={projects} isHome/>
-                </div>
+                {isSignedIn &&
+                    <div className="mx-auto">
+                        <ProjectDialogButton projects={projects} isHome />
+                    </div>
+                }
             </SignedIn>
         </div>
     )
