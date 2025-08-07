@@ -164,11 +164,11 @@ export const MessagesContainer = ({
 
     return (
         <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
-            <div className="fixed right-4 z-50">
+            <div className="fixed right-4 top-2 z-50">
                 <ThemeToggle />
             </div>
-            <div className="flex-1 pb-44">
-                <div className="max-w-2xl mx-auto pt-2 pr-1 pb-4">
+            <div className="flex-1 pb-44 pt-12">
+                <div className="max-w-2xl mx-auto pt-2 pb-4">
                     {combinedMessages.map((message) => (
                         <MessageCard
                             key={message.id}
