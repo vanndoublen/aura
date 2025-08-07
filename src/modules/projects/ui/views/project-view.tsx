@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { MessagesContainer } from "../components/message-container";
@@ -11,12 +11,14 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { ProjectSearchDialog } from "@/components/project-search-dialog";
 
 interface Props {
   projectId: string;
 }
 
 export const ProjectView = ({ projectId }: Props) => {
+  const [isSearchOpen, setIsSearchOpen ] = useState(false); 
   const { isLoaded, isSignedIn, userId } = useAuth();
   const { has } = useAuth();
   const hasProAccess = has?.({ plan: "pro" });
@@ -42,9 +44,9 @@ export const ProjectView = ({ projectId }: Props) => {
             "--sidebar-width": "16rem",
           } as React.CSSProperties
         }
-        defaultOpen={true} 
+        defaultOpen={true}
       >
-        <AppSidebar projects={projects} projectId={projectId} />
+        <AppSidebar projects={projects} projectId={projectId} isSearchOpen={isSearchOpen} setIsSearchOpen={setIsSearchOpen}/>
 
         <SidebarInset className="flex flex-col">
           <SidebarTrigger className="md:hidden border-none fixed top-2 left-4" />
@@ -52,6 +54,9 @@ export const ProjectView = ({ projectId }: Props) => {
             <MessagesContainer projectId={projectId} />
           </Suspense>
         </SidebarInset>
+        
+        <ProjectSearchDialog projects={projects} isHome isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} />
+
       </SidebarProvider>
     </div>
   );

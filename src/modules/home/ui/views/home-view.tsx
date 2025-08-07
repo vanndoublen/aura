@@ -13,10 +13,14 @@ import TextType from "@/blocks/TextAnimations/TextType/TextType";
 import { useCurrentTheme } from "@/hooks/use-current-theme";
 import { cn } from "@/lib/utils";
 import { SignedIn, useUser } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
+import { ProjectSearchDialog } from "@/components/project-search-dialog";
 
 const words = ["Generate your gadget with Aura"];
 
 export const HomeView = () => {
+  const [isOpen, setIsOpen] = useState(false)
+
 
     // TODO: might use suspense infinite query instead
     const trpc = useTRPC();
@@ -80,9 +84,17 @@ export const HomeView = () => {
             <SignedIn>
                 {isSignedIn &&
                     <div className="mx-auto">
-                        <ProjectDialogButton projects={projects} isHome />
+                        {/* <ProjectDialogButton projects={projects} isHome /> */}
+                        <Button
+                            className="bg-transparent hover:bg-accent text-[12px] h-10"
+                            variant="elevated"
+                            onClick={() => setIsOpen(true)}
+                        >
+                            View projects
+                        </Button>
                     </div>
                 }
+                <ProjectSearchDialog projects={projects} isHome isOpen={isOpen} setIsOpen={setIsOpen}/>
             </SignedIn>
         </div>
     )

@@ -25,9 +25,11 @@ import { Suspense, useEffect } from "react";
 interface Props extends React.ComponentProps<typeof Sidebar> {
   projects: Project[];
   projectId: string;
+  isSearchOpen: boolean; 
+  setIsSearchOpen: (open: boolean) => void; 
 }
 
-export const AppSidebar = ({ projects, projectId, ...props }: Props) => {
+export const AppSidebar = ({ projects, projectId, isSearchOpen, setIsSearchOpen, ...props }: Props) => {
   const { open, toggleSidebar } = useSidebar();
 
   return (
@@ -65,7 +67,7 @@ export const AppSidebar = ({ projects, projectId, ...props }: Props) => {
           </SidebarMenu>
         </SidebarHeader>
 
-        <NavMain projects={projects} />
+        <NavMain projects={projects} isSearchOpen={isSearchOpen} setIsSearchOpen={setIsSearchOpen}/>
 
         <SidebarContent >
           <NavProjects projects={projects} projectId={projectId} />
