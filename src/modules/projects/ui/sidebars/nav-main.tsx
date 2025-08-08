@@ -5,26 +5,25 @@ import { EditIcon, SearchIcon } from "lucide-react"
 import { useState } from "react";
 
 interface Props {
-    projects: Project[];
     isSearchOpen: boolean;
     setIsSearchOpen: (open: boolean) => void;
 }
 
-export const NavMain = ({ projects, isSearchOpen, setIsSearchOpen }: Props) => {
+export const NavMain = ({ isSearchOpen, setIsSearchOpen }: Props) => {
     return (
         <SidebarGroup>
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton>
                         <EditIcon />
-                        <span className="text-xs">New chat</span>
+                        <span className="text-sm">New chat</span>
                     </SidebarMenuButton>
 
                     <SidebarMenuButton
                         onClick={() => setIsSearchOpen(true)}
                     >
                         <SearchIcon />
-                        <span>Search</span>
+                        <span className="text-sm">Search</span>
                     </SidebarMenuButton>
 
                 </SidebarMenuItem>

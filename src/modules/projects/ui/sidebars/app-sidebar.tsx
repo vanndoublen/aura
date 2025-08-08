@@ -42,11 +42,11 @@ export const AppSidebar = ({ projects, projectId, isSearchOpen, setIsSearchOpen,
                 <SidebarMenuButton
                   asChild
                   className={cn(
-                    "border-none bg-transparent w-auto hover:bg-none font-bold text-base bg-none",
+                    "border-none bg-transparent w-auto active:bg-transparent hover:bg-transparent hover:text-foreground focus-visible:border-transparent focus-visible:outline-none font-bold text-base bg-none",
                     !open && "md:hidden"
                   )}
                 >
-                  <Link href="/" className="bg-none hover:bg-none">Aura</Link>
+                  <Link href="/" className="bg-none font-libre">Aura</Link>
                 </SidebarMenuButton>
                 <SidebarMenuButton
                   size="sm"
@@ -67,7 +67,7 @@ export const AppSidebar = ({ projects, projectId, isSearchOpen, setIsSearchOpen,
           </SidebarMenu>
         </SidebarHeader>
 
-        <NavMain projects={projects} isSearchOpen={isSearchOpen} setIsSearchOpen={setIsSearchOpen}/>
+        <NavMain isSearchOpen={isSearchOpen} setIsSearchOpen={setIsSearchOpen}/>
 
         <SidebarContent >
           <NavProjects projects={projects} projectId={projectId} />

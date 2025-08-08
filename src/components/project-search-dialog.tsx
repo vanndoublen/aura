@@ -57,12 +57,12 @@ export const ProjectSearchDialog = ({ projects, isHome, isOpen, setIsOpen }: Pro
 
         <CommandDialog showCloseButton={false} open={isOpen} onOpenChange={setIsOpen} className="shadow-none">
             <div className="flex py-1 border-b items-center">
-                <Search className="ml-4"/>
+                <Search className="ml-4 size-5"/>
                 <Input
                     placeholder="Search..."
                     onChange={(e) => handleSearchChange(e.target.value)}
                     value={searchValue}
-                    className="mx-1.5 shadow-none !bg-transparent border-none focus-visible:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
+                    className="!text-sm mx-1.5 shadow-none !bg-transparent border-none focus-visible:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
                 />
 
             </div>
@@ -73,14 +73,15 @@ export const ProjectSearchDialog = ({ projects, isHome, isOpen, setIsOpen }: Pro
                         <Button
                             asChild
                             variant="ghost"
+                            size="sm"
                             key={project.id}
-                            className="w-full border-none"
+                            className="w-full border-none h-8"
                         >
                             <Link href={isHome ? `projects/${project.id}` : `${project.id}`}>
 
                                 <div className="flex items-center justify-between w-full">
-                                    <span className="truncate pr-1">{project.name}</span>
-                                    <span className="text-sm pl-1 hidden sm:block">
+                                    <span className="truncate text-xs pr-1">{project.name}</span>
+                                    <span className="text-xs pl-1 hidden sm:block">
                                         {format(project.updatedAt, "MMM dd, yyyy")}
                                     </span>
                                 </div>
