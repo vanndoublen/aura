@@ -101,6 +101,7 @@ export const MessagesContainer = ({ projectId }: Props) => {
 
     useEffect(() => {
         setCombinedMessages(messages);
+        console.log(messages); 
     }, [messages]);
 
     useEffect(() => {

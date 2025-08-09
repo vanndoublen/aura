@@ -12,6 +12,15 @@ const modelData: Prisma.AiModelCreateInput[] = [
     temperature: 0.7,
     isActive: true,
   },
+  {
+    name: "gemini-2.5-flash",
+    provider: "Gemini",
+    displayName: "Gemini 2.5 flash", 
+    description: "Adaptive thinking, cost efficiency",
+    maxTokens: 4096,
+    temperature: 0.7,
+    isActive: true,
+  },
 ];
 
 export async function main() {

@@ -108,7 +108,7 @@ export const useMessageStore = create<MessageStore>()(
     clearGlobalMessage: () =>
       set({
         globalProjectId: null,
-        globalModelId: null,
+        // globalModelId: null,
         globalUserMessage: null,
       }),
 

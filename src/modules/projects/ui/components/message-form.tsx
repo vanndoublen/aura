@@ -41,13 +41,18 @@ export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
     const queryClient = useQueryClient();
 
     const setGlobalMessage = useCallback(useMessageStore((state) => state.setGlobalMessage), []);
+    const globalModelId = useMessageStore(state => state.globalModelId);
 
 
     // const {sendMessage} = useChat(projectId); 
 
     // const { data: usage } = useQuery(trpc.usage.status.queryOptions());
     const { data: aiModels } = useSuspenseQuery(trpc.ai.getMany.queryOptions());
-    const [selectedModel, setSeletedModel] = useState<AiModel | null>(() => {
+    const [selectedModel, setSelectedModel] = useState<AiModel | null>(() => {
+        if (globalModelId) {
+            const model = (aiModels.find(model => model.id === globalModelId)) ;
+            return model || null;  
+        }
         const defaultModel = aiModels.find(model => model.name === "gpt-4.1");
         return defaultModel || aiModels[0] || null;
     })
@@ -141,7 +146,7 @@ export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
                     </div>
                     <div className="flex items-center gap-x-4">
                         <Suspense fallback={<p>Loading models ... </p>}>
-                            <ModelDropdown aiModels={aiModels} selectedModel={selectedModel} setSelectedModel={setSeletedModel} />
+                            <ModelDropdown aiModels={aiModels} selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
                         </Suspense>
                         <Button
                             disabled={isButtonDisabled}
