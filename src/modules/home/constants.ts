@@ -7,20 +7,20 @@ export const PROJECT_TEMPLATES = [
   },
   {
     emoji: "",
-    title: "Calculus",
+    title: "Code",
     prompt:
-      "what is calculus in short",
+      "Write a short tsx code.",
   },
   {
     emoji: "",
-    title: "Personalized Chinese Quizzes",
+    title: "Math equations",
     prompt:
-      "Develop the quiz page: simulate generation of 5-10 question quizzes tailored to proficiency/interests (mock data), display questions (MCQ/Fill-in-Blank), provide immediate feedback and a score.",
+      "Write top 5 math equations",
   },
   {
     emoji: "",
-    title: "User Onboarding & Profile",
+    title: "Computer Science",
     prompt:
-      "Implement user onboarding with account creation, cultural preference profiling (mock Qloo), and a Chinese proficiency assessment test. Add a profile page to track progress.",
+      "What are top 5 universities for computer science.",
   },
 ] as const;
