@@ -30,6 +30,11 @@ export type AIResponseProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const components: Options['components'] = {
+  p: ({ node, children, className, ...props }) => (
+    <p className={cn('mb-4 leading-relaxed', className)} {...props}>
+      {children}
+    </p>
+  ),
   ol: ({ node, children, className, ...props }) => (
     <ol className={cn('ml-4 list-outside list-decimal', className)} {...props}>
       {children}
@@ -101,27 +106,49 @@ const components: Options['components'] = {
     </h6>
   ),
   pre: ({ node, className, children }) => {
-    let language = 'javascript';
+    let language = 'text';
 
-    if (typeof node?.properties?.className === 'string') {
-      language = node.properties.className.replace('language-', '');
+    // Try to detect language from <code> className
+    const codeNode = node?.children?.[0];
+    if (codeNode?.type === 'element' && codeNode.tagName === 'code') {
+      const classNames = codeNode.properties?.className;
+      if (Array.isArray(classNames)) {
+        const langClass = classNames.find(
+          (cls) => typeof cls === 'string' && cls.startsWith('language-')
+        );
+        if (langClass) {
+          language = langClass.toString().replace('language-', '');
+        }
+      }
     }
 
+    // Check if children is actually a <code> element
     const childrenIsCode =
       typeof children === 'object' &&
       children !== null &&
       'type' in children &&
       children.type === 'code';
 
+    // If it's not a <code> element yet (streaming incomplete), render plain <pre>
     if (!childrenIsCode) {
-      return <pre>{children}</pre>;
+      return <pre className={className}>{children}</pre>;
     }
 
+    // Safely extract code string (fallback to empty string)
+    const codeString =
+      (children as any)?.props?.children?.toString?.() ?? '';
+
+    // If code is still empty (streaming), render plain <pre>
+    if (!codeString.trim()) {
+      return <pre className={className}>{children}</pre>;
+    }
+
+    // Prepare data for CodeBlock
     const data: CodeBlockProps['data'] = [
       {
         language,
-        filename: 'index.js',
-        code: (children.props as { children: string }).children,
+        filename: `code.${language}`,
+        code: codeString,
       },
     ];
 
@@ -131,35 +158,30 @@ const components: Options['components'] = {
         data={data}
         defaultValue={data[0].language}
       >
-        <CodeBlockHeader className='!p-0'>
-          <CodeBlockFiles >
+        <CodeBlockHeader>
+          <CodeBlockFiles>
             {(item) => (
               <CodeBlockFilename key={item.language} value={item.language}>
                 {item.filename}
               </CodeBlockFilename>
             )}
           </CodeBlockFiles>
-          <CodeBlockSelect >
-            <CodeBlockSelectTrigger>
-              <CodeBlockSelectValue />
-            </CodeBlockSelectTrigger>
-            <CodeBlockSelectContent>
-              {(item) => (
-                <CodeBlockSelectItem key={item.language} value={item.language}>
-                  {item.language}
-                </CodeBlockSelectItem>
-              )}
-            </CodeBlockSelectContent>
-          </CodeBlockSelect>
           <CodeBlockCopyButton
+            className="border-none"
             onCopy={() => console.log('Copied code to clipboard')}
             onError={() => console.error('Failed to copy code to clipboard')}
           />
         </CodeBlockHeader>
         <CodeBlockBody>
           {(item) => (
-            <CodeBlockItem key={item.language} value={item.language} >
-              <CodeBlockContent language={item.language as BundledLanguage} >
+            <CodeBlockItem key={item.language} value={item.language}>
+              <CodeBlockContent
+                language={item.language as BundledLanguage}
+                themes={{
+                  light: 'slack-ochin',
+                  dark: 'gruvbox-dark-medium',
+                }}
+              >
                 {item.code}
               </CodeBlockContent>
             </CodeBlockItem>
@@ -167,7 +189,7 @@ const components: Options['components'] = {
         </CodeBlockBody>
       </CodeBlock>
     );
-  },
+  }
 };
 
 export const AIResponse = memo(

@@ -32,6 +32,7 @@ async function* streamOpenAiResponse(model: string, message: string) {
     model,
     input: message,
     stream: true,
+    reasoning: model === "gpt-5" ? {effort: "low"} : {}
   });
 
   for await (const event of events) {

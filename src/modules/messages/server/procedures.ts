@@ -183,7 +183,19 @@ export const messagesRouter = createTRPCRouter({
                 projectId: input.projectId,
               },
             });
+
+            // update the project time 
+            await prisma.project.update({
+              where: {
+                id: input.projectId,
+              },
+              data: {
+                updatedAt: new Date(),
+              }
+            })
+
           } catch (error) {
+            console.log(error)
             if (assistantContent) {
               createdAssistantMessage = await prisma.message.create({
                 data: {

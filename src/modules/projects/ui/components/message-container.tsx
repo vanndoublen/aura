@@ -10,6 +10,7 @@ import { useSubscription } from "@trpc/tanstack-react-query";
 import { Message } from "@/generated/prisma";
 import { nanoid } from "nanoid";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { stat } from "fs";
 
 interface Props {
     projectId: string;
@@ -94,31 +95,36 @@ export const MessagesContainer = ({ projectId }: Props) => {
                     setIsStreaming(false);
                     streamingMessageIdRef.current = null;
                     console.error(error);
-                }
+                },
+                onConnectionStateChange(state) {
+                    setTimeout(() => {
+                        queryClient.invalidateQueries(trpc.projects.getMany.queryOptions());
+                    }, 100);
+                },
             },
         )
     );
 
     useEffect(() => {
         setCombinedMessages(messages);
-        console.log(messages); 
+        console.log(messages);
     }, [messages]);
 
     useEffect(() => {
         if (currentProjectRef.current !== projectId) {
             clearGlobalMessage();
-            
+
             setQueryParams({
                 projectId: projectId,
                 value: "",
                 aiModelId: "",
             });
-            
+
             setIsStreaming(false);
             streamContentRef.current = "";
             streamingMessageIdRef.current = null;
             reset();
-            
+
             currentProjectRef.current = projectId;
         }
     }, [projectId, clearGlobalMessage, reset]);
@@ -153,7 +159,7 @@ export const MessagesContainer = ({ projectId }: Props) => {
             setCombinedMessages(prev => [...prev, userMessage]);
             streamContentRef.current = "";
             streamingMessageIdRef.current = null;
-            
+
             clearGlobalMessage();
         }
     }, [queryParams.value, queryParams.projectId, projectId, clearGlobalMessage]);
@@ -177,7 +183,7 @@ export const MessagesContainer = ({ projectId }: Props) => {
                 <ThemeToggle />
             </div>
             <div className="flex-1 pb-44 pt-12">
-                <div className="max-w-2xl mx-auto pt-2 pb-4">
+                <div className="max-w-3xl mx-auto pt-2 pb-4">
                     {combinedMessages.map((message) => (
                         <MessageCard
                             key={message.id}
@@ -195,7 +201,7 @@ export const MessagesContainer = ({ projectId }: Props) => {
             </div>
 
             <div className="absolute bottom-0 right-0 left-0 pointer-events-none">
-                <div className="max-w-2xl mx-auto pointer-events-auto">
+                <div className="max-w-3xl mx-auto pointer-events-auto">
                     <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-full max-w-3xl h-6 bg-gradient-to-b from-transparent to-background pointer-events-none" />
                     <MessageForm
                         projectId={projectId}

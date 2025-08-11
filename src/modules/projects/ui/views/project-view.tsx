@@ -1,8 +1,8 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useTRPC } from "@/trpc/client";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { MessagesContainer } from "../components/message-container";
 import { AppSidebar } from "../sidebars/app-sidebar";
 import { useAuth } from "@clerk/nextjs";
@@ -12,13 +12,16 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { ProjectSearchDialog } from "@/components/project-search-dialog";
+import { useMessageStore } from "@/stores/message-store";
 
 interface Props {
   projectId: string;
 }
 
 export const ProjectView = ({ projectId }: Props) => {
-  const [isSearchOpen, setIsSearchOpen ] = useState(false); 
+  const queryClient = useQueryClient(); 
+  const globalUserMessage = useMessageStore(state => state.globalUserMessage);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { isLoaded, isSignedIn, userId } = useAuth();
   const { has } = useAuth();
   const hasProAccess = has?.({ plan: "pro" });
@@ -46,7 +49,7 @@ export const ProjectView = ({ projectId }: Props) => {
         }
         defaultOpen={true}
       >
-        <AppSidebar projects={projects} projectId={projectId} isSearchOpen={isSearchOpen} setIsSearchOpen={setIsSearchOpen}/>
+        <AppSidebar projects={projects} projectId={projectId} isSearchOpen={isSearchOpen} setIsSearchOpen={setIsSearchOpen} />
 
         <SidebarInset className="flex flex-col">
           <SidebarTrigger className="md:hidden border-none fixed top-2 left-4" />
@@ -54,8 +57,8 @@ export const ProjectView = ({ projectId }: Props) => {
             <MessagesContainer projectId={projectId} />
           </Suspense>
         </SidebarInset>
-        
-        <ProjectSearchDialog projects={projects} isHome isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} />
+
+        <ProjectSearchDialog projects={projects} isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} />
 
       </SidebarProvider>
     </div>

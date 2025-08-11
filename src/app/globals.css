@@ -40,6 +40,10 @@
   --font-serif: Lora, serif;
   --font-mono: Fira Code, monospace;
   --font-libre-baskerville: Libre Baskerville;
+  /* --font-geist-mono: Geist Mono; */
+  --font-roboto: Roboto;
+  --font-open-sans: Open Sans; 
+
   --radius: 0.4rem;
   --shadow-2xs: 3px 3px 0px 0px hsl(325.7800 58.1800% 56.8600% / 0.50);
   --shadow-xs: 3px 3px 0px 0px hsl(325.7800 58.1800% 56.8600% / 0.50);
@@ -90,6 +94,10 @@
   --font-serif: Lora, serif;
   --font-mono: Fira Code, monospace;
   --font-libre-baskerville: Libre Baskerville;
+  /* --font-geist-mono: Geist Mono; */
+  --font-roboto: Roboto;
+  --font-open-sans: Open Sans; 
+
   --radius: 0.4rem;
   --shadow-2xs: 3px 3px 0px 0px hsl(206.1538 28.0576% 27.2549% / 0.50);
   --shadow-xs: 3px 3px 0px 0px hsl(206.1538 28.0576% 27.2549% / 0.50);
@@ -138,7 +146,18 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --font-serif: var(--font-serif);
-   --font-libre: var(--font-libre-baskerville);
+  --font-libre: var(--font-libre-baskerville);
+  --font-geist-mono: var(--font-geist-mono);
+  --font-roboto: var(--font-roboto);
+  --font-open-sans: var(--font-open-sans);
+  --font-ebgaramond: var(--font-eb-garamond);
+  --font-quattrocento: var(--font-quattrocento);
+  --font-bubblegum-sans: var(--font-bubblegum-sans);
+  --font-space-mono: var(--font-space-mono);
+  --font-cabin: var(--font-cabin);
+  --font-arvo: var(--font-arvo);
+  --font-montserrat: var(--font-montserrat);
+  --font-noto-sans: var(--font-noto-sans);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -186,11 +205,18 @@
 .splash-painting {
   width: 120px;
   height: 80px;
-  background: 
+  background:
     repeating-conic-gradient(#ffb3d9 0 8%, transparent 0 15%),
     repeating-conic-gradient(transparent 0 5%, #fff9b3 0 12%) 50% 50% / 70% 70%,
     repeating-conic-gradient(transparent 0 7%, #b3f0ff 0 14%) 50% 50% / 60% 60%;
   border-radius: 40%;
   filter: blur(8px) saturate(1.6);
   background-repeat: no-repeat;
+}
+
+.shiki code {
+  font-family: 'Geist Mono', 'JetBrains Mono', monospace !important;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 500;
 }

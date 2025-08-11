@@ -53,7 +53,7 @@ export const AssistantMessage = ({
                 </span>
             </div>
             <div className="pl-8.5 flex flex-col gap-y-4">
-                <AIResponse className="text-sm">
+                <AIResponse className="text-sm space-y-4">
                     {content}
                 </AIResponse>
             </div>

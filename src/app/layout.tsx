@@ -1,5 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Roboto_Slab, EB_Garamond, Libre_Baskerville } from "next/font/google";
+import {
+  Geist, 
+  Geist_Mono, 
+  Roboto_Slab, 
+  EB_Garamond, 
+  Libre_Baskerville, 
+  Roboto,
+  Open_Sans, 
+  Quattrocento, 
+  Bubblegum_Sans,
+  Space_Mono,
+  Cabin,
+  Arvo,
+  Montserrat,
+  Noto_Sans,
+
+
+} from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css";
 import { ClerkWrapper } from "@/components/clerk-wrapper";
@@ -24,12 +41,64 @@ const robotoSlab = Roboto_Slab({
 const ebGaramond = EB_Garamond({
   variable: "--font-eb-garamond",
   subsets: ["latin"],
+  weight: "500",
 })
 
 const libreBaskerville = Libre_Baskerville({
   variable: "--font-libre-baskerville",
-  subsets: ["latin"], 
+  subsets: ["latin"],
   weight: "400",
+})
+
+const roboto = Roboto({
+  variable: "--font-roboto",
+  subsets: ["latin"],
+})
+
+const openSans = Open_Sans({
+  variable: "--font-open-sans",
+  subsets: ["latin"],
+})
+
+const quattrocento = Quattrocento({
+  variable: "--font-quattrocento",
+  subsets: ["latin"],
+  weight: "700",
+})
+
+const bubblegumSans = Bubblegum_Sans({
+  variable: "--font-bubblegum-sans",
+  subsets: ["latin"],
+  weight: "400",
+})
+
+const spaceMono = Space_Mono({
+  variable: "--font-space-mono",
+  subsets: ["latin"],
+  weight: "700"
+})
+
+const cabin = Cabin({
+  variable: "--font-cabin",
+  subsets: ["latin"],
+})
+
+const arvo = Arvo({
+  variable: "--font-arvo",
+  subsets: ["latin"],
+  weight: "400"
+})
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  weight: "500"
+})
+
+const notoSans = Noto_Sans({
+  variable: "--font-noto-sans",
+  subsets: ["latin"],
+  // weight: "400"
 })
 
 export const metadata: Metadata = {
@@ -47,7 +116,21 @@ export default function RootLayout({
       <TRPCReactProvider>
         <html lang="en" suppressHydrationWarning>
           <body
-            className={`${geistSans.variable} ${geistMono.variable} ${robotoSlab.variable} ${ebGaramond.variable} ${libreBaskerville.variable} antialiased text-base font-mono`}
+            className={`${geistSans.variable} 
+            ${geistMono.variable} 
+            ${robotoSlab.variable} 
+            ${ebGaramond.variable} 
+            ${libreBaskerville.variable} 
+            ${roboto.variable} 
+            ${openSans.variable}
+            ${quattrocento.variable}
+            ${bubblegumSans.variable}
+            ${spaceMono.variable}
+            ${cabin.variable}
+            ${arvo.variable}
+            ${montserrat.variable}
+            ${notoSans.variable}
+            antialiased text-base font-noto-sans`}
           >
             <ThemeProvider
               attribute="class"
