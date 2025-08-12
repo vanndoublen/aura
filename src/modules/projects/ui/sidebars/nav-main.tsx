@@ -11,7 +11,7 @@ interface Props {
 
 export const NavMain = ({ isSearchOpen, setIsSearchOpen }: Props) => {
     return (
-        <SidebarGroup>
+        <SidebarGroup className="">
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton>

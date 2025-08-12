@@ -55,9 +55,11 @@ export const ProjectSearchDialog = ({ projects, isHome, isOpen, setIsOpen }: Pro
 
     return (
 
-        <CommandDialog showCloseButton={false} open={isOpen} onOpenChange={setIsOpen} className="shadow-none">
+        <CommandDialog showCloseButton={false} open={isOpen} onOpenChange={setIsOpen}
+              className="shadow-none"
+        >
             <div className="flex py-1 border-b items-center">
-                <Search className="ml-4 size-5"/>
+                <Search className="ml-4 size-5" />
                 <Input
                     placeholder="Search..."
                     onChange={(e) => handleSearchChange(e.target.value)}

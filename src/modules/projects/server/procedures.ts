@@ -72,7 +72,27 @@ export const projectsRouter = createTRPCRouter({
           userId: ctx.auth.userId,
         },
       });
-      return createdProject; 
+      return createdProject;
+    }),
+
+  updateName: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string().min(1, {message: "Name is required."}).max(150, { message: "Name is too long."}),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const updatedProject = await prisma.project.update({
+        where: {
+          id: input.id,
+          userId: ctx.auth.userId,
+        },
+        data: {
+          name: input.name,
+        },
+      });
+      return updatedProject; 
     }),
 
   stream: protectedProcedure
@@ -110,11 +130,10 @@ export const projectsRouter = createTRPCRouter({
       let assistantContent = "";
       let createdAssistantMessage: Message | null = null;
 
-
       if (input.aiModelId) {
         const aiModel = await prisma.aiModel.findUnique({
           where: { id: input.aiModelId },
-        }) 
+        });
 
         if (aiModel) {
           try {
@@ -156,6 +175,6 @@ export const projectsRouter = createTRPCRouter({
           }
         }
       }
-      yield createdProject.id; 
+      yield createdProject.id;
     }),
 });
