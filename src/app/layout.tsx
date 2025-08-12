@@ -19,9 +19,9 @@ import {
 } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css";
-import { ClerkWrapper } from "@/components/clerk-wrapper";
 import { TRPCReactProvider } from "@/trpc/client";
 import { Toaster } from "@/components/ui/sonner";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -112,7 +112,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkWrapper>
+    <ClerkProvider>
       <TRPCReactProvider>
         <html lang="en" suppressHydrationWarning>
           <body
@@ -144,7 +144,7 @@ export default function RootLayout({
           </body>
         </html>
       </TRPCReactProvider>
-    </ClerkWrapper>
+    </ClerkProvider>
 
   );
 }

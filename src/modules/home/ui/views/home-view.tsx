@@ -6,7 +6,7 @@ import { Suspense, useState } from "react";
 import { ProjectForm } from "../components/project-form";
 import { ProjectDialogButton } from "../components/project-dialog-button";
 import { useTRPC } from "@/trpc/client";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { TextLoop } from "../../../../../components/motion-primitives/text-loop";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import TextType from "@/blocks/TextAnimations/TextType/TextType";
@@ -19,14 +19,14 @@ import { ProjectSearchDialog } from "@/components/project-search-dialog";
 const words = ["Generate your gadget with Aura"];
 
 export const HomeView = () => {
-  const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
 
 
     // TODO: might use suspense infinite query instead
     const trpc = useTRPC();
-    const { data: projects } = useSuspenseQuery(trpc.projects.getMany.queryOptions());
+    const { data: projects } = useQuery(trpc.projects.getMany.queryOptions());
 
-    const { isSignedIn } = useUser();
+    const { user } = useUser();
 
     let currectTheme = useCurrentTheme();
     if (currectTheme === "dark") {
@@ -81,8 +81,9 @@ export const HomeView = () => {
                 </div>
             </section>
 
-            <SignedIn>
-                {isSignedIn &&
+
+            {user &&
+                <>
                     <div className="mx-auto">
                         {/* <ProjectDialogButton projects={projects} isHome /> */}
                         <Button
@@ -93,9 +94,8 @@ export const HomeView = () => {
                             View projects
                         </Button>
                     </div>
-                }
-                <ProjectSearchDialog projects={projects} isHome isOpen={isOpen} setIsOpen={setIsOpen}/>
-            </SignedIn>
+                    <ProjectSearchDialog projects={projects ?? []} isHome isOpen={isOpen} setIsOpen={setIsOpen} />
+                </>}
         </div>
     )
 }

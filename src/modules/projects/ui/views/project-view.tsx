@@ -5,7 +5,7 @@ import { useTRPC } from "@/trpc/client";
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { MessagesContainer } from "../components/message-container";
 import { AppSidebar } from "../sidebars/app-sidebar";
-import { useAuth } from "@clerk/nextjs";
+import { SignedIn, useAuth } from "@clerk/nextjs";
 import {
   SidebarInset,
   SidebarProvider,
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export const ProjectView = ({ projectId }: Props) => {
-  const queryClient = useQueryClient(); 
+  const queryClient = useQueryClient();
   const globalUserMessage = useMessageStore(state => state.globalUserMessage);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { isLoaded, isSignedIn, userId } = useAuth();
@@ -58,7 +58,9 @@ export const ProjectView = ({ projectId }: Props) => {
           </Suspense>
         </SidebarInset>
 
-        <ProjectSearchDialog projects={projects} isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} />
+        <SignedIn>
+          <ProjectSearchDialog projects={projects} isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} />
+        </SignedIn>
 
       </SidebarProvider>
     </div>

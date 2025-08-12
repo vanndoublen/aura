@@ -51,14 +51,14 @@ export const ProjectForm = () => {
     const globalModelId = useMessageStore(state => state.globalModelId);
 
 
-    const { data: aiModels } = useSuspenseQuery(trpc.ai.getMany.queryOptions());
+    const { data: aiModels } = useQuery(trpc.ai.getMany.queryOptions());
     const [selectedModel, setSelectedModel] = useState<AiModel | null>(() => {
         if (globalModelId) {
-            const model = (aiModels.find(model => model.id === globalModelId));
+            const model = (aiModels?.find(model => model.id === globalModelId));
             return model || null;
         }
-        const defaultModel = aiModels.find(model => model.name === "gpt-4.1");
-        return defaultModel || aiModels[0] || null;
+        const defaultModel = aiModels?.find(model => model.name === "gpt-4.1");
+        return defaultModel || null;
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -72,9 +72,9 @@ export const ProjectForm = () => {
         if (success && projectId && userMessage && selectedModel?.id && !messageSentRef.current) {
             messageSentRef.current = true; // Prevent sending multiple times
             setGlobalMessage(projectId, userMessage, selectedModel?.id);
-            setTimeout(() => {
+            // setTimeout(() => {
                 router.push(`/projects/${projectId}`);
-            }, 2000);
+            // }, 2000);
         }
     }, [success, projectId, userMessage, selectedModel?.id, router, setGlobalMessage]);
 
@@ -171,7 +171,7 @@ export const ProjectForm = () => {
 
                         <div className="flex items-center gap-x-4">
                             <Suspense fallback={<p>Loading models ... </p>}>
-                                <ModelDropdown aiModels={aiModels} selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
+                                <ModelDropdown aiModels={aiModels ?? []} selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
                             </Suspense>
                             <Button
                                 disabled={isButtonDisabled}

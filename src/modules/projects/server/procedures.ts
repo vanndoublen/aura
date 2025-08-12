@@ -57,6 +57,13 @@ export const projectsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      if (!input.aiModelId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Please select a model.",
+        });
+      }
+
       // TODO: calculate credits
 
       const projectTitleResponse = await AiService.createResponse(
@@ -79,7 +86,10 @@ export const projectsRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        name: z.string().min(1, {message: "Name is required."}).max(150, { message: "Name is too long."}),
+        name: z
+          .string()
+          .min(1, { message: "Name is required." })
+          .max(150, { message: "Name is too long." }),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -92,7 +102,7 @@ export const projectsRouter = createTRPCRouter({
           name: input.name,
         },
       });
-      return updatedProject; 
+      return updatedProject;
     }),
 
   stream: protectedProcedure

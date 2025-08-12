@@ -128,6 +128,12 @@ export const messagesRouter = createTRPCRouter({
       })
     )
     .subscription(async function* ({ input, ctx }) {
+      if (!input.aiModelId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Please select a model.",
+        });
+      }
       const existingProject = await prisma.project.findUnique({
         where: {
           id: input.projectId,
@@ -184,18 +190,17 @@ export const messagesRouter = createTRPCRouter({
               },
             });
 
-            // update the project time 
+            // update the project time
             await prisma.project.update({
               where: {
                 id: input.projectId,
               },
               data: {
                 updatedAt: new Date(),
-              }
-            })
-
+              },
+            });
           } catch (error) {
-            console.log(error)
+            console.log(error);
             if (assistantContent) {
               createdAssistantMessage = await prisma.message.create({
                 data: {
@@ -212,12 +217,6 @@ export const messagesRouter = createTRPCRouter({
               message: "Response interrupted",
             });
           }
-
-          // yield* streamAIResponse({
-          //   provider: aiModel.provider,
-          //   model: aiModel.name,
-          //   message: input.value,
-          // });
         }
       }
     }),

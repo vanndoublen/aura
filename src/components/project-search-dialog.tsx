@@ -30,8 +30,6 @@ export const ProjectSearchDialog = ({ projects, isHome, isOpen, setIsOpen }: Pro
     const [searchValue, setSearchValue] = useState("");
     const [filteredProjects, setFilterProjects] = useState<Project[]>(projects);
 
-    const router = useRouter();
-
     useEffect(() => {
         const down = (e: KeyboardEvent) => {
             if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -42,6 +40,10 @@ export const ProjectSearchDialog = ({ projects, isHome, isOpen, setIsOpen }: Pro
         document.addEventListener("keydown", down)
         return () => document.removeEventListener("keydown", down)
     }, [])
+
+    useEffect(() => {
+        setFilterProjects(projects);
+    } ,[projects])
 
     const handleSearchChange = (value: string) => {
         if (value.length === 0) {

@@ -9,7 +9,7 @@ import {
 import { type AiModel } from "@/generated/prisma";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { Input } from "./ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 interface Props {
@@ -21,6 +21,10 @@ interface Props {
 export const ModelDropdown = ({ aiModels, selectedModel, setSelectedModel }: Props) => {
     const [searchValue, setSearchValue] = useState("");
     const [filteredModels, setFilteredModels] = useState<AiModel[]>(aiModels);
+
+    useEffect(() => {
+        setFilteredModels(aiModels);
+    }, [aiModels]);
 
     const handleOnChangeSearch = (modelName: string) => {
         setSearchValue(modelName);
@@ -40,7 +44,7 @@ export const ModelDropdown = ({ aiModels, selectedModel, setSelectedModel }: Pro
                     size="sm"
                     className="focus-visible:ring-0 bg-transparent hover:opacity-75 transition-opacity h-8 border-0"
                 >
-                    <span className="text-[12px]">{selectedModel ? selectedModel.displayName : "Selet Model"}</span>
+                    <span className="text-[12px]">{selectedModel ? selectedModel.displayName : "Select Model"}</span>
                     <ChevronDownIcon />
 
 
