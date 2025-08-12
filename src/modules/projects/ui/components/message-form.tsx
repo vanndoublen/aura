@@ -4,7 +4,7 @@ import { Suspense, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import TextareaAutoSize from "react-textarea-autosize";
-import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 
 
 import { cn } from "@/lib/utils";
@@ -13,17 +13,14 @@ import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { ArrowUpIcon, Loader2Icon } from "lucide-react";
 // import { Usage } from "./usage";
-import { useRouter } from "next/navigation";
 import { ModelDropdown } from "@/components/model-dropdown";
 import { AiModel } from "@/generated/prisma";
-import { useChat } from "@/hooks/use-chat";
 import { useMessageStore } from "@/stores/message-store";
 
 interface Props {
     projectId: string;
     isStreaming: boolean;
     isFetching: boolean;
-    // onSendMessage: (messageText: string, modelId: string) => void;
 }
 
 const formSchema = z.object({
@@ -35,8 +32,6 @@ const formSchema = z.object({
 
 
 export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
-    const router = useRouter();
-
     const trpc = useTRPC();
     const queryClient = useQueryClient();
 
@@ -44,9 +39,7 @@ export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
     const globalModelId = useMessageStore(state => state.globalModelId);
 
 
-    // const {sendMessage} = useChat(projectId); 
 
-    // const { data: usage } = useQuery(trpc.usage.status.queryOptions());
     const { data: aiModels } = useSuspenseQuery(trpc.ai.getMany.queryOptions());
     const [selectedModel, setSelectedModel] = useState<AiModel | null>(() => {
         if (globalModelId) {
@@ -64,28 +57,8 @@ export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
         },
     });
 
-    const mutateMessage = useMutation(trpc.messages.create.mutationOptions({
-        onSuccess: () => {
-            form.reset();
-            queryClient.invalidateQueries(
-                trpc.messages.getMany.queryOptions({ projectId })
-            );
-            //  TODO: usage
-            // queryClient.invalidateQueries(
-            //     trpc.usage.status.queryOptions()
-            // );
-        },
-        onError: (error) => {
-            toast.error(error.message);
-            if (error.data?.code === "TOO_MANY_REQUESTS") {
-                router.push("/pricing");
-            }
-        }
-    }))
-
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         console.log(values.value);
-        // sendMessage(values.value, selectedModel?.id ?? "")
         setGlobalMessage(projectId, values.value, selectedModel?.id ?? ""); 
         form.reset();
     }
@@ -93,8 +66,7 @@ export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
 
 
     const [isFocused, setIsFocused] = useState(false);
-    const isPending = mutateMessage.isPending;
-    const isButtonDisabled = isPending || !form.formState.isValid || isStreaming || isFetching;
+    const isButtonDisabled = !form.formState.isValid || isStreaming || isFetching;
     // const showUsage = !!usage;
     const showUsage = false;
 
@@ -121,7 +93,7 @@ export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
                     render={({ field }) => (
                         <TextareaAutoSize
                             {...field}
-                            disabled={isPending}
+                            // disabled={}
                             onFocus={() => setIsFocused(true)}
                             onBlur={() => setIsFocused(false)}
                             minRows={2}
@@ -157,11 +129,6 @@ export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
                             )}
                         >
 
-                            {isPending ? (
-                                <Loader2Icon className="size-4 animate-spin" />
-                            ) : (
-                                <ArrowUpIcon />
-                            )}
                         </Button>
                     </div>
                 </div>
