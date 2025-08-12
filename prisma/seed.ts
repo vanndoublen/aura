@@ -31,6 +31,15 @@ const modelData: Prisma.AiModelCreateInput[] = [
     temperature: 0.7,
     isActive: true,
   },
+  {
+    name: "o4-mini",
+    provider: "OpenAI",
+    displayName: "GPT o4 mini",
+    description: "Optimized for fast, effective reasoning with exceptionally efficient performance in coding and visual tasks.",
+    maxTokens: 4096,
+    temperature: 0.7,
+    isActive: true,
+  },
 ];
 
 export async function main() {
