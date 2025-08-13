@@ -43,8 +43,8 @@ export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
     const { data: aiModels } = useSuspenseQuery(trpc.ai.getMany.queryOptions());
     const [selectedModel, setSelectedModel] = useState<AiModel | null>(() => {
         if (globalModelId) {
-            const model = (aiModels.find(model => model.id === globalModelId)) ;
-            return model || null;  
+            const model = (aiModels.find(model => model.id === globalModelId));
+            return model || null;
         }
         const defaultModel = aiModels.find(model => model.name === "gpt-4.1");
         return defaultModel || aiModels[0] || null;
@@ -59,13 +59,14 @@ export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         console.log(values.value);
-        setGlobalMessage(projectId, values.value, selectedModel?.id ?? ""); 
+        setGlobalMessage(projectId, values.value, selectedModel?.id ?? "");
         form.reset();
     }
 
 
 
     const [isFocused, setIsFocused] = useState(false);
+    const isPending = isStreaming || isFetching;
     const isButtonDisabled = !form.formState.isValid || isStreaming || isFetching;
     // const showUsage = !!usage;
     const showUsage = false;
@@ -82,7 +83,7 @@ export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className={cn(
-                    "relative border p-4 pt-1 rounded-t-xl bg-sidebar dark:bg-sidebar transition-all",
+                    "relative border p-4 pt-1 rounded-t-md bg-sidebar dark:bg-sidebar transition-all",
                     isFocused && "shadow-xs",
                     showUsage && "rounded-t-none"
                 )}
@@ -128,6 +129,11 @@ export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
 
                             )}
                         >
+                            {isPending ? (
+                                <Loader2Icon className="size-4 animate-spin" />
+                            ) : (
+                                <ArrowUpIcon />
+                            )}
 
                         </Button>
                     </div>

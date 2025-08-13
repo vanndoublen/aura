@@ -68,7 +68,7 @@ export const MessagesContainer = ({ projectId }: Props) => {
                                 content: streamContentRef.current,
                                 role: "ASSISTANT",
                                 type: "TEXT",
-                                aiModelId: "",
+                                aiModelId: queryParams.aiModelId,
                                 createdAt: new Date(),
                                 updatedAt: new Date(),
                                 inputTokens: 0,
@@ -148,7 +148,7 @@ export const MessagesContainer = ({ projectId }: Props) => {
                 content: queryParams.value.trim(),
                 role: "USER",
                 type: "TEXT",
-                aiModelId: "",
+                aiModelId: queryParams.aiModelId,
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 inputTokens: 0,
@@ -189,6 +189,7 @@ export const MessagesContainer = ({ projectId }: Props) => {
                             key={message.id}
                             content={message.content}
                             role={message.role}
+                            aiModelId={message.aiModelId}
                             createdAt={message.createdAt}
                             type={message.type}
                         />

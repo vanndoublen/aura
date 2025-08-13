@@ -6,17 +6,57 @@ import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { MessageRole, MessageType } from "@/generated/prisma";
 import { AIResponse } from "@/components/ui/kibo-ui/ai/response";
+import { CheckIcon, CopyIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
+import { useTRPC } from "@/trpc/client";
 
+
+interface CopyProps {
+    text: string;
+    className?: string;
+}
+
+const CopyButton = ({ text, className }: CopyProps) => {
+    const [isCopied, setIsCopied] = useState(false);
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(text);
+            setIsCopied(true);
+            setTimeout(() => setIsCopied(false), 2000);
+        } catch (err) {
+            toast.error("Failed to copy!")
+        }
+    }
+
+    return (
+        <Button
+            size="icon"
+            variant="ghost"
+            onClick={handleCopy}
+            className={cn("border-none !bg-transparent !hover:bg-transparent", className)}
+        >
+            {isCopied ? (
+                <CheckIcon />
+            ) : (
+                <CopyIcon />
+            )}
+        </Button>
+    )
+}
 
 interface UserMessageProps {
     content: string;
 }
 const UserMessage = ({ content }: UserMessageProps) => {
     return (
-        <div className="flex justify-end pb-4 pr-2 pl-10">
+        <div className="flex flex-col items-end pb-4 pr-2 pl-10 group">
             <Card className="rounded-lg bg-muted p-3 shadow-none border-none max-w-[80%] break-words text-sm">
                 {content}
             </Card>
+            <CopyButton text={content} className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground" />
         </div>
     )
 }
@@ -27,19 +67,25 @@ interface AssistantMessageProps {
     content: string;
     createdAt: Date;
     type: MessageType;
+    aiModelId: string | null;
 }
 
 export const AssistantMessage = ({
     content,
     createdAt,
     type,
+    aiModelId,
 }: AssistantMessageProps) => {
+    const trpc = useTRPC();
+    const { data: aiModels } = useQuery(trpc.ai.getMany.queryOptions());
+    const aiModel = aiModels?.find(model => model.id === aiModelId);
+
     return (
         <div className={cn(
-            "flex flex-col group px-2 pb-4",
+            "flex flex-col group pb-4",
             type === "ERROR" && "text-red-700 dark:text-red-700"
         )}>
-            <div className="flex items-center gap-2 pl-2 mb-2">
+            <div className="flex items-center gap-2 mb-2">
                 <Image
                     src="/logo.svg"
                     alt="Aura"
@@ -52,10 +98,16 @@ export const AssistantMessage = ({
                     {format(createdAt, "HH:mm 'on' MMM dd, yyyy")}
                 </span>
             </div>
-            <div className="pl-8.5 flex flex-col gap-y-4">
+            <div className="flex flex-col gap-y-4">
                 <AIResponse className="text-sm space-y-4">
                     {content}
                 </AIResponse>
+            </div>
+            <div className="flex items-center gap-2 mt-2">
+                <span className="text-xs text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
+                    {aiModel ? aiModel.name : ""}
+                </span>
+                <CopyButton text={content} className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground" />
             </div>
         </div>
     )
@@ -67,6 +119,7 @@ interface Props {
     role: MessageRole;
     createdAt: Date;
     type: MessageType;
+    aiModelId: string | null;
 }
 
 export const MessageCard = ({
@@ -74,6 +127,7 @@ export const MessageCard = ({
     role,
     createdAt,
     type,
+    aiModelId,
 }: Props) => {
     if (role === "ASSISTANT") {
         return (
@@ -81,6 +135,7 @@ export const MessageCard = ({
                 content={content}
                 createdAt={createdAt}
                 type={type}
+                aiModelId={aiModelId}
             />
         )
     }

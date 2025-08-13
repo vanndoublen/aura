@@ -96,6 +96,7 @@ export const messagesRouter = createTRPCRouter({
               data: {
                 role: "ASSISTANT",
                 type: "TEXT",
+                aiModelId: input.aiModelId,
                 content: assistantContent,
                 projectId: input.projectId,
               },
@@ -117,6 +118,7 @@ export const messagesRouter = createTRPCRouter({
                 data: {
                   role: "ASSISTANT",
                   type: "ERROR",
+                  aiModelId: input.aiModelId,
                   content: assistantContent + " [ERROR: Stream interrupted]",
                   projectId: input.projectId,
                 },
