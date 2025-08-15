@@ -4,9 +4,10 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "./u
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, Loader, LogOut, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export const UserButton = () => {
-    const router = useRouter(); 
+    const router = useRouter();
     const { isMobile } = useSidebar()
     const { isLoaded, user } = useUser();
     const { signOut, openUserProfile } = useClerk();
@@ -48,7 +49,7 @@ export const UserButton = () => {
                                 <Avatar className="h-8 w-8 rounded-lg">
                                     <AvatarImage src={user?.imageUrl} alt={user?.username ?? ""} />
                                     <AvatarFallback className="rounded-lg">
-                                        <Loader className="animate-spin"/>
+                                        <Loader className="animate-spin" />
                                     </AvatarFallback>
                                 </Avatar>
 
@@ -61,24 +62,22 @@ export const UserButton = () => {
                         <DropdownMenuSeparator />
 
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <Sparkles />
-                                TODO: Upgrade to Pro
+                            <DropdownMenuItem asChild className="cursor-pointer">
+                                <Link href="/pricing">
+                                    <Sparkles /> Upgrade to Pro
+                                </Link>
+
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem onClick={() => openUserProfile()}>
+                            <DropdownMenuItem onClick={() => openUserProfile()} className="cursor-pointer">
                                 <BadgeCheck />
                                 Account
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <CreditCard />
-                                TODO: Billing
-                            </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => signOut(() => router.push("/"))}>
+                        <DropdownMenuItem onClick={() => signOut(() => router.push("/"))} className="cursor-pointer">
                             <LogOut />
                             Log out
                         </DropdownMenuItem>

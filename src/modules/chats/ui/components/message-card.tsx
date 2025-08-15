@@ -98,12 +98,12 @@ export const AssistantMessage = ({
                     {format(createdAt, "HH:mm 'on' MMM dd, yyyy")}
                 </span>
             </div>
-            <div className="flex flex-col gap-y-4">
+            <div className="flex flex-col gap-y-4 px-4">
                 <AIResponse className="text-sm space-y-4">
                     {content}
                 </AIResponse>
             </div>
-            <div className="flex items-center gap-2 mt-2">
+            <div className="flex items-center gap-2 mt-2 px-4">
                 <span className="text-xs text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
                     {aiModel ? aiModel.name : ""}
                 </span>
