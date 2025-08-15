@@ -35,8 +35,8 @@ model Project {
 }
 
 model AiModel {
-  id          String   @id @default(uuid())
-  name        String   @unique
+  id          String  @id @default(uuid())
+  name        String  @unique
   provider    String
   displayName String?
   description String?
@@ -52,14 +52,14 @@ model AiModel {
 }
 
 model Message {
-  id               String      @id @default(uuid())
-  externalId       String?
-  content          String
-  role             MessageRole
-  type             MessageType
-  inputTokens     Int?
+  id           String      @id @default(uuid())
+  externalId   String?
+  content      String
+  role         MessageRole
+  type         MessageType
+  inputTokens  Int?
   outputTokens Int?
-  totalTokens      Int?
+  totalTokens  Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
