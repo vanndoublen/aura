@@ -70,3 +70,9 @@ model Message {
   aiModelId String?
   aiModel   AiModel? @relation(fields: [aiModelId], references: [id], onDelete: SetNull)
 }
+
+model Usage {
+  key    String    @id
+  points Int
+  expire DateTime?
+}

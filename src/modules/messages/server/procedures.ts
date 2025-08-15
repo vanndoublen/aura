@@ -4,6 +4,7 @@ import prisma from "@/lib/db";
 import { tracked, TRPCError } from "@trpc/server";
 import { streamAIResponse } from "@/modules/ai/ai-streaming";
 import { Message } from "@/generated/prisma";
+import { consumeCredits, getUsageStatus } from "@/lib/usage";
 
 export const messagesRouter = createTRPCRouter({
   getMany: protectedProcedure
@@ -73,10 +74,33 @@ export const messagesRouter = createTRPCRouter({
       let assistantContent = "";
       let chunkId = 0;
       let createdAssistantMessage: Message | null = null;
+      const usageStatus = await getUsageStatus(); 
+      const remainingCredit = usageStatus?.remainingPoints;
       if (input.aiModelId) {
         const aiModel = await prisma.aiModel.findUnique({
           where: { id: input.aiModelId },
         });
+
+        // TODO: dont consume if remaining credit <= 0, because in db, 
+        // it would increase the point which would affect the actual success usage
+
+        // TODO: create new "SYSTEM" role, and notify users with no credit left info 
+
+        try {
+          await consumeCredits();
+        } catch (error) {
+          if (error instanceof Error) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Something went wrong",
+            });
+          } else {
+            throw new TRPCError({
+              code: "TOO_MANY_REQUESTS",
+              message: "You have run out of credits",
+            });
+          }
+        }
 
         if (aiModel) {
           try {

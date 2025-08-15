@@ -156,6 +156,12 @@ exports.Prisma.MessageScalarFieldEnum = {
   aiModelId: 'aiModelId'
 };
 
+exports.Prisma.UsageScalarFieldEnum = {
+  key: 'key',
+  points: 'points',
+  expire: 'expire'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -183,7 +189,8 @@ exports.MessageType = exports.$Enums.MessageType = {
 exports.Prisma.ModelName = {
   Chat: 'Chat',
   AiModel: 'AiModel',
-  Message: 'Message'
+  Message: 'Message',
+  Usage: 'Usage'
 };
 
 /**

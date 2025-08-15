@@ -11,6 +11,8 @@ import { Message } from "@/generated/prisma";
 import { nanoid } from "nanoid";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { stat } from "fs";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface Props {
     chatId: string;
@@ -19,6 +21,7 @@ interface Props {
 export const MessagesContainer = ({ chatId }: Props) => {
     const trpc = useTRPC();
     const queryClient = useQueryClient();
+    const router = useRouter();
     const bottomRef = useRef<HTMLDivElement>(null);
     const streamingMessageIdRef = useRef<string | null>(null);
     const streamContentRef = useRef("");
@@ -92,6 +95,10 @@ export const MessagesContainer = ({ chatId }: Props) => {
                     });
                 },
                 onError(error) {
+                    toast.error(error.message);
+                    if (error.data?.code === "TOO_MANY_REQUESTS") {
+                        router.push("/pricing")
+                    }
                     setIsStreaming(false);
                     streamingMessageIdRef.current = null;
                     console.error(error);
@@ -100,6 +107,10 @@ export const MessagesContainer = ({ chatId }: Props) => {
                     setTimeout(() => {
                         queryClient.invalidateQueries(trpc.chats.getMany.queryOptions());
                     }, 100);
+
+                    if (state.state === "pending") {
+                        queryClient.invalidateQueries(trpc.usage.status.queryOptions());
+                    }
                 },
             },
         )

@@ -4,7 +4,7 @@ import { Suspense, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import TextareaAutoSize from "react-textarea-autosize";
-import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 
 
 import { cn } from "@/lib/utils";
@@ -16,6 +16,7 @@ import { ArrowUpIcon, Loader2Icon } from "lucide-react";
 import { ModelDropdown } from "@/components/model-dropdown";
 import { AiModel } from "@/generated/prisma";
 import { useMessageStore } from "@/stores/message-store";
+import { Usage } from "./usage";
 
 interface Props {
     chatId: string;
@@ -38,7 +39,7 @@ export const MessageForm = ({ chatId, isStreaming, isFetching }: Props) => {
     const setGlobalMessage = useCallback(useMessageStore((state) => state.setGlobalMessage), []);
     const globalModelId = useMessageStore(state => state.globalModelId);
 
-
+    const {data: usage } = useQuery(trpc.usage.status.queryOptions());
 
     const { data: aiModels } = useSuspenseQuery(trpc.ai.getMany.queryOptions());
     const [selectedModel, setSelectedModel] = useState<AiModel | null>(() => {
@@ -68,18 +69,17 @@ export const MessageForm = ({ chatId, isStreaming, isFetching }: Props) => {
     const [isFocused, setIsFocused] = useState(false);
     const isPending = isStreaming || isFetching;
     const isButtonDisabled = !form.formState.isValid || isStreaming || isFetching;
-    // const showUsage = !!usage;
-    const showUsage = false;
+    const showUsage = !!usage;
 
 
     return (
         <Form {...form}>
-            {/* {showUsage && (
+            {showUsage && (
                 <Usage
                     points={usage.remainingPoints}
                     msBeforeNext={usage.msBeforeNext}
                 />
-            )} */}
+            )}
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className={cn(

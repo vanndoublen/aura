@@ -65,8 +65,14 @@ model Message {
   updatedAt DateTime @updatedAt
 
   chatId String
-  chat   Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
   aiModelId String?
   aiModel   AiModel? @relation(fields: [aiModelId], references: [id], onDelete: SetNull)
+}
+
+model Usage {
+  key    String    @id
+  points Int
+  expire DateTime?
 }
