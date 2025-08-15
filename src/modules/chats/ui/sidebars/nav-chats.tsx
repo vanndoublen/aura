@@ -41,11 +41,11 @@ export const NavChats = ({ chats, chatId }: Props) => {
     return (
         <>
 
-            {todayChats && <SubNavChats chats={todayChats} chatId={chatId} day="Today" />}
+            {todayChats.length > 0 && <SubNavChats chats={todayChats} chatId={chatId} day="Today" />}
 
-            {lastSevenDaysChats && <SubNavChats chats={lastSevenDaysChats} chatId={chatId} day="Last 7 Days" />}
+            {lastSevenDaysChats.length > 0 && <SubNavChats chats={lastSevenDaysChats} chatId={chatId} day="Last 7 Days" />}
 
-            {oldChats && <SubNavChats chats={oldChats} chatId={chatId} day="A Long Time Ago" />}
+            {oldChats.length > 0 && <SubNavChats chats={oldChats} chatId={chatId} day="A Long Time Ago" />}
 
         </>
     )
