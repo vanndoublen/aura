@@ -10,6 +10,10 @@ const Page = () => {
     return (
         <div className="flex flex-col max-w-3xl mx-auto w-full">
             <section className="space-y-6 py-[16vh] 2xl:py-48">
+                <div className="flex flex-col items-center gap-y-4">
+                    <h1 className="text-xl md:text-3xl font-bold">Pricing</h1>
+                    <p className="text-muted-foreground">Going pro?</p>
+                </div>
                 <PricingTable
                     appearance={{
                         baseTheme: currentTheme === "dark" ? dark : undefined,
