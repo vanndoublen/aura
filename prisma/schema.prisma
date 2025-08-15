@@ -24,7 +24,7 @@ enum MessageType {
   ERROR
 }
 
-model Project {
+model Chat {
   id        String   @id @default(uuid())
   name      String
   userId    String
@@ -64,8 +64,8 @@ model Message {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  projectId String
-  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  chatId String
+  chat   Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
   aiModelId String?
   aiModel   AiModel? @relation(fields: [aiModelId], references: [id], onDelete: SetNull)

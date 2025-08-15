@@ -11,9 +11,9 @@ import {
   useSidebar, // Move this import here
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
-import { NavProjects } from "./nav-projects";
+import { NavChats } from "./nav-chats";
 import { NavUser } from "./nav-user";
-import { Project } from "@/generated/prisma";
+import { Chat } from "@/generated/prisma";
 import { SidebarIcon, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -23,13 +23,13 @@ import { MessagesContainer } from "../components/message-container";
 import { Suspense, useEffect } from "react";
 
 interface Props extends React.ComponentProps<typeof Sidebar> {
-  projects: Project[];
-  projectId: string;
-  isSearchOpen: boolean; 
-  setIsSearchOpen: (open: boolean) => void; 
+  chats: Chat[];
+  chatId: string;
+  isSearchOpen: boolean;
+  setIsSearchOpen: (open: boolean) => void;
 }
 
-export const AppSidebar = ({ projects, projectId, isSearchOpen, setIsSearchOpen, ...props }: Props) => {
+export const AppSidebar = ({ chats, chatId, isSearchOpen, setIsSearchOpen, ...props }: Props) => {
   const { open, toggleSidebar } = useSidebar();
 
   return (
@@ -67,10 +67,10 @@ export const AppSidebar = ({ projects, projectId, isSearchOpen, setIsSearchOpen,
           </SidebarMenu>
         </SidebarHeader>
 
-        <NavMain isSearchOpen={isSearchOpen} setIsSearchOpen={setIsSearchOpen}/>
+        <NavMain isSearchOpen={isSearchOpen} setIsSearchOpen={setIsSearchOpen} />
 
         <SidebarContent >
-          <NavProjects projects={projects} projectId={projectId} />
+          <NavChats chats={chats} chatId={chatId} />
         </SidebarContent>
 
         <SidebarFooter className="border-t border-dashed">

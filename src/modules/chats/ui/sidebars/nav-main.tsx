@@ -1,6 +1,6 @@
 import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
-import { Project } from "@/generated/prisma"
-import { ProjectDialogButton } from "@/modules/home/ui/components/project-dialog-button"
+import { Chat } from "@/generated/prisma"
+import { ChatDialogButton } from "@/modules/home/ui/components/chat-dialog-button"
 import { EditIcon, SearchIcon } from "lucide-react"
 import { useState } from "react";
 

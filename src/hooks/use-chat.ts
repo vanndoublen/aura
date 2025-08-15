@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { useShallow } from 'zustand/react/shallow'
 
 
-export const useChat = (projectId: string) => {
+export const useChat = (chatId: string) => {
   // ✅ Move all hooks INSIDE the hook function
   const trpc = useTRPC();
   const queryClient = useQueryClient();
@@ -23,7 +23,7 @@ export const useChat = (projectId: string) => {
   const globalModelId = useMessageStore( useShallow((state) => state.globalModelId)); 
 
   const [queryParams, setQueryParams] = useState({
-    projectId: projectId,
+    chatId: chatId,
     value: globalUserMessage ?? "",
     aiModelId: globalModelId ?? "",
   });
@@ -68,9 +68,9 @@ export const useChat = (projectId: string) => {
     // If we're no longer fetching and not streaming, end the stream
     if (!isFetching && !isStreaming) {
       console.log("🛑 Should end stream now");
-      endStream(projectId);
+      endStream(chatId);
     }
-  }, [isStreaming, isFetching, endStream, projectId]);
+  }, [isStreaming, isFetching, endStream, chatId]);
 
   // Update your sendMessage function to better handle completion:
   const sendMessage = async (messageText: string, modelId?: string) => {
@@ -78,19 +78,19 @@ export const useChat = (projectId: string) => {
 
     console.log("🚀 Starting message send:", messageText);
 
-    startStream(projectId, messageText);
+    startStream(chatId, messageText);
     setUserMessage(messageText);
     setIsStreaming(true);
     setCurrentStreamContent("");
     console.log("-------------------------------");
-    console.log(projectId);
+    console.log(chatId);
     console.log(messageText);
     console.log(modelId);
     console.log("-------------------------------");
 
     try {
       const newParams = {
-        projectId: projectId,
+        chatId: chatId,
         value: messageText,
         aiModelId: modelId ?? "",
       };
@@ -107,10 +107,10 @@ export const useChat = (projectId: string) => {
       console.log("🏁 Cleaning up stream");
       setIsStreaming(false);
       setCurrentStreamContent("");
-      endStream(projectId);
+      endStream(chatId);
 
       queryClient.invalidateQueries({
-        queryKey: trpc.messages.getMany.queryOptions({ projectId }).queryKey,
+        queryKey: trpc.messages.getMany.queryOptions({ chatId }).queryKey,
       });
     }
   };
@@ -123,19 +123,19 @@ export const useChat = (projectId: string) => {
 
       // Only add new chunks, not all chunks repeatedly
       const currentChunksCount =
-        useMessageStore.getState().streams[projectId]?.chunks.length || 0;
+        useMessageStore.getState().streams[chatId]?.chunks.length || 0;
       const newChunks = streamData.slice(currentChunksCount);
 
       // Add only new chunks
       newChunks.forEach((chunk) => {
         console.log("📝 Adding chunk:", chunk);
-        addChunk(projectId, chunk);
+        addChunk(chatId, chunk);
       });
 
       const fullContent = streamData.join("");
       setCurrentStreamContent(fullContent);
     }
-  }, [streamData, projectId]); // Remove addChunk from deps to avoid infinite loop
+  }, [streamData, chatId]); // Remove addChunk from deps to avoid infinite loop
 
   return {
     sendMessage,

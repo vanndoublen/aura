@@ -11,14 +11,14 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { ProjectSearchDialog } from "@/components/project-search-dialog";
+import { ChatSearchDialog } from "@/components/chat-search-dialog";
 import { useMessageStore } from "@/stores/message-store";
 
 interface Props {
-  projectId: string;
+  chatId: string;
 }
 
-export const ProjectView = ({ projectId }: Props) => {
+export const ChatView = ({ chatId }: Props) => {
   const queryClient = useQueryClient();
   const globalUserMessage = useMessageStore(state => state.globalUserMessage);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -27,8 +27,8 @@ export const ProjectView = ({ projectId }: Props) => {
   const hasProAccess = has?.({ plan: "pro" });
 
   const trpc = useTRPC();
-  const { data: projects } = useSuspenseQuery(
-    trpc.projects.getMany.queryOptions()
+  const { data: chats } = useSuspenseQuery(
+    trpc.chats.getMany.queryOptions()
   );
 
   if (!isLoaded) {
@@ -49,17 +49,17 @@ export const ProjectView = ({ projectId }: Props) => {
         }
         defaultOpen={true}
       >
-        <AppSidebar projects={projects} projectId={projectId} isSearchOpen={isSearchOpen} setIsSearchOpen={setIsSearchOpen} />
+        <AppSidebar chats={chats} chatId={chatId} isSearchOpen={isSearchOpen} setIsSearchOpen={setIsSearchOpen} />
 
         <SidebarInset className="flex flex-col">
           <SidebarTrigger className="md:hidden border-none fixed top-2 left-4" />
           <Suspense fallback={<p>loading messages. ... . </p>}>
-            <MessagesContainer projectId={projectId} />
+            <MessagesContainer chatId={chatId} />
           </Suspense>
         </SidebarInset>
 
         <SignedIn>
-          <ProjectSearchDialog projects={projects} isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} />
+          <ChatSearchDialog chats={chats} isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} />
         </SignedIn>
 
       </SidebarProvider>

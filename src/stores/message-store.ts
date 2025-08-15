@@ -10,51 +10,51 @@ interface StreamingData {
 }
 
 interface MessageStore {
-  globalProjectId: string | null;
+  globalChatId: string | null;
   globalUserMessage: string | null;
   globalModelId: string | null;
 
-  // State per project
+  // State per chat
   streams: Record<string, StreamingData>;
 
-  pendingProjectMessage: string | null;
-  pendingProjectModelId: string | null;
+  pendingChatMessage: string | null;
+  pendingChatModelId: string | null;
 
   // Actions
-  startStream: (projectId: string, userMessage: string) => void;
-  addChunk: (projectId: string, chunk: string) => void;
-  endStream: (projectId: string) => void;
-  clearStream: (projectId: string) => void;
+  startStream: (chatId: string, userMessage: string) => void;
+  addChunk: (chatId: string, chunk: string) => void;
+  endStream: (chatId: string) => void;
+  clearStream: (chatId: string) => void;
 
   setGlobalMessage: (
-    projectId: string,
+    chatId: string,
     userMessage: string,
     modelId: string
   ) => void;
 
   clearGlobalMessage: () => void;
 
-  clearPendingProjectMessage: () => void;
+  clearPendingChatMessage: () => void;
 
   // Selectors
-  getStreamData: (projectId: string) => StreamingData | null;
+  getStreamData: (chatId: string) => StreamingData | null;
 }
 
 export const useMessageStore = create<MessageStore>()(
   subscribeWithSelector((set, get) => ({
-    globalProjectId: null,
+    globalChatId: null,
     globalUserMessage: null,
     globalModelId: null,
 
     streams: {},
-    pendingProjectMessage: null,
-    pendingProjectModelId: null,
+    pendingChatMessage: null,
+    pendingChatModelId: null,
 
-    startStream: (projectId, userMessage) =>
+    startStream: (chatId, userMessage) =>
       set((state) => ({
         streams: {
           ...state.streams,
-          [projectId]: {
+          [chatId]: {
             userMessage,
             streamContent: "",
             isStreaming: true,
@@ -63,16 +63,16 @@ export const useMessageStore = create<MessageStore>()(
         },
       })),
 
-    addChunk: (projectId, chunk) =>
+    addChunk: (chatId, chunk) =>
       set((state) => {
-        const current = state.streams[projectId];
+        const current = state.streams[chatId];
         if (!current) return state;
 
         const newChunks = [...current.chunks, chunk];
         return {
           streams: {
             ...state.streams,
-            [projectId]: {
+            [chatId]: {
               ...current,
               chunks: newChunks,
               streamContent: newChunks.join(""),
@@ -81,43 +81,43 @@ export const useMessageStore = create<MessageStore>()(
         };
       }),
 
-    endStream: (projectId) =>
+    endStream: (chatId) =>
       set((state) => ({
         streams: {
           ...state.streams,
-          [projectId]: {
-            ...state.streams[projectId],
+          [chatId]: {
+            ...state.streams[chatId],
             isStreaming: false,
           },
         },
       })),
 
-    clearStream: (projectId) =>
+    clearStream: (chatId) =>
       set((state) => {
-        const { [projectId]: removed, ...rest } = state.streams;
+        const { [chatId]: removed, ...rest } = state.streams;
         return { streams: rest };
       }),
 
-    setGlobalMessage: (projectId, message, modelId) =>
+    setGlobalMessage: (chatId, message, modelId) =>
       set({
-        globalProjectId: projectId,
+        globalChatId: chatId,
         globalUserMessage: message,
         globalModelId: modelId,
       }),
 
     clearGlobalMessage: () =>
       set({
-        globalProjectId: null,
+        globalChatId: null,
         // globalModelId: null,
         globalUserMessage: null,
       }),
 
-    clearPendingProjectMessage: () =>
+    clearPendingChatMessage: () =>
       set({
-        pendingProjectMessage: null,
-        pendingProjectModelId: null,
+        pendingChatMessage: null,
+        pendingChatModelId: null,
       }),
 
-    getStreamData: (projectId) => get().streams[projectId] || null,
+    getStreamData: (chatId) => get().streams[chatId] || null,
   }))
 );

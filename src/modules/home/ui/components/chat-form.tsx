@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { ArrowUpIcon, Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { PROJECT_TEMPLATES } from "../../constants";
+import { CHAT_TEMPLATES } from "../../constants";
 import { useClerk } from "@clerk/nextjs";
 import { type AiModel } from "@/generated/prisma";
 import { ModelDropdown } from "@/components/model-dropdown";
@@ -33,8 +33,8 @@ const formSchema = z.object({
 })
 
 
-export const ProjectForm = () => {
-    const [projectId, setProjectId] = useState("");
+export const ChatForm = () => {
+    const [chatId, setChatId] = useState("");
     const [success, setSuccess] = useState(false);
     const [userMessage, setUserMessage] = useState("");
 
@@ -44,7 +44,7 @@ export const ProjectForm = () => {
     const trpc = useTRPC();
     const queryClient = useQueryClient();
 
-    // const { sendMessage } = useChat(projectId || "");
+    // const { sendMessage } = useChat(chatId || "");
     const messageSentRef = useRef(false);
 
     const setGlobalMessage = useCallback(useMessageStore((state) => state.setGlobalMessage), []);
@@ -69,23 +69,23 @@ export const ProjectForm = () => {
     });
 
     useEffect(() => {
-        if (success && projectId && userMessage && selectedModel?.id && !messageSentRef.current) {
+        if (success && chatId && userMessage && selectedModel?.id && !messageSentRef.current) {
             messageSentRef.current = true; // Prevent sending multiple times
-            setGlobalMessage(projectId, userMessage, selectedModel?.id);
+            setGlobalMessage(chatId, userMessage, selectedModel?.id);
             // setTimeout(() => {
-                router.push(`/projects/${projectId}`);
+            router.push(`/chats/${chatId}`);
             // }, 2000);
         }
-    }, [success, projectId, userMessage, selectedModel?.id, router, setGlobalMessage]);
+    }, [success, chatId, userMessage, selectedModel?.id, router, setGlobalMessage]);
 
-    const mutateProject = useMutation(trpc.projects.create.mutationOptions({
+    const mutateChat = useMutation(trpc.chats.create.mutationOptions({
         onSuccess: (data) => {
             form.reset();
             queryClient.invalidateQueries(
-                trpc.projects.getMany.queryOptions()
+                trpc.chats.getMany.queryOptions()
             );
 
-            setProjectId(data.id)
+            setChatId(data.id)
             setSuccess(true);
 
             // TODO: add usage
@@ -106,7 +106,7 @@ export const ProjectForm = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setUserMessage(values.value);
-        await mutateProject.mutateAsync({
+        await mutateChat.mutateAsync({
             value: values.value,
             aiModelId: selectedModel?.id,
         })
@@ -124,7 +124,7 @@ export const ProjectForm = () => {
 
 
     const [isFocused, setIsFocused] = useState(false);
-    const isPending = mutateProject.isPending;
+    const isPending = mutateChat.isPending;
     const isButtonDisabled = isPending || !form.formState.isValid;
 
 
@@ -193,7 +193,7 @@ export const ProjectForm = () => {
                 </form>
 
                 <div className="flex-wrap justify-center gap-2 hidden md:flex max-w-3xl">
-                    {PROJECT_TEMPLATES.map((template) => (
+                    {CHAT_TEMPLATES.map((template) => (
                         <AISuggestion
                             key={template.title}
                             onClick={() => onSelect(template.prompt)}

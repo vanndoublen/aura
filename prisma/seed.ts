@@ -23,15 +23,6 @@ const modelData: Prisma.AiModelCreateInput[] = [
     isActive: true,
   },
   {
-    name: "gpt-5",
-    provider: "OpenAI",
-    displayName: "GPT 5",
-    description: "The best model for coding and agentic tasks across domains.",
-    maxTokens: 4096,
-    temperature: 0.7,
-    isActive: true,
-  },
-  {
     name: "o4-mini",
     provider: "OpenAI",
     displayName: "GPT o4 mini",

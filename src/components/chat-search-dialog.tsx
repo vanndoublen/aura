@@ -1,4 +1,4 @@
-import { Project } from "@/generated/prisma";
+import { Chat } from "@/generated/prisma";
 
 import {
     Command,
@@ -20,15 +20,15 @@ import { Input } from "./ui/input";
 import { Search } from "lucide-react";
 
 interface Props {
-    projects: Project[];
+    chats: Chat[];
     isHome?: boolean;
     isOpen: boolean;
     setIsOpen: (open: boolean) => void;
 }
 
-export const ProjectSearchDialog = ({ projects, isHome, isOpen, setIsOpen }: Props) => {
+export const ChatSearchDialog = ({ chats, isHome, isOpen, setIsOpen }: Props) => {
     const [searchValue, setSearchValue] = useState("");
-    const [filteredProjects, setFilterProjects] = useState<Project[]>(projects);
+    const [filteredChats, setFilterChats] = useState<Chat[]>(chats);
 
     useEffect(() => {
         const down = (e: KeyboardEvent) => {
@@ -42,15 +42,15 @@ export const ProjectSearchDialog = ({ projects, isHome, isOpen, setIsOpen }: Pro
     }, [])
 
     useEffect(() => {
-        setFilterProjects(projects);
-    } ,[projects])
+        setFilterChats(chats);
+    } ,[chats])
 
     const handleSearchChange = (value: string) => {
         if (value.length === 0) {
-            setFilterProjects(projects);
+            setFilterChats(chats);
         } else {
-            const filteredResult = projects.filter(item => item.name.toLowerCase().includes(value.toLowerCase()) || format(item.updatedAt, "MMM dd, yyyy").toLowerCase().includes(value.toLowerCase()));
-            setFilterProjects(filteredResult);
+            const filteredResult = chats.filter(item => item.name.toLowerCase().includes(value.toLowerCase()) || format(item.updatedAt, "MMM dd, yyyy").toLowerCase().includes(value.toLowerCase()));
+            setFilterChats(filteredResult);
         }
         setSearchValue(value);
     }
@@ -71,31 +71,31 @@ export const ProjectSearchDialog = ({ projects, isHome, isOpen, setIsOpen }: Pro
 
             </div>
             <CommandList>
-                <CommandGroup heading="Projects">
-                    {filteredProjects.map((project) => (
+                <CommandGroup heading="Chats">
+                    {filteredChats.map((chat) => (
 
                         <Button
                             asChild
                             variant="ghost"
                             size="sm"
-                            key={project.id}
+                            key={chat.id}
                             className="w-full border-none h-8"
                         >
-                            <Link href={isHome ? `projects/${project.id}` : `${project.id}`}>
+                            <Link href={isHome ? `chats/${chat.id}` : `${chat.id}`}>
 
                                 <div className="flex items-center justify-between w-full">
-                                    <span className="truncate text-xs pr-1">{project.name}</span>
+                                    <span className="truncate text-xs pr-1">{chat.name}</span>
                                     <span className="text-xs pl-1 hidden sm:block">
-                                        {format(project.updatedAt, "MMM dd, yyyy")}
+                                        {format(chat.updatedAt, "MMM dd, yyyy")}
                                     </span>
                                 </div>
                             </Link>
                         </Button>
 
                     ))}
-                    {filteredProjects.length === 0 && searchValue && (
+                    {filteredChats.length === 0 && searchValue && (
                         <div className="px-3 py-8 text-center text-sm text-muted-foreground">
-                            No projects found
+                            No chats found
                         </div>
                     )}
                 </CommandGroup>

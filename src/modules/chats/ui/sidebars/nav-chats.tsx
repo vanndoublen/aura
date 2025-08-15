@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem } from "@/components/ui/sidebar"
-import { Project } from "@/generated/prisma"
+import { Chat } from "@/generated/prisma"
 import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -9,11 +9,11 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 interface Props {
-    projects: Project[];
-    projectId: string;
+    chats: Chat[];
+    chatId: string;
 }
 
-export const NavProjects = ({ projects, projectId }: Props) => {
+export const NavChats = ({ chats, chatId }: Props) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -22,17 +22,17 @@ export const NavProjects = ({ projects, projectId }: Props) => {
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
 
-    const todayProjects = projects.filter(
+    const todayChats = chats.filter(
         p => new Date(p.updatedAt).setHours(0, 0, 0, 0) === today.getTime()
     );
 
-    const lastSevenDaysProjects = projects.filter(p => {
+    const lastSevenDaysChats = chats.filter(p => {
         const updated = new Date(p.updatedAt);
         updated.setHours(0, 0, 0, 0);
         return updated < today && updated >= sevenDaysAgo;
     });
 
-    const oldProjects = projects.filter(p => {
+    const oldChats = chats.filter(p => {
         const updated = new Date(p.updatedAt);
         updated.setHours(0, 0, 0, 0);
         return updated < sevenDaysAgo;
@@ -41,11 +41,11 @@ export const NavProjects = ({ projects, projectId }: Props) => {
     return (
         <>
 
-            {todayProjects && <SubNavProjects projects={todayProjects} projectId={projectId} day="Today" />}
+            {todayChats && <SubNavChats chats={todayChats} chatId={chatId} day="Today" />}
 
-            {lastSevenDaysProjects && <SubNavProjects projects={lastSevenDaysProjects} projectId={projectId} day="Last 7 Days" />}
+            {lastSevenDaysChats && <SubNavChats chats={lastSevenDaysChats} chatId={chatId} day="Last 7 Days" />}
 
-            {oldProjects && <SubNavProjects projects={oldProjects} projectId={projectId} day="A Long Time Ago" />}
+            {oldChats && <SubNavChats chats={oldChats} chatId={chatId} day="A Long Time Ago" />}
 
         </>
     )
@@ -53,29 +53,29 @@ export const NavProjects = ({ projects, projectId }: Props) => {
 
 
 interface SubProps {
-    projects: Project[];
-    projectId: string;
+    chats: Chat[];
+    chatId: string;
     day: "Today" | "Last 7 Days" | "A Long Time Ago"
 
 }
-const SubNavProjects = ({ projects, projectId, day }: SubProps) => {
+const SubNavChats = ({ chats, chatId, day }: SubProps) => {
     const trpc = useTRPC();
     const queryClient = useQueryClient();
     const [editingId, setEditingId] = useState<string | null>(null);
     const [tempName, setTempName] = useState("");
 
-    const updateName = useMutation(trpc.projects.updateName.mutationOptions({
+    const updateName = useMutation(trpc.chats.updateName.mutationOptions({
         onSuccess() {
-            queryClient.invalidateQueries(trpc.projects.getMany.queryOptions());
+            queryClient.invalidateQueries(trpc.chats.getMany.queryOptions());
         },
         onError(error) {
             toast.error(error.message);
         }
     }))
 
-    const handleDoubleClick = (project: Project) => {
-        setEditingId(project.id);
-        setTempName(project.name);
+    const handleDoubleClick = (chat: Chat) => {
+        setEditingId(chat.id);
+        setTempName(chat.name);
     }
 
     const handleSave = async (id: string) => {
@@ -102,33 +102,33 @@ const SubNavProjects = ({ projects, projectId, day }: SubProps) => {
     return (
         <SidebarGroup>
             <SidebarGroupLabel>{day}</SidebarGroupLabel>
-            {projects && (
+            {chats && (
                 <SidebarMenu>
                     <SidebarMenuSubItem >
-                        {projects.map((project) => (
-                            <SidebarMenuSubButton asChild key={project.id} isActive={projectId === project.id}
-                                className={cn(projectId === project.id && "border-2 border-foreground" )}
+                        {chats.map((chat) => (
+                            <SidebarMenuSubButton asChild key={chat.id} isActive={chatId === chat.id}
+                                className={cn(chatId === chat.id && "border-2 border-foreground")}
                             >
-                                {editingId === project.id ? (
+                                {editingId === chat.id ? (
                                     <Input
                                         value={tempName}
                                         onChange={(e) => setTempName(e.target.value)}
-                                        onBlur={() => handleSave(project.id)}
-                                        onKeyDown={(e) => handleKeyDown(e, project.id)}
+                                        onBlur={() => handleSave(chat.id)}
+                                        onKeyDown={(e) => handleKeyDown(e, chat.id)}
                                         autoFocus
                                         className="!text-foreground !text-xs"
                                     />
                                 ) : (
                                     <Link
-                                        href={project.id}
+                                        href={chat.id}
                                         className="hover:border-2 hover:border-foreground"
                                         onDoubleClick={(e) => {
                                             e.preventDefault();
-                                            handleDoubleClick(project)
+                                            handleDoubleClick(chat)
                                         }}
                                     >
                                         <span className="text-xs truncate pr-4">
-                                            {project.name}
+                                            {chat.name}
                                         </span>
                                     </Link>
                                 )}

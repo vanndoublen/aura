@@ -15,29 +15,29 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { Project } from "@/generated/prisma";
+import { Chat } from "@/generated/prisma";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 
 interface Props {
-    projects: Project[];
+    chats: Chat[];
     isHome?: boolean;
 }
 
-export const ProjectDialogButton = ({ projects, isHome }: Props) => {
+export const ChatDialogButton = ({ chats, isHome }: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
-    const [filteredProjects, setFilterProjects] = useState<Project[]>(projects);
+    const [filteredChats, setFilterChats] = useState<Chat[]>(chats);
 
 
 
     const handleSearchChange = (value: string) => {
         if (value.length === 0) {
-            setFilterProjects(projects);
+            setFilterChats(chats);
         } else {
-            const filteredResult = projects.filter(item => item.name.toLowerCase().includes(value.toLowerCase()) || format(item.updatedAt, "MMM dd, yyyy").toLowerCase().includes(value.toLowerCase()));
-            setFilterProjects(filteredResult);
+            const filteredResult = chats.filter(item => item.name.toLowerCase().includes(value.toLowerCase()) || format(item.updatedAt, "MMM dd, yyyy").toLowerCase().includes(value.toLowerCase()));
+            setFilterChats(filteredResult);
         }
         setSearchValue(value);
     }
@@ -53,7 +53,7 @@ export const ProjectDialogButton = ({ projects, isHome }: Props) => {
                         variant="elevated"
                         onClick={() => setIsOpen(true)}
                     >
-                        View projects
+                        View chats
                     </Button>
                 ) : (
                     <SidebarMenuButton
@@ -66,10 +66,10 @@ export const ProjectDialogButton = ({ projects, isHome }: Props) => {
 
                 <DialogContent showCloseButton={false} className="!max-w-7xl !w-[70vw] !rounded-4xl">
                     <DialogHeader className="">
-                        <DialogTitle>Projects</DialogTitle>
+                        <DialogTitle>Chats</DialogTitle>
                     </DialogHeader>
                     <Input
-                        placeholder="Search your project"
+                        placeholder="Search your chat"
                         value={searchValue}
                         onChange={(e) => handleSearchChange(e.target.value)}
                     />
@@ -78,17 +78,17 @@ export const ProjectDialogButton = ({ projects, isHome }: Props) => {
                     <ScrollArea className="h-[400px] min-h-1xl w-full mx-auto border-t">
                         <div className="flex flex-col ">
 
-                            {filteredProjects.map((project) => (
+                            {filteredChats.map((chat) => (
                                 <Button
                                     asChild
                                     variant="ghost"
-                                    key={project.id}
+                                    key={chat.id}
                                     className="bg-transparent py-4 border-none h-10 flex text-start justify-between max-w-7xl w-[65vw] rounded-2xl"
                                 >
-                                    <Link href={isHome ? `projects/${project.id}` : `${project.id}`} >
+                                    <Link href={isHome ? `chats/${chat.id}` : `${chat.id}`} >
 
-                                        <span>{project.name}</span>
-                                        <span className="text-sm">{format(project.updatedAt, "MMM dd, yyyy")}</span>
+                                        <span>{chat.name}</span>
+                                        <span className="text-sm">{format(chat.updatedAt, "MMM dd, yyyy")}</span>
                                     </Link>
                                 </Button>
                             ))}

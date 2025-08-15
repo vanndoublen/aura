@@ -5,12 +5,11 @@ import { TRPCError } from "@trpc/server";
 import prisma from "@/lib/db";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { AiService } from "@/modules/ai/service";
-import { PROJECT_TITLE_PROMPT } from "@/prompt";
+import { CHAT_TITLE_PROMPT } from "@/prompt";
 
-
-export const projectsRouter = createTRPCRouter({
+export const chatsRouter = createTRPCRouter({
   getMany: protectedProcedure.query(async ({ ctx }) => {
-    const projects = await prisma.project.findMany({
+    const chats = await prisma.chat.findMany({
       where: {
         userId: ctx.auth.userId,
       },
@@ -18,29 +17,29 @@ export const projectsRouter = createTRPCRouter({
         updatedAt: "desc",
       },
     });
-    return projects;
+    return chats;
   }),
 
   getOne: protectedProcedure
     .input(
       z.object({
-        id: z.string().min(1, { message: "Project ID is required" }),
+        id: z.string().min(1, { message: "Chat ID is required" }),
       })
     )
     .query(async ({ input, ctx }) => {
-      const project = await prisma.project.findUnique({
+      const chat = await prisma.chat.findUnique({
         where: {
           id: input.id,
           userId: ctx.auth.userId,
         },
       });
-      if (!project) {
+      if (!chat) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Project not found",
+          message: "Chat not found",
         });
       }
-      return project;
+      return chat;
     }),
 
   create: protectedProcedure
@@ -63,20 +62,20 @@ export const projectsRouter = createTRPCRouter({
 
       // TODO: calculate credits
 
-      const projectTitleResponse = await AiService.createResponse(
+      const chatTitleResponse = await AiService.createResponse(
         input.value,
         "OpenAI",
         "gpt-4.1-nano",
-        PROJECT_TITLE_PROMPT
+        CHAT_TITLE_PROMPT
       );
 
-      const createdProject = await prisma.project.create({
+      const createdChat = await prisma.chat.create({
         data: {
-          name: projectTitleResponse.content,
+          name: chatTitleResponse.content,
           userId: ctx.auth.userId,
         },
       });
-      return createdProject;
+      return createdChat;
     }),
 
   updateName: protectedProcedure
@@ -90,7 +89,7 @@ export const projectsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const updatedProject = await prisma.project.update({
+      const updatedChat = await prisma.chat.update({
         where: {
           id: input.id,
           userId: ctx.auth.userId,
@@ -99,6 +98,6 @@ export const projectsRouter = createTRPCRouter({
           name: input.name,
         },
       });
-      return updatedProject;
+      return updatedChat;
     }),
 });

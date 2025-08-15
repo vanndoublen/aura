@@ -9,14 +9,14 @@ export const messagesRouter = createTRPCRouter({
   getMany: protectedProcedure
     .input(
       z.object({
-        projectId: z.string().min(1, { message: "Project ID is required" }),
+        chatId: z.string().min(1, { message: "Chat ID is required" }),
       })
     )
     .query(async ({ input, ctx }) => {
       const messages = await prisma.message.findMany({
         where: {
-          projectId: input.projectId,
-          project: {
+          chatId: input.chatId,
+          chat: {
             userId: ctx.auth.userId,
           },
         },
@@ -34,7 +34,7 @@ export const messagesRouter = createTRPCRouter({
           .string()
           .min(1, { message: "Value is required" })
           .max(10000, { message: "Value is too long" }),
-        projectId: z.string().min(1, { message: "Project ID is required" }),
+        chatId: z.string().min(1, { message: "Chat ID is required" }),
         aiModelId: z.string().optional(),
       })
     )
@@ -45,17 +45,17 @@ export const messagesRouter = createTRPCRouter({
           message: "Please select a model.",
         });
       }
-      const existingProject = await prisma.project.findUnique({
+      const existingChat = await prisma.chat.findUnique({
         where: {
-          id: input.projectId,
+          id: input.chatId,
           userId: ctx.auth.userId,
         },
       });
 
-      if (!existingProject) {
+      if (!existingChat) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Project not found",
+          message: "Chat not found",
         });
       }
 
@@ -64,7 +64,7 @@ export const messagesRouter = createTRPCRouter({
       const createdUserMessage = await prisma.message.create({
         data: {
           content: input.value,
-          projectId: input.projectId,
+          chatId: input.chatId,
           role: "USER",
           type: "TEXT",
         },
@@ -98,14 +98,14 @@ export const messagesRouter = createTRPCRouter({
                 type: "TEXT",
                 aiModelId: input.aiModelId,
                 content: assistantContent,
-                projectId: input.projectId,
+                chatId: input.chatId,
               },
             });
 
-            // update the project time
-            await prisma.project.update({
+            // update the chat time
+            await prisma.chat.update({
               where: {
-                id: input.projectId,
+                id: input.chatId,
               },
               data: {
                 updatedAt: new Date(),
@@ -120,7 +120,7 @@ export const messagesRouter = createTRPCRouter({
                   type: "ERROR",
                   aiModelId: input.aiModelId,
                   content: assistantContent + " [ERROR: Stream interrupted]",
-                  projectId: input.projectId,
+                  chatId: input.chatId,
                 },
               });
             }

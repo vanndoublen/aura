@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { Suspense, useState } from "react";
 
-import { ProjectForm } from "../components/project-form";
-import { ProjectDialogButton } from "../components/project-dialog-button";
+import { ChatForm } from "../components/chat-form";
+import { ChatDialogButton } from "../components/chat-dialog-button";
 import { useTRPC } from "@/trpc/client";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { TextLoop } from "../../../../../components/motion-primitives/text-loop";
@@ -14,7 +14,7 @@ import { useCurrentTheme } from "@/hooks/use-current-theme";
 import { cn } from "@/lib/utils";
 import { SignedIn, useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
-import { ProjectSearchDialog } from "@/components/project-search-dialog";
+import { ChatSearchDialog } from "@/components/chat-search-dialog";
 
 const words = ["Generate your gadget with Aura"];
 
@@ -24,7 +24,7 @@ export const HomeView = () => {
 
     // TODO: might use suspense infinite query instead
     const trpc = useTRPC();
-    const { data: projects } = useQuery(trpc.projects.getMany.queryOptions());
+    const { data: chats } = useQuery(trpc.chats.getMany.queryOptions());
 
     const { user } = useUser();
 
@@ -76,7 +76,7 @@ export const HomeView = () => {
                 </TextLoop>
                 <div className="max-w-3xl mx-auto w-full">
                     <Suspense fallback={<p>Loading text area</p>}>
-                        <ProjectForm />
+                        <ChatForm />
                     </Suspense>
                 </div>
             </section>
@@ -85,16 +85,16 @@ export const HomeView = () => {
             {user &&
                 <>
                     <div className="mx-auto">
-                        {/* <ProjectDialogButton projects={projects} isHome /> */}
+                        {/* <ChatDialogButton chats={chats} isHome /> */}
                         <Button
                             className="bg-transparent hover:bg-accent text-[12px] h-10"
                             variant="elevated"
                             onClick={() => setIsOpen(true)}
                         >
-                            View projects
+                            View chats
                         </Button>
                     </div>
-                    <ProjectSearchDialog projects={projects ?? []} isHome isOpen={isOpen} setIsOpen={setIsOpen} />
+                    <ChatSearchDialog chats={chats ?? []} isHome isOpen={isOpen} setIsOpen={setIsOpen} />
                 </>}
         </div>
     )

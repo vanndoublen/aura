@@ -1,4 +1,4 @@
-export const PROJECT_TITLE_PROMPT = `
+export const CHAT_TITLE_PROMPT = `
 You are an assistant that generates a short, descriptive title for a chat conversation.
 The title should be:
   - Relevant to what was generated

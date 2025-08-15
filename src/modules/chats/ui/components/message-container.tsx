@@ -13,33 +13,33 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { stat } from "fs";
 
 interface Props {
-    projectId: string;
+    chatId: string;
 }
 
-export const MessagesContainer = ({ projectId }: Props) => {
+export const MessagesContainer = ({ chatId }: Props) => {
     const trpc = useTRPC();
     const queryClient = useQueryClient();
     const bottomRef = useRef<HTMLDivElement>(null);
     const streamingMessageIdRef = useRef<string | null>(null);
     const streamContentRef = useRef("");
-    const currentProjectRef = useRef(projectId);
+    const currentChatRef = useRef(chatId);
 
     const [isStreaming, setIsStreaming] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
     const [combinedMessages, setCombinedMessages] = useState<Message[]>([]);
     const [queryParams, setQueryParams] = useState({
-        projectId: projectId,
+        chatId: chatId,
         value: "",
         aiModelId: "",
     });
 
     const globalUserMessage = useMessageStore(useShallow((state) => state.globalUserMessage));
     const globalModelId = useMessageStore(useShallow((state) => state.globalModelId));
-    const globalProjectId = useMessageStore(useShallow((state) => state.globalProjectId));
+    const globalChatId = useMessageStore(useShallow((state) => state.globalChatId));
     const clearGlobalMessage = useMessageStore(useShallow((state) => state.clearGlobalMessage));
 
     const { data: messages } = useSuspenseQuery(trpc.messages.getMany.queryOptions({
-        projectId: projectId,
+        chatId: chatId,
     }));
 
     const { data: streamData, error, status, reset } = useSubscription(
@@ -50,7 +50,7 @@ export const MessagesContainer = ({ projectId }: Props) => {
                     queryParams.value &&
                     queryParams.value.trim() !== "" &&
                     queryParams.aiModelId &&
-                    queryParams.projectId === projectId
+                    queryParams.chatId === chatId
                 ),
                 onData(data) {
                     setIsStreaming(true);
@@ -63,7 +63,7 @@ export const MessagesContainer = ({ projectId }: Props) => {
                         if (!isLastMessageAssistant || !streamingMessageIdRef.current) {
                             const newAssistantMessage: Message = {
                                 id: nanoid(),
-                                projectId: projectId,
+                                chatId: chatId,
                                 externalId: "",
                                 content: streamContentRef.current,
                                 role: "ASSISTANT",
@@ -98,7 +98,7 @@ export const MessagesContainer = ({ projectId }: Props) => {
                 },
                 onConnectionStateChange(state) {
                     setTimeout(() => {
-                        queryClient.invalidateQueries(trpc.projects.getMany.queryOptions());
+                        queryClient.invalidateQueries(trpc.chats.getMany.queryOptions());
                     }, 100);
                 },
             },
@@ -111,11 +111,11 @@ export const MessagesContainer = ({ projectId }: Props) => {
     }, [messages]);
 
     useEffect(() => {
-        if (currentProjectRef.current !== projectId) {
+        if (currentChatRef.current !== chatId) {
             clearGlobalMessage();
 
             setQueryParams({
-                projectId: projectId,
+                chatId: chatId,
                 value: "",
                 aiModelId: "",
             });
@@ -125,25 +125,25 @@ export const MessagesContainer = ({ projectId }: Props) => {
             streamingMessageIdRef.current = null;
             reset();
 
-            currentProjectRef.current = projectId;
+            currentChatRef.current = chatId;
         }
-    }, [projectId, clearGlobalMessage, reset]);
+    }, [chatId, clearGlobalMessage, reset]);
 
     useEffect(() => {
-        if (globalUserMessage && globalProjectId === projectId) {
+        if (globalUserMessage && globalChatId === chatId) {
             setQueryParams({
-                projectId: projectId,
+                chatId: chatId,
                 value: globalUserMessage,
                 aiModelId: globalModelId ?? "",
             });
         }
-    }, [globalUserMessage, globalModelId, globalProjectId, projectId]);
+    }, [globalUserMessage, globalModelId, globalChatId, chatId]);
 
     useEffect(() => {
-        if (queryParams.value && queryParams.value.trim() !== "" && queryParams.projectId === projectId) {
+        if (queryParams.value && queryParams.value.trim() !== "" && queryParams.chatId === chatId) {
             const userMessage: Message = {
                 id: nanoid(),
-                projectId: projectId,
+                chatId: chatId,
                 externalId: "",
                 content: queryParams.value.trim(),
                 role: "USER",
@@ -162,7 +162,7 @@ export const MessagesContainer = ({ projectId }: Props) => {
 
             clearGlobalMessage();
         }
-    }, [queryParams.value, queryParams.projectId, projectId, clearGlobalMessage]);
+    }, [queryParams.value, queryParams.chatId, chatId, clearGlobalMessage]);
 
     useEffect(() => {
         const isCurrentlyFetching = status === "pending" || status === "connecting";
@@ -205,7 +205,7 @@ export const MessagesContainer = ({ projectId }: Props) => {
                 <div className="max-w-3xl mx-auto pointer-events-auto">
                     <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-full max-w-3xl h-6 bg-gradient-to-b from-transparent to-background pointer-events-none" />
                     <MessageForm
-                        projectId={projectId}
+                        chatId={chatId}
                         isStreaming={isStreaming}
                         isFetching={isFetching}
                     />

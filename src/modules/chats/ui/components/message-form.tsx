@@ -18,7 +18,7 @@ import { AiModel } from "@/generated/prisma";
 import { useMessageStore } from "@/stores/message-store";
 
 interface Props {
-    projectId: string;
+    chatId: string;
     isStreaming: boolean;
     isFetching: boolean;
 }
@@ -31,7 +31,7 @@ const formSchema = z.object({
 })
 
 
-export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
+export const MessageForm = ({ chatId, isStreaming, isFetching }: Props) => {
     const trpc = useTRPC();
     const queryClient = useQueryClient();
 
@@ -59,7 +59,7 @@ export const MessageForm = ({ projectId, isStreaming, isFetching }: Props) => {
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         console.log(values.value);
-        setGlobalMessage(projectId, values.value, selectedModel?.id ?? "");
+        setGlobalMessage(chatId, values.value, selectedModel?.id ?? "");
         form.reset();
     }
 
