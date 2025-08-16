@@ -2,7 +2,7 @@ import z from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import prisma from "@/lib/db";
 import { tracked, TRPCError } from "@trpc/server";
-import { streamAIResponse } from "@/modules/ai/ai-streaming";
+import { streamAIResponse } from "@/modules/ai/lib/ai-streaming";
 import { Message } from "@/generated/prisma";
 import { consumeCredits, getUsageStatus } from "@/lib/usage";
 

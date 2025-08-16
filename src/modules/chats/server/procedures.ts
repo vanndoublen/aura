@@ -4,8 +4,8 @@ import { TRPCError } from "@trpc/server";
 
 import prisma from "@/lib/db";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
-import { AiService } from "@/modules/ai/service";
 import { CHAT_TITLE_PROMPT } from "@/prompt";
+import { createTitle } from "@/modules/ai/lib/utils";
 
 export const chatsRouter = createTRPCRouter({
   getMany: protectedProcedure.query(async ({ ctx }) => {
@@ -62,16 +62,13 @@ export const chatsRouter = createTRPCRouter({
 
       // TODO: calculate credits
 
-      const chatTitleResponse = await AiService.createResponse(
+      const chatTitleResponse = await createTitle(
         input.value,
-        "OpenAI",
-        "gpt-4.1-nano",
-        CHAT_TITLE_PROMPT
       );
 
       const createdChat = await prisma.chat.create({
         data: {
-          name: chatTitleResponse.content,
+          name: chatTitleResponse.output_text,
           userId: ctx.auth.userId,
         },
       });
