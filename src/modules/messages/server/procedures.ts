@@ -74,17 +74,17 @@ export const messagesRouter = createTRPCRouter({
       let assistantContent = "";
       let chunkId = 0;
       let createdAssistantMessage: Message | null = null;
-      const usageStatus = await getUsageStatus(); 
+      const usageStatus = await getUsageStatus();
       const remainingCredit = usageStatus?.remainingPoints;
       if (input.aiModelId) {
         const aiModel = await prisma.aiModel.findUnique({
           where: { id: input.aiModelId },
         });
 
-        // TODO: dont consume if remaining credit <= 0, because in db, 
+        // TODO: dont consume if remaining credit <= 0, because in db,
         // it would increase the point which would affect the actual success usage
 
-        // TODO: create new "SYSTEM" role, and notify users with no credit left info 
+        // TODO: create new "SYSTEM" role, and notify users with no credit left info
 
         try {
           await consumeCredits();
@@ -103,11 +103,22 @@ export const messagesRouter = createTRPCRouter({
         }
 
         if (aiModel) {
+            const history = await prisma.message.findMany({
+              where: { chatId: input.chatId },
+              orderBy: {updatedAt: "asc"},
+            });
+
+          const pastConversations = history.map((message) => {
+            return { role: message.role.toLowerCase(), content: message.content };
+          });
+
+          pastConversations.push({role: "user", content: input.value});
+
           try {
             const stream = streamAIResponse({
               provider: aiModel.provider,
               model: aiModel.name,
-              message: input.value,
+              message: pastConversations,
             });
 
             for await (const chunk of stream) {

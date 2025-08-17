@@ -1,5 +1,7 @@
 import OpenAI from "openai";
 import { GoogleGenAI } from "@google/genai";
+import { Responses } from "openai/resources/index.mjs";
+import { Conversations, toGeminiHistory, toOpenAiHistory } from "./utils";
 
 // TODO: use proper provider type
 // type ModelProvider = "OpenAI" | "Anthropic";
@@ -7,7 +9,7 @@ import { GoogleGenAI } from "@google/genai";
 export const streamAIResponse = async function* (args: {
   provider: string;
   model: string;
-  message: string;
+  message: Conversations[];
 }) {
   const { provider, model, message } = args;
 
@@ -25,12 +27,14 @@ export const streamAIResponse = async function* (args: {
   }
 };
 
-async function* streamOpenAiResponse(model: string, message: string) {
+async function* streamOpenAiResponse(model: string, message: Conversations[]) {
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+  const conversations = toOpenAiHistory(message);
 
   const events = await openai.responses.create({
     model,
-    input: message,
+    input: conversations,
     stream: true,
     reasoning: model === "o4-mini" ? {effort: "low"} : {}
   });
@@ -42,12 +46,21 @@ async function* streamOpenAiResponse(model: string, message: string) {
   }
 }
 
-async function* streamGeminiResponse(model: string, message: string) {
+async function* streamGeminiResponse(model: string, message: Conversations[]) {
   const googleAi = new GoogleGenAI({apiKey: process.env.GEMINI_API_KEY});
 
-  const events = await googleAi.models.generateContentStream({
+  const conversations = toGeminiHistory(message); 
+
+  const chat = googleAi.chats.create({
     model,
-    contents: message,
+    history: conversations,
+    config: {
+      systemInstruction: "You are a helpful and concise assistant. Make sure the response is short and precise."
+    }
+  })
+
+  const events = await chat.sendMessageStream({
+    message: message[message.length - 1].content,
   });
 
   for await (const chunk of events) {
