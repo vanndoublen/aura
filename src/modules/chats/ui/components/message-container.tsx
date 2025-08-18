@@ -10,7 +10,6 @@ import { useSubscription } from "@trpc/tanstack-react-query";
 import { Message } from "@/generated/prisma";
 import { nanoid } from "nanoid";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { stat } from "fs";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 

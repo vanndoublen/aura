@@ -21,7 +21,7 @@ export const streamAIResponse = async function* (args: {
     case "Gemini":
       yield* streamGeminiResponse(model, message);
       break;
-      
+
     default:
       throw new Error(`unknown provider: ${provider}`);
   }
@@ -47,23 +47,24 @@ async function* streamOpenAiResponse(model: string, message: Conversations[]) {
 }
 
 async function* streamGeminiResponse(model: string, message: Conversations[]) {
-  const googleAi = new GoogleGenAI({apiKey: process.env.GEMINI_API_KEY});
+  const googleAi = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-  const conversations = toGeminiHistory(message); 
+  const conversations = toGeminiHistory(message);
 
   const chat = googleAi.chats.create({
     model,
     history: conversations,
     config: {
-      systemInstruction: "You are a helpful and concise assistant. Make sure the response is short and precise."
-    }
-  })
+      systemInstruction:
+        "You are a helpful and concise assistant. Make sure the response is short and precise.",
+    },
+  });
 
   const events = await chat.sendMessageStream({
     message: message[message.length - 1].content,
   });
 
   for await (const chunk of events) {
-    yield chunk.text; 
+    yield chunk.text;
   }
-} 
+}

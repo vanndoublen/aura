@@ -7,7 +7,7 @@ import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import TextareaAutoSize from "react-textarea-autosize";
-import { QueryClient, QueryClientProvider, useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 
 import { cn } from "@/lib/utils";
@@ -21,7 +21,6 @@ import { useClerk } from "@clerk/nextjs";
 import { type AiModel } from "@/generated/prisma";
 import { ModelDropdown } from "@/components/model-dropdown";
 import { AISuggestion, AISuggestions } from "@/components/ui/kibo-ui/ai/suggestion";
-import { useChat } from "@/hooks/use-chat";
 import { useMessageStore } from "@/stores/message-store";
 
 
@@ -44,7 +43,6 @@ export const ChatForm = () => {
     const trpc = useTRPC();
     const queryClient = useQueryClient();
 
-    // const { sendMessage } = useChat(chatId || "");
     const messageSentRef = useRef(false);
 
     const setGlobalMessage = useCallback(useMessageStore((state) => state.setGlobalMessage), []);
