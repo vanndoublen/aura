@@ -17,6 +17,13 @@ interface Props {
     chatId: string;
 }
 
+interface QueryParams {
+    chatId: string,
+    value: string,
+    aiModelId: string,
+    files: File[] | null, 
+}
+
 export const MessagesContainer = ({ chatId }: Props) => {
     const trpc = useTRPC();
     const queryClient = useQueryClient();
@@ -29,15 +36,17 @@ export const MessagesContainer = ({ chatId }: Props) => {
     const [isStreaming, setIsStreaming] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
     const [combinedMessages, setCombinedMessages] = useState<Message[]>([]);
-    const [queryParams, setQueryParams] = useState({
+    const [queryParams, setQueryParams] = useState<QueryParams>({
         chatId: chatId,
         value: "",
         aiModelId: "",
+        files: null, 
     });
 
     const globalUserMessage = useMessageStore(useShallow((state) => state.globalUserMessage));
     const globalModelId = useMessageStore(useShallow((state) => state.globalModelId));
     const globalChatId = useMessageStore(useShallow((state) => state.globalChatId));
+    const globalFiles = useMessageStore(useShallow((state) => state.globalFiles)); 
     const clearGlobalMessage = useMessageStore(useShallow((state) => state.clearGlobalMessage));
 
     const { data: messages } = useSuspenseQuery(trpc.messages.getMany.queryOptions({
@@ -128,6 +137,7 @@ export const MessagesContainer = ({ chatId }: Props) => {
                 chatId: chatId,
                 value: "",
                 aiModelId: "",
+                files: null, 
             });
 
             setIsStreaming(false);
@@ -145,9 +155,10 @@ export const MessagesContainer = ({ chatId }: Props) => {
                 chatId: chatId,
                 value: globalUserMessage,
                 aiModelId: globalModelId ?? "",
+                files: globalFiles, 
             });
         }
-    }, [globalUserMessage, globalModelId, globalChatId, chatId]);
+    }, [globalUserMessage, globalModelId, globalChatId, globalFiles, chatId]);
 
     useEffect(() => {
         if (queryParams.value && queryParams.value.trim() !== "" && queryParams.chatId === chatId) {
@@ -168,7 +179,7 @@ export const MessagesContainer = ({ chatId }: Props) => {
 
             setCombinedMessages(prev => [...prev, userMessage]);
             streamContentRef.current = "";
-            streamingMessageIdRef.current = null;
+            streamingMessageIdRef.current = null;   
 
             clearGlobalMessage();
         }
@@ -202,6 +213,7 @@ export const MessagesContainer = ({ chatId }: Props) => {
                             aiModelId={message.aiModelId}
                             createdAt={message.createdAt}
                             type={message.type}
+                            // TODO: display files
                         />
                     ))}
                     {isFetching && !isStreaming && (

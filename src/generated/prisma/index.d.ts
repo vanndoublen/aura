@@ -29,6 +29,11 @@ export type AiModel = $Result.DefaultSelection<Prisma.$AiModelPayload>
  */
 export type Message = $Result.DefaultSelection<Prisma.$MessagePayload>
 /**
+ * Model MessageFile
+ * 
+ */
+export type MessageFile = $Result.DefaultSelection<Prisma.$MessageFilePayload>
+/**
  * Model Usage
  * 
  */
@@ -217,6 +222,16 @@ export class PrismaClient<
     * ```
     */
   get message(): Prisma.MessageDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.messageFile`: Exposes CRUD operations for the **MessageFile** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MessageFiles
+    * const messageFiles = await prisma.messageFile.findMany()
+    * ```
+    */
+  get messageFile(): Prisma.MessageFileDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.usage`: Exposes CRUD operations for the **Usage** model.
@@ -670,6 +685,7 @@ export namespace Prisma {
     Chat: 'Chat',
     AiModel: 'AiModel',
     Message: 'Message',
+    MessageFile: 'MessageFile',
     Usage: 'Usage'
   };
 
@@ -689,7 +705,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "chat" | "aiModel" | "message" | "usage"
+      modelProps: "chat" | "aiModel" | "message" | "messageFile" | "usage"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -915,6 +931,80 @@ export namespace Prisma {
           }
         }
       }
+      MessageFile: {
+        payload: Prisma.$MessageFilePayload<ExtArgs>
+        fields: Prisma.MessageFileFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MessageFileFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageFilePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MessageFileFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageFilePayload>
+          }
+          findFirst: {
+            args: Prisma.MessageFileFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageFilePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MessageFileFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageFilePayload>
+          }
+          findMany: {
+            args: Prisma.MessageFileFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageFilePayload>[]
+          }
+          create: {
+            args: Prisma.MessageFileCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageFilePayload>
+          }
+          createMany: {
+            args: Prisma.MessageFileCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MessageFileCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageFilePayload>[]
+          }
+          delete: {
+            args: Prisma.MessageFileDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageFilePayload>
+          }
+          update: {
+            args: Prisma.MessageFileUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageFilePayload>
+          }
+          deleteMany: {
+            args: Prisma.MessageFileDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MessageFileUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MessageFileUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageFilePayload>[]
+          }
+          upsert: {
+            args: Prisma.MessageFileUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageFilePayload>
+          }
+          aggregate: {
+            args: Prisma.MessageFileAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMessageFile>
+          }
+          groupBy: {
+            args: Prisma.MessageFileGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MessageFileGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MessageFileCountArgs<ExtArgs>
+            result: $Utils.Optional<MessageFileCountAggregateOutputType> | number
+          }
+        }
+      }
       Usage: {
         payload: Prisma.$UsagePayload<ExtArgs>
         fields: Prisma.UsageFieldRefs
@@ -1076,6 +1166,7 @@ export namespace Prisma {
     chat?: ChatOmit
     aiModel?: AiModelOmit
     message?: MessageOmit
+    messageFile?: MessageFileOmit
     usage?: UsageOmit
   }
 
@@ -1225,6 +1316,37 @@ export namespace Prisma {
    */
   export type AiModelCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MessageWhereInput
+  }
+
+
+  /**
+   * Count Type MessageCountOutputType
+   */
+
+  export type MessageCountOutputType = {
+    files: number
+  }
+
+  export type MessageCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    files?: boolean | MessageCountOutputTypeCountFilesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MessageCountOutputType without action
+   */
+  export type MessageCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageCountOutputType
+     */
+    select?: MessageCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MessageCountOutputType without action
+   */
+  export type MessageCountOutputTypeCountFilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageFileWhereInput
   }
 
 
@@ -3739,6 +3861,8 @@ export namespace Prisma {
     aiModelId?: boolean
     chat?: boolean | ChatDefaultArgs<ExtArgs>
     aiModel?: boolean | Message$aiModelArgs<ExtArgs>
+    files?: boolean | Message$filesArgs<ExtArgs>
+    _count?: boolean | MessageCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
 
   export type MessageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3794,6 +3918,8 @@ export namespace Prisma {
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chat?: boolean | ChatDefaultArgs<ExtArgs>
     aiModel?: boolean | Message$aiModelArgs<ExtArgs>
+    files?: boolean | Message$filesArgs<ExtArgs>
+    _count?: boolean | MessageCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MessageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chat?: boolean | ChatDefaultArgs<ExtArgs>
@@ -3809,6 +3935,7 @@ export namespace Prisma {
     objects: {
       chat: Prisma.$ChatPayload<ExtArgs>
       aiModel: Prisma.$AiModelPayload<ExtArgs> | null
+      files: Prisma.$MessageFilePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4219,6 +4346,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     chat<T extends ChatDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChatDefaultArgs<ExtArgs>>): Prisma__ChatClient<$Result.GetResult<Prisma.$ChatPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     aiModel<T extends Message$aiModelArgs<ExtArgs> = {}>(args?: Subset<T, Message$aiModelArgs<ExtArgs>>): Prisma__AiModelClient<$Result.GetResult<Prisma.$AiModelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    files<T extends Message$filesArgs<ExtArgs> = {}>(args?: Subset<T, Message$filesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4675,6 +4803,30 @@ export namespace Prisma {
   }
 
   /**
+   * Message.files
+   */
+  export type Message$filesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageFile
+     */
+    select?: MessageFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageFile
+     */
+    omit?: MessageFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageFileInclude<ExtArgs> | null
+    where?: MessageFileWhereInput
+    orderBy?: MessageFileOrderByWithRelationInput | MessageFileOrderByWithRelationInput[]
+    cursor?: MessageFileWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MessageFileScalarFieldEnum | MessageFileScalarFieldEnum[]
+  }
+
+  /**
    * Message without action
    */
   export type MessageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4690,6 +4842,1176 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: MessageInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MessageFile
+   */
+
+  export type AggregateMessageFile = {
+    _count: MessageFileCountAggregateOutputType | null
+    _avg: MessageFileAvgAggregateOutputType | null
+    _sum: MessageFileSumAggregateOutputType | null
+    _min: MessageFileMinAggregateOutputType | null
+    _max: MessageFileMaxAggregateOutputType | null
+  }
+
+  export type MessageFileAvgAggregateOutputType = {
+    fileSize: number | null
+  }
+
+  export type MessageFileSumAggregateOutputType = {
+    fileSize: number | null
+  }
+
+  export type MessageFileMinAggregateOutputType = {
+    id: string | null
+    originalName: string | null
+    fileName: string | null
+    fileSize: number | null
+    mimeType: string | null
+    s3Key: string | null
+    s3Bucket: string | null
+    s3Url: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    messageId: string | null
+  }
+
+  export type MessageFileMaxAggregateOutputType = {
+    id: string | null
+    originalName: string | null
+    fileName: string | null
+    fileSize: number | null
+    mimeType: string | null
+    s3Key: string | null
+    s3Bucket: string | null
+    s3Url: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    messageId: string | null
+  }
+
+  export type MessageFileCountAggregateOutputType = {
+    id: number
+    originalName: number
+    fileName: number
+    fileSize: number
+    mimeType: number
+    s3Key: number
+    s3Bucket: number
+    s3Url: number
+    createdAt: number
+    updatedAt: number
+    messageId: number
+    _all: number
+  }
+
+
+  export type MessageFileAvgAggregateInputType = {
+    fileSize?: true
+  }
+
+  export type MessageFileSumAggregateInputType = {
+    fileSize?: true
+  }
+
+  export type MessageFileMinAggregateInputType = {
+    id?: true
+    originalName?: true
+    fileName?: true
+    fileSize?: true
+    mimeType?: true
+    s3Key?: true
+    s3Bucket?: true
+    s3Url?: true
+    createdAt?: true
+    updatedAt?: true
+    messageId?: true
+  }
+
+  export type MessageFileMaxAggregateInputType = {
+    id?: true
+    originalName?: true
+    fileName?: true
+    fileSize?: true
+    mimeType?: true
+    s3Key?: true
+    s3Bucket?: true
+    s3Url?: true
+    createdAt?: true
+    updatedAt?: true
+    messageId?: true
+  }
+
+  export type MessageFileCountAggregateInputType = {
+    id?: true
+    originalName?: true
+    fileName?: true
+    fileSize?: true
+    mimeType?: true
+    s3Key?: true
+    s3Bucket?: true
+    s3Url?: true
+    createdAt?: true
+    updatedAt?: true
+    messageId?: true
+    _all?: true
+  }
+
+  export type MessageFileAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MessageFile to aggregate.
+     */
+    where?: MessageFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MessageFiles to fetch.
+     */
+    orderBy?: MessageFileOrderByWithRelationInput | MessageFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MessageFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MessageFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MessageFiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MessageFiles
+    **/
+    _count?: true | MessageFileCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MessageFileAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MessageFileSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MessageFileMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MessageFileMaxAggregateInputType
+  }
+
+  export type GetMessageFileAggregateType<T extends MessageFileAggregateArgs> = {
+        [P in keyof T & keyof AggregateMessageFile]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMessageFile[P]>
+      : GetScalarType<T[P], AggregateMessageFile[P]>
+  }
+
+
+
+
+  export type MessageFileGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageFileWhereInput
+    orderBy?: MessageFileOrderByWithAggregationInput | MessageFileOrderByWithAggregationInput[]
+    by: MessageFileScalarFieldEnum[] | MessageFileScalarFieldEnum
+    having?: MessageFileScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MessageFileCountAggregateInputType | true
+    _avg?: MessageFileAvgAggregateInputType
+    _sum?: MessageFileSumAggregateInputType
+    _min?: MessageFileMinAggregateInputType
+    _max?: MessageFileMaxAggregateInputType
+  }
+
+  export type MessageFileGroupByOutputType = {
+    id: string
+    originalName: string
+    fileName: string
+    fileSize: number
+    mimeType: string
+    s3Key: string
+    s3Bucket: string
+    s3Url: string | null
+    createdAt: Date
+    updatedAt: Date
+    messageId: string
+    _count: MessageFileCountAggregateOutputType | null
+    _avg: MessageFileAvgAggregateOutputType | null
+    _sum: MessageFileSumAggregateOutputType | null
+    _min: MessageFileMinAggregateOutputType | null
+    _max: MessageFileMaxAggregateOutputType | null
+  }
+
+  type GetMessageFileGroupByPayload<T extends MessageFileGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MessageFileGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MessageFileGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MessageFileGroupByOutputType[P]>
+            : GetScalarType<T[P], MessageFileGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MessageFileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    originalName?: boolean
+    fileName?: boolean
+    fileSize?: boolean
+    mimeType?: boolean
+    s3Key?: boolean
+    s3Bucket?: boolean
+    s3Url?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    messageId?: boolean
+    message?: boolean | MessageDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["messageFile"]>
+
+  export type MessageFileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    originalName?: boolean
+    fileName?: boolean
+    fileSize?: boolean
+    mimeType?: boolean
+    s3Key?: boolean
+    s3Bucket?: boolean
+    s3Url?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    messageId?: boolean
+    message?: boolean | MessageDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["messageFile"]>
+
+  export type MessageFileSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    originalName?: boolean
+    fileName?: boolean
+    fileSize?: boolean
+    mimeType?: boolean
+    s3Key?: boolean
+    s3Bucket?: boolean
+    s3Url?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    messageId?: boolean
+    message?: boolean | MessageDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["messageFile"]>
+
+  export type MessageFileSelectScalar = {
+    id?: boolean
+    originalName?: boolean
+    fileName?: boolean
+    fileSize?: boolean
+    mimeType?: boolean
+    s3Key?: boolean
+    s3Bucket?: boolean
+    s3Url?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    messageId?: boolean
+  }
+
+  export type MessageFileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "originalName" | "fileName" | "fileSize" | "mimeType" | "s3Key" | "s3Bucket" | "s3Url" | "createdAt" | "updatedAt" | "messageId", ExtArgs["result"]["messageFile"]>
+  export type MessageFileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    message?: boolean | MessageDefaultArgs<ExtArgs>
+  }
+  export type MessageFileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    message?: boolean | MessageDefaultArgs<ExtArgs>
+  }
+  export type MessageFileIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    message?: boolean | MessageDefaultArgs<ExtArgs>
+  }
+
+  export type $MessageFilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MessageFile"
+    objects: {
+      message: Prisma.$MessagePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      originalName: string
+      fileName: string
+      fileSize: number
+      mimeType: string
+      s3Key: string
+      s3Bucket: string
+      s3Url: string | null
+      createdAt: Date
+      updatedAt: Date
+      messageId: string
+    }, ExtArgs["result"]["messageFile"]>
+    composites: {}
+  }
+
+  type MessageFileGetPayload<S extends boolean | null | undefined | MessageFileDefaultArgs> = $Result.GetResult<Prisma.$MessageFilePayload, S>
+
+  type MessageFileCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MessageFileFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MessageFileCountAggregateInputType | true
+    }
+
+  export interface MessageFileDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MessageFile'], meta: { name: 'MessageFile' } }
+    /**
+     * Find zero or one MessageFile that matches the filter.
+     * @param {MessageFileFindUniqueArgs} args - Arguments to find a MessageFile
+     * @example
+     * // Get one MessageFile
+     * const messageFile = await prisma.messageFile.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MessageFileFindUniqueArgs>(args: SelectSubset<T, MessageFileFindUniqueArgs<ExtArgs>>): Prisma__MessageFileClient<$Result.GetResult<Prisma.$MessageFilePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MessageFile that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MessageFileFindUniqueOrThrowArgs} args - Arguments to find a MessageFile
+     * @example
+     * // Get one MessageFile
+     * const messageFile = await prisma.messageFile.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MessageFileFindUniqueOrThrowArgs>(args: SelectSubset<T, MessageFileFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MessageFileClient<$Result.GetResult<Prisma.$MessageFilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MessageFile that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageFileFindFirstArgs} args - Arguments to find a MessageFile
+     * @example
+     * // Get one MessageFile
+     * const messageFile = await prisma.messageFile.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MessageFileFindFirstArgs>(args?: SelectSubset<T, MessageFileFindFirstArgs<ExtArgs>>): Prisma__MessageFileClient<$Result.GetResult<Prisma.$MessageFilePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MessageFile that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageFileFindFirstOrThrowArgs} args - Arguments to find a MessageFile
+     * @example
+     * // Get one MessageFile
+     * const messageFile = await prisma.messageFile.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MessageFileFindFirstOrThrowArgs>(args?: SelectSubset<T, MessageFileFindFirstOrThrowArgs<ExtArgs>>): Prisma__MessageFileClient<$Result.GetResult<Prisma.$MessageFilePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MessageFiles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageFileFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MessageFiles
+     * const messageFiles = await prisma.messageFile.findMany()
+     * 
+     * // Get first 10 MessageFiles
+     * const messageFiles = await prisma.messageFile.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const messageFileWithIdOnly = await prisma.messageFile.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MessageFileFindManyArgs>(args?: SelectSubset<T, MessageFileFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MessageFile.
+     * @param {MessageFileCreateArgs} args - Arguments to create a MessageFile.
+     * @example
+     * // Create one MessageFile
+     * const MessageFile = await prisma.messageFile.create({
+     *   data: {
+     *     // ... data to create a MessageFile
+     *   }
+     * })
+     * 
+     */
+    create<T extends MessageFileCreateArgs>(args: SelectSubset<T, MessageFileCreateArgs<ExtArgs>>): Prisma__MessageFileClient<$Result.GetResult<Prisma.$MessageFilePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MessageFiles.
+     * @param {MessageFileCreateManyArgs} args - Arguments to create many MessageFiles.
+     * @example
+     * // Create many MessageFiles
+     * const messageFile = await prisma.messageFile.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MessageFileCreateManyArgs>(args?: SelectSubset<T, MessageFileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MessageFiles and returns the data saved in the database.
+     * @param {MessageFileCreateManyAndReturnArgs} args - Arguments to create many MessageFiles.
+     * @example
+     * // Create many MessageFiles
+     * const messageFile = await prisma.messageFile.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MessageFiles and only return the `id`
+     * const messageFileWithIdOnly = await prisma.messageFile.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MessageFileCreateManyAndReturnArgs>(args?: SelectSubset<T, MessageFileCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageFilePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MessageFile.
+     * @param {MessageFileDeleteArgs} args - Arguments to delete one MessageFile.
+     * @example
+     * // Delete one MessageFile
+     * const MessageFile = await prisma.messageFile.delete({
+     *   where: {
+     *     // ... filter to delete one MessageFile
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MessageFileDeleteArgs>(args: SelectSubset<T, MessageFileDeleteArgs<ExtArgs>>): Prisma__MessageFileClient<$Result.GetResult<Prisma.$MessageFilePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MessageFile.
+     * @param {MessageFileUpdateArgs} args - Arguments to update one MessageFile.
+     * @example
+     * // Update one MessageFile
+     * const messageFile = await prisma.messageFile.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MessageFileUpdateArgs>(args: SelectSubset<T, MessageFileUpdateArgs<ExtArgs>>): Prisma__MessageFileClient<$Result.GetResult<Prisma.$MessageFilePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MessageFiles.
+     * @param {MessageFileDeleteManyArgs} args - Arguments to filter MessageFiles to delete.
+     * @example
+     * // Delete a few MessageFiles
+     * const { count } = await prisma.messageFile.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MessageFileDeleteManyArgs>(args?: SelectSubset<T, MessageFileDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MessageFiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageFileUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MessageFiles
+     * const messageFile = await prisma.messageFile.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MessageFileUpdateManyArgs>(args: SelectSubset<T, MessageFileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MessageFiles and returns the data updated in the database.
+     * @param {MessageFileUpdateManyAndReturnArgs} args - Arguments to update many MessageFiles.
+     * @example
+     * // Update many MessageFiles
+     * const messageFile = await prisma.messageFile.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MessageFiles and only return the `id`
+     * const messageFileWithIdOnly = await prisma.messageFile.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MessageFileUpdateManyAndReturnArgs>(args: SelectSubset<T, MessageFileUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageFilePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MessageFile.
+     * @param {MessageFileUpsertArgs} args - Arguments to update or create a MessageFile.
+     * @example
+     * // Update or create a MessageFile
+     * const messageFile = await prisma.messageFile.upsert({
+     *   create: {
+     *     // ... data to create a MessageFile
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MessageFile we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MessageFileUpsertArgs>(args: SelectSubset<T, MessageFileUpsertArgs<ExtArgs>>): Prisma__MessageFileClient<$Result.GetResult<Prisma.$MessageFilePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MessageFiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageFileCountArgs} args - Arguments to filter MessageFiles to count.
+     * @example
+     * // Count the number of MessageFiles
+     * const count = await prisma.messageFile.count({
+     *   where: {
+     *     // ... the filter for the MessageFiles we want to count
+     *   }
+     * })
+    **/
+    count<T extends MessageFileCountArgs>(
+      args?: Subset<T, MessageFileCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MessageFileCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MessageFile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageFileAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MessageFileAggregateArgs>(args: Subset<T, MessageFileAggregateArgs>): Prisma.PrismaPromise<GetMessageFileAggregateType<T>>
+
+    /**
+     * Group by MessageFile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageFileGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MessageFileGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MessageFileGroupByArgs['orderBy'] }
+        : { orderBy?: MessageFileGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MessageFileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMessageFileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MessageFile model
+   */
+  readonly fields: MessageFileFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MessageFile.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MessageFileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    message<T extends MessageDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MessageDefaultArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MessageFile model
+   */
+  interface MessageFileFieldRefs {
+    readonly id: FieldRef<"MessageFile", 'String'>
+    readonly originalName: FieldRef<"MessageFile", 'String'>
+    readonly fileName: FieldRef<"MessageFile", 'String'>
+    readonly fileSize: FieldRef<"MessageFile", 'Int'>
+    readonly mimeType: FieldRef<"MessageFile", 'String'>
+    readonly s3Key: FieldRef<"MessageFile", 'String'>
+    readonly s3Bucket: FieldRef<"MessageFile", 'String'>
+    readonly s3Url: FieldRef<"MessageFile", 'String'>
+    readonly createdAt: FieldRef<"MessageFile", 'DateTime'>
+    readonly updatedAt: FieldRef<"MessageFile", 'DateTime'>
+    readonly messageId: FieldRef<"MessageFile", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MessageFile findUnique
+   */
+  export type MessageFileFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageFile
+     */
+    select?: MessageFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageFile
+     */
+    omit?: MessageFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageFileInclude<ExtArgs> | null
+    /**
+     * Filter, which MessageFile to fetch.
+     */
+    where: MessageFileWhereUniqueInput
+  }
+
+  /**
+   * MessageFile findUniqueOrThrow
+   */
+  export type MessageFileFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageFile
+     */
+    select?: MessageFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageFile
+     */
+    omit?: MessageFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageFileInclude<ExtArgs> | null
+    /**
+     * Filter, which MessageFile to fetch.
+     */
+    where: MessageFileWhereUniqueInput
+  }
+
+  /**
+   * MessageFile findFirst
+   */
+  export type MessageFileFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageFile
+     */
+    select?: MessageFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageFile
+     */
+    omit?: MessageFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageFileInclude<ExtArgs> | null
+    /**
+     * Filter, which MessageFile to fetch.
+     */
+    where?: MessageFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MessageFiles to fetch.
+     */
+    orderBy?: MessageFileOrderByWithRelationInput | MessageFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MessageFiles.
+     */
+    cursor?: MessageFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MessageFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MessageFiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MessageFiles.
+     */
+    distinct?: MessageFileScalarFieldEnum | MessageFileScalarFieldEnum[]
+  }
+
+  /**
+   * MessageFile findFirstOrThrow
+   */
+  export type MessageFileFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageFile
+     */
+    select?: MessageFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageFile
+     */
+    omit?: MessageFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageFileInclude<ExtArgs> | null
+    /**
+     * Filter, which MessageFile to fetch.
+     */
+    where?: MessageFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MessageFiles to fetch.
+     */
+    orderBy?: MessageFileOrderByWithRelationInput | MessageFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MessageFiles.
+     */
+    cursor?: MessageFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MessageFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MessageFiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MessageFiles.
+     */
+    distinct?: MessageFileScalarFieldEnum | MessageFileScalarFieldEnum[]
+  }
+
+  /**
+   * MessageFile findMany
+   */
+  export type MessageFileFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageFile
+     */
+    select?: MessageFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageFile
+     */
+    omit?: MessageFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageFileInclude<ExtArgs> | null
+    /**
+     * Filter, which MessageFiles to fetch.
+     */
+    where?: MessageFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MessageFiles to fetch.
+     */
+    orderBy?: MessageFileOrderByWithRelationInput | MessageFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MessageFiles.
+     */
+    cursor?: MessageFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MessageFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MessageFiles.
+     */
+    skip?: number
+    distinct?: MessageFileScalarFieldEnum | MessageFileScalarFieldEnum[]
+  }
+
+  /**
+   * MessageFile create
+   */
+  export type MessageFileCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageFile
+     */
+    select?: MessageFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageFile
+     */
+    omit?: MessageFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageFileInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MessageFile.
+     */
+    data: XOR<MessageFileCreateInput, MessageFileUncheckedCreateInput>
+  }
+
+  /**
+   * MessageFile createMany
+   */
+  export type MessageFileCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MessageFiles.
+     */
+    data: MessageFileCreateManyInput | MessageFileCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MessageFile createManyAndReturn
+   */
+  export type MessageFileCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageFile
+     */
+    select?: MessageFileSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageFile
+     */
+    omit?: MessageFileOmit<ExtArgs> | null
+    /**
+     * The data used to create many MessageFiles.
+     */
+    data: MessageFileCreateManyInput | MessageFileCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageFileIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MessageFile update
+   */
+  export type MessageFileUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageFile
+     */
+    select?: MessageFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageFile
+     */
+    omit?: MessageFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageFileInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MessageFile.
+     */
+    data: XOR<MessageFileUpdateInput, MessageFileUncheckedUpdateInput>
+    /**
+     * Choose, which MessageFile to update.
+     */
+    where: MessageFileWhereUniqueInput
+  }
+
+  /**
+   * MessageFile updateMany
+   */
+  export type MessageFileUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MessageFiles.
+     */
+    data: XOR<MessageFileUpdateManyMutationInput, MessageFileUncheckedUpdateManyInput>
+    /**
+     * Filter which MessageFiles to update
+     */
+    where?: MessageFileWhereInput
+    /**
+     * Limit how many MessageFiles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MessageFile updateManyAndReturn
+   */
+  export type MessageFileUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageFile
+     */
+    select?: MessageFileSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageFile
+     */
+    omit?: MessageFileOmit<ExtArgs> | null
+    /**
+     * The data used to update MessageFiles.
+     */
+    data: XOR<MessageFileUpdateManyMutationInput, MessageFileUncheckedUpdateManyInput>
+    /**
+     * Filter which MessageFiles to update
+     */
+    where?: MessageFileWhereInput
+    /**
+     * Limit how many MessageFiles to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageFileIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MessageFile upsert
+   */
+  export type MessageFileUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageFile
+     */
+    select?: MessageFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageFile
+     */
+    omit?: MessageFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageFileInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MessageFile to update in case it exists.
+     */
+    where: MessageFileWhereUniqueInput
+    /**
+     * In case the MessageFile found by the `where` argument doesn't exist, create a new MessageFile with this data.
+     */
+    create: XOR<MessageFileCreateInput, MessageFileUncheckedCreateInput>
+    /**
+     * In case the MessageFile was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MessageFileUpdateInput, MessageFileUncheckedUpdateInput>
+  }
+
+  /**
+   * MessageFile delete
+   */
+  export type MessageFileDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageFile
+     */
+    select?: MessageFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageFile
+     */
+    omit?: MessageFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageFileInclude<ExtArgs> | null
+    /**
+     * Filter which MessageFile to delete.
+     */
+    where: MessageFileWhereUniqueInput
+  }
+
+  /**
+   * MessageFile deleteMany
+   */
+  export type MessageFileDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MessageFiles to delete
+     */
+    where?: MessageFileWhereInput
+    /**
+     * Limit how many MessageFiles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MessageFile without action
+   */
+  export type MessageFileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageFile
+     */
+    select?: MessageFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageFile
+     */
+    omit?: MessageFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageFileInclude<ExtArgs> | null
   }
 
 
@@ -5755,6 +7077,23 @@ export namespace Prisma {
   export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
 
 
+  export const MessageFileScalarFieldEnum: {
+    id: 'id',
+    originalName: 'originalName',
+    fileName: 'fileName',
+    fileSize: 'fileSize',
+    mimeType: 'mimeType',
+    s3Key: 's3Key',
+    s3Bucket: 's3Bucket',
+    s3Url: 's3Url',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    messageId: 'messageId'
+  };
+
+  export type MessageFileScalarFieldEnum = (typeof MessageFileScalarFieldEnum)[keyof typeof MessageFileScalarFieldEnum]
+
+
   export const UsageScalarFieldEnum: {
     key: 'key',
     points: 'points',
@@ -6042,6 +7381,7 @@ export namespace Prisma {
     aiModelId?: StringNullableFilter<"Message"> | string | null
     chat?: XOR<ChatScalarRelationFilter, ChatWhereInput>
     aiModel?: XOR<AiModelNullableScalarRelationFilter, AiModelWhereInput> | null
+    files?: MessageFileListRelationFilter
   }
 
   export type MessageOrderByWithRelationInput = {
@@ -6059,6 +7399,7 @@ export namespace Prisma {
     aiModelId?: SortOrderInput | SortOrder
     chat?: ChatOrderByWithRelationInput
     aiModel?: AiModelOrderByWithRelationInput
+    files?: MessageFileOrderByRelationAggregateInput
   }
 
   export type MessageWhereUniqueInput = Prisma.AtLeast<{
@@ -6079,6 +7420,7 @@ export namespace Prisma {
     aiModelId?: StringNullableFilter<"Message"> | string | null
     chat?: XOR<ChatScalarRelationFilter, ChatWhereInput>
     aiModel?: XOR<AiModelNullableScalarRelationFilter, AiModelWhereInput> | null
+    files?: MessageFileListRelationFilter
   }, "id">
 
   export type MessageOrderByWithAggregationInput = {
@@ -6117,6 +7459,93 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
     chatId?: StringWithAggregatesFilter<"Message"> | string
     aiModelId?: StringNullableWithAggregatesFilter<"Message"> | string | null
+  }
+
+  export type MessageFileWhereInput = {
+    AND?: MessageFileWhereInput | MessageFileWhereInput[]
+    OR?: MessageFileWhereInput[]
+    NOT?: MessageFileWhereInput | MessageFileWhereInput[]
+    id?: StringFilter<"MessageFile"> | string
+    originalName?: StringFilter<"MessageFile"> | string
+    fileName?: StringFilter<"MessageFile"> | string
+    fileSize?: IntFilter<"MessageFile"> | number
+    mimeType?: StringFilter<"MessageFile"> | string
+    s3Key?: StringFilter<"MessageFile"> | string
+    s3Bucket?: StringFilter<"MessageFile"> | string
+    s3Url?: StringNullableFilter<"MessageFile"> | string | null
+    createdAt?: DateTimeFilter<"MessageFile"> | Date | string
+    updatedAt?: DateTimeFilter<"MessageFile"> | Date | string
+    messageId?: StringFilter<"MessageFile"> | string
+    message?: XOR<MessageScalarRelationFilter, MessageWhereInput>
+  }
+
+  export type MessageFileOrderByWithRelationInput = {
+    id?: SortOrder
+    originalName?: SortOrder
+    fileName?: SortOrder
+    fileSize?: SortOrder
+    mimeType?: SortOrder
+    s3Key?: SortOrder
+    s3Bucket?: SortOrder
+    s3Url?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    messageId?: SortOrder
+    message?: MessageOrderByWithRelationInput
+  }
+
+  export type MessageFileWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MessageFileWhereInput | MessageFileWhereInput[]
+    OR?: MessageFileWhereInput[]
+    NOT?: MessageFileWhereInput | MessageFileWhereInput[]
+    originalName?: StringFilter<"MessageFile"> | string
+    fileName?: StringFilter<"MessageFile"> | string
+    fileSize?: IntFilter<"MessageFile"> | number
+    mimeType?: StringFilter<"MessageFile"> | string
+    s3Key?: StringFilter<"MessageFile"> | string
+    s3Bucket?: StringFilter<"MessageFile"> | string
+    s3Url?: StringNullableFilter<"MessageFile"> | string | null
+    createdAt?: DateTimeFilter<"MessageFile"> | Date | string
+    updatedAt?: DateTimeFilter<"MessageFile"> | Date | string
+    messageId?: StringFilter<"MessageFile"> | string
+    message?: XOR<MessageScalarRelationFilter, MessageWhereInput>
+  }, "id">
+
+  export type MessageFileOrderByWithAggregationInput = {
+    id?: SortOrder
+    originalName?: SortOrder
+    fileName?: SortOrder
+    fileSize?: SortOrder
+    mimeType?: SortOrder
+    s3Key?: SortOrder
+    s3Bucket?: SortOrder
+    s3Url?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    messageId?: SortOrder
+    _count?: MessageFileCountOrderByAggregateInput
+    _avg?: MessageFileAvgOrderByAggregateInput
+    _max?: MessageFileMaxOrderByAggregateInput
+    _min?: MessageFileMinOrderByAggregateInput
+    _sum?: MessageFileSumOrderByAggregateInput
+  }
+
+  export type MessageFileScalarWhereWithAggregatesInput = {
+    AND?: MessageFileScalarWhereWithAggregatesInput | MessageFileScalarWhereWithAggregatesInput[]
+    OR?: MessageFileScalarWhereWithAggregatesInput[]
+    NOT?: MessageFileScalarWhereWithAggregatesInput | MessageFileScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"MessageFile"> | string
+    originalName?: StringWithAggregatesFilter<"MessageFile"> | string
+    fileName?: StringWithAggregatesFilter<"MessageFile"> | string
+    fileSize?: IntWithAggregatesFilter<"MessageFile"> | number
+    mimeType?: StringWithAggregatesFilter<"MessageFile"> | string
+    s3Key?: StringWithAggregatesFilter<"MessageFile"> | string
+    s3Bucket?: StringWithAggregatesFilter<"MessageFile"> | string
+    s3Url?: StringNullableWithAggregatesFilter<"MessageFile"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"MessageFile"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"MessageFile"> | Date | string
+    messageId?: StringWithAggregatesFilter<"MessageFile"> | string
   }
 
   export type UsageWhereInput = {
@@ -6331,6 +7760,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     chat: ChatCreateNestedOneWithoutMessagesInput
     aiModel?: AiModelCreateNestedOneWithoutMessagesInput
+    files?: MessageFileCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUncheckedCreateInput = {
@@ -6346,6 +7776,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     chatId: string
     aiModelId?: string | null
+    files?: MessageFileUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUpdateInput = {
@@ -6361,6 +7792,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chat?: ChatUpdateOneRequiredWithoutMessagesNestedInput
     aiModel?: AiModelUpdateOneWithoutMessagesNestedInput
+    files?: MessageFileUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateInput = {
@@ -6376,6 +7808,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: StringFieldUpdateOperationsInput | string
     aiModelId?: NullableStringFieldUpdateOperationsInput | string | null
+    files?: MessageFileUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageCreateManyInput = {
@@ -6419,6 +7852,103 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: StringFieldUpdateOperationsInput | string
     aiModelId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MessageFileCreateInput = {
+    id?: string
+    originalName: string
+    fileName: string
+    fileSize: number
+    mimeType: string
+    s3Key: string
+    s3Bucket: string
+    s3Url?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    message: MessageCreateNestedOneWithoutFilesInput
+  }
+
+  export type MessageFileUncheckedCreateInput = {
+    id?: string
+    originalName: string
+    fileName: string
+    fileSize: number
+    mimeType: string
+    s3Key: string
+    s3Bucket: string
+    s3Url?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messageId: string
+  }
+
+  export type MessageFileUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
+    s3Bucket?: StringFieldUpdateOperationsInput | string
+    s3Url?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    message?: MessageUpdateOneRequiredWithoutFilesNestedInput
+  }
+
+  export type MessageFileUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
+    s3Bucket?: StringFieldUpdateOperationsInput | string
+    s3Url?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messageId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type MessageFileCreateManyInput = {
+    id?: string
+    originalName: string
+    fileName: string
+    fileSize: number
+    mimeType: string
+    s3Key: string
+    s3Bucket: string
+    s3Url?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messageId: string
+  }
+
+  export type MessageFileUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
+    s3Bucket?: StringFieldUpdateOperationsInput | string
+    s3Url?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageFileUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
+    s3Bucket?: StringFieldUpdateOperationsInput | string
+    s3Url?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messageId?: StringFieldUpdateOperationsInput | string
   }
 
   export type UsageCreateInput = {
@@ -6733,6 +8263,16 @@ export namespace Prisma {
     isNot?: AiModelWhereInput | null
   }
 
+  export type MessageFileListRelationFilter = {
+    every?: MessageFileWhereInput
+    some?: MessageFileWhereInput
+    none?: MessageFileWhereInput
+  }
+
+  export type MessageFileOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type MessageCountOrderByAggregateInput = {
     id?: SortOrder
     externalId?: SortOrder
@@ -6821,6 +8361,77 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type MessageScalarRelationFilter = {
+    is?: MessageWhereInput
+    isNot?: MessageWhereInput
+  }
+
+  export type MessageFileCountOrderByAggregateInput = {
+    id?: SortOrder
+    originalName?: SortOrder
+    fileName?: SortOrder
+    fileSize?: SortOrder
+    mimeType?: SortOrder
+    s3Key?: SortOrder
+    s3Bucket?: SortOrder
+    s3Url?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    messageId?: SortOrder
+  }
+
+  export type MessageFileAvgOrderByAggregateInput = {
+    fileSize?: SortOrder
+  }
+
+  export type MessageFileMaxOrderByAggregateInput = {
+    id?: SortOrder
+    originalName?: SortOrder
+    fileName?: SortOrder
+    fileSize?: SortOrder
+    mimeType?: SortOrder
+    s3Key?: SortOrder
+    s3Bucket?: SortOrder
+    s3Url?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    messageId?: SortOrder
+  }
+
+  export type MessageFileMinOrderByAggregateInput = {
+    id?: SortOrder
+    originalName?: SortOrder
+    fileName?: SortOrder
+    fileSize?: SortOrder
+    mimeType?: SortOrder
+    s3Key?: SortOrder
+    s3Bucket?: SortOrder
+    s3Url?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    messageId?: SortOrder
+  }
+
+  export type MessageFileSumOrderByAggregateInput = {
+    fileSize?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -6856,22 +8467,6 @@ export namespace Prisma {
 
   export type UsageSumOrderByAggregateInput = {
     points?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -7016,6 +8611,20 @@ export namespace Prisma {
     connect?: AiModelWhereUniqueInput
   }
 
+  export type MessageFileCreateNestedManyWithoutMessageInput = {
+    create?: XOR<MessageFileCreateWithoutMessageInput, MessageFileUncheckedCreateWithoutMessageInput> | MessageFileCreateWithoutMessageInput[] | MessageFileUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: MessageFileCreateOrConnectWithoutMessageInput | MessageFileCreateOrConnectWithoutMessageInput[]
+    createMany?: MessageFileCreateManyMessageInputEnvelope
+    connect?: MessageFileWhereUniqueInput | MessageFileWhereUniqueInput[]
+  }
+
+  export type MessageFileUncheckedCreateNestedManyWithoutMessageInput = {
+    create?: XOR<MessageFileCreateWithoutMessageInput, MessageFileUncheckedCreateWithoutMessageInput> | MessageFileCreateWithoutMessageInput[] | MessageFileUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: MessageFileCreateOrConnectWithoutMessageInput | MessageFileCreateOrConnectWithoutMessageInput[]
+    createMany?: MessageFileCreateManyMessageInputEnvelope
+    connect?: MessageFileWhereUniqueInput | MessageFileWhereUniqueInput[]
+  }
+
   export type EnumMessageRoleFieldUpdateOperationsInput = {
     set?: $Enums.MessageRole
   }
@@ -7042,12 +8651,54 @@ export namespace Prisma {
     update?: XOR<XOR<AiModelUpdateToOneWithWhereWithoutMessagesInput, AiModelUpdateWithoutMessagesInput>, AiModelUncheckedUpdateWithoutMessagesInput>
   }
 
+  export type MessageFileUpdateManyWithoutMessageNestedInput = {
+    create?: XOR<MessageFileCreateWithoutMessageInput, MessageFileUncheckedCreateWithoutMessageInput> | MessageFileCreateWithoutMessageInput[] | MessageFileUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: MessageFileCreateOrConnectWithoutMessageInput | MessageFileCreateOrConnectWithoutMessageInput[]
+    upsert?: MessageFileUpsertWithWhereUniqueWithoutMessageInput | MessageFileUpsertWithWhereUniqueWithoutMessageInput[]
+    createMany?: MessageFileCreateManyMessageInputEnvelope
+    set?: MessageFileWhereUniqueInput | MessageFileWhereUniqueInput[]
+    disconnect?: MessageFileWhereUniqueInput | MessageFileWhereUniqueInput[]
+    delete?: MessageFileWhereUniqueInput | MessageFileWhereUniqueInput[]
+    connect?: MessageFileWhereUniqueInput | MessageFileWhereUniqueInput[]
+    update?: MessageFileUpdateWithWhereUniqueWithoutMessageInput | MessageFileUpdateWithWhereUniqueWithoutMessageInput[]
+    updateMany?: MessageFileUpdateManyWithWhereWithoutMessageInput | MessageFileUpdateManyWithWhereWithoutMessageInput[]
+    deleteMany?: MessageFileScalarWhereInput | MessageFileScalarWhereInput[]
+  }
+
+  export type MessageFileUncheckedUpdateManyWithoutMessageNestedInput = {
+    create?: XOR<MessageFileCreateWithoutMessageInput, MessageFileUncheckedCreateWithoutMessageInput> | MessageFileCreateWithoutMessageInput[] | MessageFileUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: MessageFileCreateOrConnectWithoutMessageInput | MessageFileCreateOrConnectWithoutMessageInput[]
+    upsert?: MessageFileUpsertWithWhereUniqueWithoutMessageInput | MessageFileUpsertWithWhereUniqueWithoutMessageInput[]
+    createMany?: MessageFileCreateManyMessageInputEnvelope
+    set?: MessageFileWhereUniqueInput | MessageFileWhereUniqueInput[]
+    disconnect?: MessageFileWhereUniqueInput | MessageFileWhereUniqueInput[]
+    delete?: MessageFileWhereUniqueInput | MessageFileWhereUniqueInput[]
+    connect?: MessageFileWhereUniqueInput | MessageFileWhereUniqueInput[]
+    update?: MessageFileUpdateWithWhereUniqueWithoutMessageInput | MessageFileUpdateWithWhereUniqueWithoutMessageInput[]
+    updateMany?: MessageFileUpdateManyWithWhereWithoutMessageInput | MessageFileUpdateManyWithWhereWithoutMessageInput[]
+    deleteMany?: MessageFileScalarWhereInput | MessageFileScalarWhereInput[]
+  }
+
+  export type MessageCreateNestedOneWithoutFilesInput = {
+    create?: XOR<MessageCreateWithoutFilesInput, MessageUncheckedCreateWithoutFilesInput>
+    connectOrCreate?: MessageCreateOrConnectWithoutFilesInput
+    connect?: MessageWhereUniqueInput
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type MessageUpdateOneRequiredWithoutFilesNestedInput = {
+    create?: XOR<MessageCreateWithoutFilesInput, MessageUncheckedCreateWithoutFilesInput>
+    connectOrCreate?: MessageCreateOrConnectWithoutFilesInput
+    upsert?: MessageUpsertWithoutFilesInput
+    connect?: MessageWhereUniqueInput
+    update?: XOR<XOR<MessageUpdateToOneWithWhereWithoutFilesInput, MessageUpdateWithoutFilesInput>, MessageUncheckedUpdateWithoutFilesInput>
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -7253,17 +8904,6 @@ export namespace Prisma {
     _max?: NestedEnumMessageTypeFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -7289,6 +8929,17 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -7317,6 +8968,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     aiModel?: AiModelCreateNestedOneWithoutMessagesInput
+    files?: MessageFileCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUncheckedCreateWithoutChatInput = {
@@ -7331,6 +8983,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     aiModelId?: string | null
+    files?: MessageFileUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageCreateOrConnectWithoutChatInput = {
@@ -7389,6 +9042,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     chat: ChatCreateNestedOneWithoutMessagesInput
+    files?: MessageFileCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUncheckedCreateWithoutAiModelInput = {
@@ -7403,6 +9057,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     chatId: string
+    files?: MessageFileUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageCreateOrConnectWithoutAiModelInput = {
@@ -7483,6 +9138,42 @@ export namespace Prisma {
     create: XOR<AiModelCreateWithoutMessagesInput, AiModelUncheckedCreateWithoutMessagesInput>
   }
 
+  export type MessageFileCreateWithoutMessageInput = {
+    id?: string
+    originalName: string
+    fileName: string
+    fileSize: number
+    mimeType: string
+    s3Key: string
+    s3Bucket: string
+    s3Url?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MessageFileUncheckedCreateWithoutMessageInput = {
+    id?: string
+    originalName: string
+    fileName: string
+    fileSize: number
+    mimeType: string
+    s3Key: string
+    s3Bucket: string
+    s3Url?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MessageFileCreateOrConnectWithoutMessageInput = {
+    where: MessageFileWhereUniqueInput
+    create: XOR<MessageFileCreateWithoutMessageInput, MessageFileUncheckedCreateWithoutMessageInput>
+  }
+
+  export type MessageFileCreateManyMessageInputEnvelope = {
+    data: MessageFileCreateManyMessageInput | MessageFileCreateManyMessageInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ChatUpsertWithoutMessagesInput = {
     update: XOR<ChatUpdateWithoutMessagesInput, ChatUncheckedUpdateWithoutMessagesInput>
     create: XOR<ChatCreateWithoutMessagesInput, ChatUncheckedCreateWithoutMessagesInput>
@@ -7547,6 +9238,115 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type MessageFileUpsertWithWhereUniqueWithoutMessageInput = {
+    where: MessageFileWhereUniqueInput
+    update: XOR<MessageFileUpdateWithoutMessageInput, MessageFileUncheckedUpdateWithoutMessageInput>
+    create: XOR<MessageFileCreateWithoutMessageInput, MessageFileUncheckedCreateWithoutMessageInput>
+  }
+
+  export type MessageFileUpdateWithWhereUniqueWithoutMessageInput = {
+    where: MessageFileWhereUniqueInput
+    data: XOR<MessageFileUpdateWithoutMessageInput, MessageFileUncheckedUpdateWithoutMessageInput>
+  }
+
+  export type MessageFileUpdateManyWithWhereWithoutMessageInput = {
+    where: MessageFileScalarWhereInput
+    data: XOR<MessageFileUpdateManyMutationInput, MessageFileUncheckedUpdateManyWithoutMessageInput>
+  }
+
+  export type MessageFileScalarWhereInput = {
+    AND?: MessageFileScalarWhereInput | MessageFileScalarWhereInput[]
+    OR?: MessageFileScalarWhereInput[]
+    NOT?: MessageFileScalarWhereInput | MessageFileScalarWhereInput[]
+    id?: StringFilter<"MessageFile"> | string
+    originalName?: StringFilter<"MessageFile"> | string
+    fileName?: StringFilter<"MessageFile"> | string
+    fileSize?: IntFilter<"MessageFile"> | number
+    mimeType?: StringFilter<"MessageFile"> | string
+    s3Key?: StringFilter<"MessageFile"> | string
+    s3Bucket?: StringFilter<"MessageFile"> | string
+    s3Url?: StringNullableFilter<"MessageFile"> | string | null
+    createdAt?: DateTimeFilter<"MessageFile"> | Date | string
+    updatedAt?: DateTimeFilter<"MessageFile"> | Date | string
+    messageId?: StringFilter<"MessageFile"> | string
+  }
+
+  export type MessageCreateWithoutFilesInput = {
+    id?: string
+    externalId?: string | null
+    content: string
+    role: $Enums.MessageRole
+    type: $Enums.MessageType
+    inputTokens?: number | null
+    outputTokens?: number | null
+    totalTokens?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    chat: ChatCreateNestedOneWithoutMessagesInput
+    aiModel?: AiModelCreateNestedOneWithoutMessagesInput
+  }
+
+  export type MessageUncheckedCreateWithoutFilesInput = {
+    id?: string
+    externalId?: string | null
+    content: string
+    role: $Enums.MessageRole
+    type: $Enums.MessageType
+    inputTokens?: number | null
+    outputTokens?: number | null
+    totalTokens?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    chatId: string
+    aiModelId?: string | null
+  }
+
+  export type MessageCreateOrConnectWithoutFilesInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutFilesInput, MessageUncheckedCreateWithoutFilesInput>
+  }
+
+  export type MessageUpsertWithoutFilesInput = {
+    update: XOR<MessageUpdateWithoutFilesInput, MessageUncheckedUpdateWithoutFilesInput>
+    create: XOR<MessageCreateWithoutFilesInput, MessageUncheckedCreateWithoutFilesInput>
+    where?: MessageWhereInput
+  }
+
+  export type MessageUpdateToOneWithWhereWithoutFilesInput = {
+    where?: MessageWhereInput
+    data: XOR<MessageUpdateWithoutFilesInput, MessageUncheckedUpdateWithoutFilesInput>
+  }
+
+  export type MessageUpdateWithoutFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
+    inputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    outputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    totalTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chat?: ChatUpdateOneRequiredWithoutMessagesNestedInput
+    aiModel?: AiModelUpdateOneWithoutMessagesNestedInput
+  }
+
+  export type MessageUncheckedUpdateWithoutFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
+    inputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    outputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    totalTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatId?: StringFieldUpdateOperationsInput | string
+    aiModelId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type MessageCreateManyChatInput = {
     id?: string
     externalId?: string | null
@@ -7573,6 +9373,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     aiModel?: AiModelUpdateOneWithoutMessagesNestedInput
+    files?: MessageFileUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateWithoutChatInput = {
@@ -7587,6 +9388,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     aiModelId?: NullableStringFieldUpdateOperationsInput | string | null
+    files?: MessageFileUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateManyWithoutChatInput = {
@@ -7629,6 +9431,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chat?: ChatUpdateOneRequiredWithoutMessagesNestedInput
+    files?: MessageFileUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateWithoutAiModelInput = {
@@ -7643,6 +9446,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: StringFieldUpdateOperationsInput | string
+    files?: MessageFileUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateManyWithoutAiModelInput = {
@@ -7657,6 +9461,58 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type MessageFileCreateManyMessageInput = {
+    id?: string
+    originalName: string
+    fileName: string
+    fileSize: number
+    mimeType: string
+    s3Key: string
+    s3Bucket: string
+    s3Url?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MessageFileUpdateWithoutMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
+    s3Bucket?: StringFieldUpdateOperationsInput | string
+    s3Url?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageFileUncheckedUpdateWithoutMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
+    s3Bucket?: StringFieldUpdateOperationsInput | string
+    s3Url?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageFileUncheckedUpdateManyWithoutMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    s3Key?: StringFieldUpdateOperationsInput | string
+    s3Bucket?: StringFieldUpdateOperationsInput | string
+    s3Url?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

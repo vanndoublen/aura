@@ -69,6 +69,27 @@ model Message {
 
   aiModelId String?
   aiModel   AiModel? @relation(fields: [aiModelId], references: [id], onDelete: SetNull)
+
+  files MessageFile[]
+}
+
+model MessageFile {
+  id           String   @id @default(uuid())
+  originalName String   
+  fileName     String   
+  fileSize     Int      
+  mimeType     String   
+  s3Key        String   
+  s3Bucket     String   
+  s3Url        String?  
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messageId String
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
 }
 
 model Usage {

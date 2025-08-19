@@ -156,6 +156,20 @@ exports.Prisma.MessageScalarFieldEnum = {
   aiModelId: 'aiModelId'
 };
 
+exports.Prisma.MessageFileScalarFieldEnum = {
+  id: 'id',
+  originalName: 'originalName',
+  fileName: 'fileName',
+  fileSize: 'fileSize',
+  mimeType: 'mimeType',
+  s3Key: 's3Key',
+  s3Bucket: 's3Bucket',
+  s3Url: 's3Url',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  messageId: 'messageId'
+};
+
 exports.Prisma.UsageScalarFieldEnum = {
   key: 'key',
   points: 'points',
@@ -190,6 +204,7 @@ exports.Prisma.ModelName = {
   Chat: 'Chat',
   AiModel: 'AiModel',
   Message: 'Message',
+  MessageFile: 'MessageFile',
   Usage: 'Usage'
 };
 
