@@ -4,7 +4,6 @@ import { TRPCError } from "@trpc/server";
 
 import prisma from "@/lib/db";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
-import { CHAT_TITLE_PROMPT } from "@/prompt";
 import { createTitle } from "@/modules/ai/lib/utils";
 
 export const chatsRouter = createTRPCRouter({
@@ -59,7 +58,7 @@ export const chatsRouter = createTRPCRouter({
           message: "Please select a model.",
         });
       }
-
+      
       // TODO: calculate credits
 
       const chatTitleResponse = await createTitle(
@@ -68,7 +67,7 @@ export const chatsRouter = createTRPCRouter({
 
       const createdChat = await prisma.chat.create({
         data: {
-          name: chatTitleResponse.output_text,
+          name: chatTitleResponse.choices[0].message.content ?? "",
           userId: ctx.auth.userId,
         },
       });

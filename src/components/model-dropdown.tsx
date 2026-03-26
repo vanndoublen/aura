@@ -44,7 +44,7 @@ export const ModelDropdown = ({ aiModels, selectedModel, setSelectedModel }: Pro
                     size="sm"
                     className="focus-visible:ring-0 bg-transparent hover:opacity-75 transition-opacity h-8 border-0"
                 >
-                    <span className="text-[12px]">{selectedModel ? selectedModel.displayName : "Select Model"}</span>
+                    <span className="text-sm">{selectedModel ? selectedModel.displayName : "Select Model"}</span>
                     <ChevronDownIcon />
 
 
@@ -56,7 +56,7 @@ export const ModelDropdown = ({ aiModels, selectedModel, setSelectedModel }: Pro
                     value={searchValue}
                     onChange={(e) => handleOnChangeSearch(e.target.value)}
                     onKeyDown={(e) => e.stopPropagation()}
-                    className="!text-sm shadow-none !bg-transparent border-none focus-visible:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
+                    className="text-md shadow-none !bg-transparent border-none focus-visible:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
 
                 />
                 <DropdownMenuSeparator />
@@ -64,16 +64,16 @@ export const ModelDropdown = ({ aiModels, selectedModel, setSelectedModel }: Pro
                     <DropdownMenuItem
                         key={model.id}
                         onSelect={() => setSelectedModel(model)}
-                        className={model.id === selectedModel?.id ? "font-semibold bg-accent text-accent-foreground" : ""}
+                        className={model.id === selectedModel?.id ? "bg-accent text-accent-foreground" : ""}
                     >
-                        {model.displayName}
+                        <span className="text-md">{model.displayName}</span>
                         {model.id === selectedModel?.id && (
                             <CheckIcon className="ml-auto h-4 w-4" />
                         )}
                     </DropdownMenuItem>
                 ))}
                 {filteredModels.length === 0 && searchValue && (
-                    <div className="text-sm p-2 flex justify-center text-muted-foreground">
+                    <div className="text-md p-2 flex justify-center text-muted-foreground">
                         No models found
                     </div>
                 )}

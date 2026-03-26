@@ -26,7 +26,18 @@ const modelData: Prisma.AiModelCreateInput[] = [
     name: "o4-mini",
     provider: "OpenAI",
     displayName: "GPT o4 mini",
-    description: "Optimized for fast, effective reasoning with exceptionally efficient performance in coding and visual tasks.",
+    description:
+      "Optimized for fast, effective reasoning with exceptionally efficient performance in coding and visual tasks.",
+    maxTokens: 4096,
+    temperature: 0.7,
+    isActive: true,
+  },
+  {
+    name: "deepseek-chat",
+    provider: "DeepSeek",
+    displayName: "DeepSeek",
+    description:
+      "Deepseek chat with non-thinking Mode",
     maxTokens: 4096,
     temperature: 0.7,
     isActive: true,

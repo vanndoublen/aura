@@ -107,7 +107,7 @@ const SubNavChats = ({ chats, chatId, day }: SubProps) => {
                     <SidebarMenuSubItem >
                         {chats.map((chat) => (
                             <SidebarMenuSubButton asChild key={chat.id} isActive={chatId === chat.id}
-                                className={cn(chatId === chat.id && "border-2 border-foreground")}
+                                className={cn("px-2 py-4" ,chatId === chat.id && "bg-border!")}
                             >
                                 {editingId === chat.id ? (
                                     <Input
@@ -121,13 +121,12 @@ const SubNavChats = ({ chats, chatId, day }: SubProps) => {
                                 ) : (
                                     <Link
                                         href={chat.id}
-                                        className="hover:border-2 hover:border-foreground"
                                         onDoubleClick={(e) => {
                                             e.preventDefault();
                                             handleDoubleClick(chat)
                                         }}
                                     >
-                                        <span className="text-xs truncate pr-4">
+                                        <span className="text-md! truncate pr-4">
                                             {chat.name}
                                         </span>
                                     </Link>

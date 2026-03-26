@@ -52,8 +52,8 @@ interface UserMessageProps {
 }
 const UserMessage = ({ content }: UserMessageProps) => {
     return (
-        <div className="flex flex-col items-end pb-4 pr-2 pl-10 group">
-            <Card className="rounded-lg bg-muted p-3 shadow-none border-none max-w-[80%] break-words text-sm">
+        <div className="flex flex-col items-end pb-4 pr-2 pl-10 group ">
+            <Card className="rounded-lg bg-muted p-3 shadow-none border-none max-w-[80%] break-words text-base">
                 {content}
             </Card>
             <CopyButton text={content} className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground" />
@@ -99,7 +99,7 @@ export const AssistantMessage = ({
                 </span>
             </div>
             <div className="flex flex-col gap-y-4 px-4">
-                <AIResponse className="text-sm space-y-4">
+                <AIResponse className="text-base space-y-4">
                     {content}
                 </AIResponse>
             </div>

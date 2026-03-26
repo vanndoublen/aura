@@ -194,9 +194,9 @@ export const MessagesContainer = ({ chatId }: Props) => {
         }
     }, [status]);
 
-    useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [combinedMessages.length, combinedMessages[combinedMessages.length - 1]?.content]);
+    // useEffect(() => {
+    //     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    // }, [combinedMessages.length, combinedMessages[combinedMessages.length - 1]?.content]);
 
     return (
         <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
@@ -225,7 +225,7 @@ export const MessagesContainer = ({ chatId }: Props) => {
 
             <div className="absolute bottom-0 right-0 left-0 pointer-events-none">
                 <div className="max-w-3xl mx-auto pointer-events-auto">
-                    <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-full max-w-3xl h-6 bg-gradient-to-b from-transparent to-background pointer-events-none" />
+                    <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-full max-w-3xl h-6 bg-gradient-to-b from-transparent to-background pointer-events-none font-inter" />
                     <MessageForm
                         chatId={chatId}
                         isStreaming={isStreaming}

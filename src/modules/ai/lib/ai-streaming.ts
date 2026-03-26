@@ -1,7 +1,12 @@
 import OpenAI from "openai";
 import { GoogleGenAI } from "@google/genai";
 import { Responses } from "openai/resources/index.mjs";
-import { Conversations, toGeminiHistory, toOpenAiHistory } from "./utils";
+import {
+  Conversations,
+  toDeepseekAiHistory,
+  toGeminiHistory,
+  toOpenAiHistory,
+} from "./utils";
 
 // TODO: use proper provider type
 // type ModelProvider = "OpenAI" | "Anthropic";
@@ -22,6 +27,10 @@ export const streamAIResponse = async function* (args: {
       yield* streamGeminiResponse(model, message);
       break;
 
+    case "DeepSeek":
+      yield* streamDeepseekResponse(model, message);
+      break;
+
     default:
       throw new Error(`unknown provider: ${provider}`);
   }
@@ -36,7 +45,7 @@ async function* streamOpenAiResponse(model: string, message: Conversations[]) {
     model,
     input: conversations,
     stream: true,
-    reasoning: model === "o4-mini" ? {effort: "low"} : {}
+    reasoning: model === "o4-mini" ? { effort: "low" } : {},
   });
 
   for await (const event of events) {
@@ -56,15 +65,42 @@ async function* streamGeminiResponse(model: string, message: Conversations[]) {
     history: conversations,
     config: {
       systemInstruction:
-        "You are a helpful and concise assistant. Make sure the response is short and precise.",
+        "You are a helpful and concise assistant. Make sure the response is neat and precise.",
     },
   });
 
-  const events = await chat.sendMessageStream({
-    message: message[message.length - 1].content,
+  try {
+    const events = await chat.sendMessageStream({
+      message: message[message.length - 1].content,
+    });
+
+    for await (const chunk of events) {
+      yield chunk.text;
+    }
+  } catch (error) {
+    console.error("Gemini Stream Error:", error);
+    throw error;
+  }
+}
+
+async function* streamDeepseekResponse(
+  model: string,
+  message: Conversations[],
+) {
+  const openai = new OpenAI({
+    baseURL: "https://api.deepseek.com",
+    apiKey: process.env.DEEPSEEK_API_KEY,
   });
 
-  for await (const chunk of events) {
-    yield chunk.text;
+  const conversations = toDeepseekAiHistory(message);
+
+  const events = await openai.chat.completions.create({
+    model,
+    messages: conversations,
+    stream: true,
+  });
+
+  for await (const event of events) {
+    yield event.choices[0].delta.content;
   }
 }

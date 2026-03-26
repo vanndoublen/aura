@@ -68,7 +68,7 @@ export const HomeView = () => {
 
                 </h1>
 
-                <TextLoop className='text-base md:text-xl text-muted-foreground text-center max-w-5xl w-full mx-auto'>
+                <TextLoop className='text-base md:text-lg text-muted-foreground text-center max-w-5xl w-full mx-auto'>
                     <span>How can I assist you today?</span>
                     <span>What is octave in music</span>
                     <span>How to study linear algebra</span>

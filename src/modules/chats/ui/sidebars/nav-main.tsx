@@ -16,14 +16,14 @@ export const NavMain = ({ isSearchOpen, setIsSearchOpen }: Props) => {
                 <SidebarMenuItem>
                     <SidebarMenuButton>
                         <EditIcon />
-                        <span className="text-sm">New chat</span>
+                        <span>New chat</span>
                     </SidebarMenuButton>
 
                     <SidebarMenuButton
                         onClick={() => setIsSearchOpen(true)}
                     >
                         <SearchIcon />
-                        <span className="text-sm">Search</span>
+                        <span>Search</span>
                     </SidebarMenuButton>
 
                 </SidebarMenuItem>

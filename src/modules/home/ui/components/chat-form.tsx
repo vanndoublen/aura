@@ -148,7 +148,7 @@ export const ChatForm = () => {
                                 onBlur={() => setIsFocused(false)}
                                 minRows={2}
                                 maxRows={8}
-                                className="pt-4 resize-none border-none w-full outline-none bg-transparent text-base"
+                                className="pt-4 resize-none border-none w-full outline-none bg-transparent"
                                 placeholder="What would you like to generate?"
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {

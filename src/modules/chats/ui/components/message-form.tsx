@@ -121,7 +121,7 @@ export const MessageForm = ({ chatId, isStreaming, isFetching }: Props) => {
                                     <span className="text-sm truncate max-w-[200px]">
                                         {file.name}
                                     </span>
-                                    <span className="text-xs text-muted-foreground">
+                                    <span className="text-sm text-muted-foreground">
                                         ({(file.size / 1024).toFixed(1)} KB)
                                     </span>
                                 </div>
@@ -161,7 +161,7 @@ export const MessageForm = ({ chatId, isStreaming, isFetching }: Props) => {
                     )}
                 />
                 <div className="flex gap-2 items-end justify-between pt-2">
-                    <div className="text-[10px] text-muted-foreground font-mono">
+                    <div className="text-[12px] text-muted-foreground font-mono">
                         <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
                             <span>&#8984;</span>Enter
                         </kbd>
