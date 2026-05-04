@@ -10,8 +10,6 @@ import { CheckIcon, CopyIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
 
 
 interface CopyProps {
@@ -67,19 +65,15 @@ interface AssistantMessageProps {
     content: string;
     createdAt: Date;
     type: MessageType;
-    aiModelId: string | null;
+    aiModelName: string | null;
 }
 
 export const AssistantMessage = ({
     content,
     createdAt,
     type,
-    aiModelId,
+    aiModelName,
 }: AssistantMessageProps) => {
-    const trpc = useTRPC();
-    const { data: aiModels } = useQuery(trpc.ai.getMany.queryOptions());
-    const aiModel = aiModels?.find(model => model.id === aiModelId);
-
     return (
         <div className={cn(
             "flex flex-col group pb-4",
@@ -105,7 +99,7 @@ export const AssistantMessage = ({
             </div>
             <div className="flex items-center gap-2 mt-2 px-4">
                 <span className="text-xs text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
-                    {aiModel ? aiModel.name : ""}
+                    {aiModelName ?? ""}
                 </span>
                 <CopyButton text={content} className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground" />
             </div>
@@ -119,7 +113,7 @@ interface Props {
     role: MessageRole;
     createdAt: Date;
     type: MessageType;
-    aiModelId: string | null;
+    aiModelName: string | null;
 }
 
 export const MessageCard = ({
@@ -127,7 +121,7 @@ export const MessageCard = ({
     role,
     createdAt,
     type,
-    aiModelId,
+    aiModelName,
 }: Props) => {
     if (role === "ASSISTANT") {
         return (
@@ -135,7 +129,7 @@ export const MessageCard = ({
                 content={content}
                 createdAt={createdAt}
                 type={type}
-                aiModelId={aiModelId}
+                aiModelName={aiModelName}
             />
         )
     }

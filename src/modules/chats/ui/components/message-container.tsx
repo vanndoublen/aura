@@ -1,5 +1,5 @@
 import { useTRPC } from "@/trpc/client";
-import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { MessageCard } from "./message-card";
 import { MessageForm } from "./message-form";
 import { useEffect, useRef, useState } from "react";
@@ -52,6 +52,8 @@ export const MessagesContainer = ({ chatId }: Props) => {
     const { data: messages } = useSuspenseQuery(trpc.messages.getMany.queryOptions({
         chatId: chatId,
     }));
+
+    const { data: aiModels } = useQuery(trpc.ai.getMany.queryOptions());
 
     const { data: streamData, error, status, reset } = useSubscription(
         trpc.messages.stream.subscriptionOptions(
@@ -210,7 +212,7 @@ export const MessagesContainer = ({ chatId }: Props) => {
                             key={message.id}
                             content={message.content}
                             role={message.role}
-                            aiModelId={message.aiModelId}
+                            aiModelName={aiModels?.find(m => m.id === message.aiModelId)?.name ?? null}
                             createdAt={message.createdAt}
                             type={message.type}
                             // TODO: display files
